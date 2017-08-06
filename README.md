@@ -15,7 +15,7 @@
  - SiriKit
  - Firebase
 
-## Week 1 TODO List
+## TODO List
   * Gamja
     - [ ] 네비게이션 파트 스토리보드 완성
     - [ ] 주행기록-통계 데이터 형식 결정
