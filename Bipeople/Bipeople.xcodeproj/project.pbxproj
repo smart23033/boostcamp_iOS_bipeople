@@ -16,6 +16,12 @@
 		30E82DA01F3822ED00536AFB /* Navigation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30E82D9E1F3822ED00536AFB /* Navigation.storyboard */; };
 		30E82DA21F3822F600536AFB /* History.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30E82DA11F3822F600536AFB /* History.storyboard */; };
 		30E82DA51F38230700536AFB /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30E82DA31F38230700536AFB /* Settings.storyboard */; };
+		A21981291F3972FC00D0F5F7 /* HistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21981281F3972FC00D0F5F7 /* HistoryCell.swift */; };
+		A219812B1F39730C00D0F5F7 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219812A1F39730C00D0F5F7 /* CardView.swift */; };
+		A219812D1F39771E00D0F5F7 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219812C1F39771E00D0F5F7 /* HistoryTableViewController.swift */; };
+		A219812F1F39772700D0F5F7 /* HistoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219812E1F39772700D0F5F7 /* HistoryDetailViewController.swift */; };
+		A21981311F39774400D0F5F7 /* HistoryChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21981301F39774400D0F5F7 /* HistoryChartViewController.swift */; };
+		A258388C1F39A11A00BECEA3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A258388B1F39A11A00BECEA3 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +36,12 @@
 		30E82D9F1F3822ED00536AFB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Navigation.storyboard; sourceTree = "<group>"; };
 		30E82DA11F3822F600536AFB /* History.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = History.storyboard; sourceTree = "<group>"; };
 		30E82DA41F38230700536AFB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Settings.storyboard; sourceTree = "<group>"; };
+		A21981281F3972FC00D0F5F7 /* HistoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCell.swift; sourceTree = "<group>"; };
+		A219812A1F39730C00D0F5F7 /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		A219812C1F39771E00D0F5F7 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
+		A219812E1F39772700D0F5F7 /* HistoryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailViewController.swift; sourceTree = "<group>"; };
+		A21981301F39774400D0F5F7 /* HistoryChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryChartViewController.swift; sourceTree = "<group>"; };
+		A258388B1F39A11A00BECEA3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,13 +74,15 @@
 		30E82D821F38224B00536AFB /* Bipeople */ = {
 			isa = PBXGroup;
 			children = (
+				30E82D831F38224B00536AFB /* AppDelegate.swift */,
+				A219812A1F39730C00D0F5F7 /* CardView.swift */,
+				A258388B1F39A11A00BECEA3 /* Extensions.swift */,
 				30E82DAB1F38235E00536AFB /* Resources */,
 				30E82DA61F38230C00536AFB /* Settings */,
 				30E82D981F38227D00536AFB /* Places */,
 				30E82D971F38227500536AFB /* Navigation */,
 				30E82D961F38226D00536AFB /* History */,
 				30E82D951F38225800536AFB /* Social */,
-				30E82D831F38224B00536AFB /* AppDelegate.swift */,
 			);
 			path = Bipeople;
 			sourceTree = "<group>";
@@ -121,6 +135,7 @@
 		30E82DA91F38233C00536AFB /* View */ = {
 			isa = PBXGroup;
 			children = (
+				A21981281F3972FC00D0F5F7 /* HistoryCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -128,6 +143,9 @@
 		30E82DAA1F38234000536AFB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				A219812C1F39771E00D0F5F7 /* HistoryTableViewController.swift */,
+				A219812E1F39772700D0F5F7 /* HistoryDetailViewController.swift */,
+				A21981301F39774400D0F5F7 /* HistoryChartViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -225,7 +243,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A21981311F39774400D0F5F7 /* HistoryChartViewController.swift in Sources */,
+				A219812F1F39772700D0F5F7 /* HistoryDetailViewController.swift in Sources */,
+				A219812D1F39771E00D0F5F7 /* HistoryTableViewController.swift in Sources */,
+				A21981291F3972FC00D0F5F7 /* HistoryCell.swift in Sources */,
+				A219812B1F39730C00D0F5F7 /* CardView.swift in Sources */,
 				30E82D841F38224B00536AFB /* AppDelegate.swift in Sources */,
+				A258388C1F39A11A00BECEA3 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,6 +437,7 @@
 				30E82D941F38224B00536AFB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
