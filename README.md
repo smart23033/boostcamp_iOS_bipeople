@@ -11,8 +11,7 @@
  - [T Map geoJSON](https://developers.skplanetx.com/apidoc/kor/geofencing/regions/geojson/)
  - [Realm](https://hanjungv.github.io/2017-02-08-2_Swift_RealmTodo1/)
  - [Alamofire](https://outofbedlam.github.io/swift/2016/02/04/Alamofire/)
-  - CoreLocation
- - Chameleon
+ - CoreLocation
  - ARKit
  - SiriKit
  - Firebase
