@@ -22,6 +22,9 @@
 		A219812F1F39772700D0F5F7 /* HistoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219812E1F39772700D0F5F7 /* HistoryDetailViewController.swift */; };
 		A21981311F39774400D0F5F7 /* HistoryChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21981301F39774400D0F5F7 /* HistoryChartViewController.swift */; };
 		A258388C1F39A11A00BECEA3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A258388B1F39A11A00BECEA3 /* Extensions.swift */; };
+		CA581E36F745E69C960E75F5 /* Pods_Bipeople.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA1522085776953070CF67BC /* Pods_Bipeople.framework */; };
+		F13AB3531F3A78AD0038B2CF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */; };
+		F18C67261F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18C67251F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,12 +39,17 @@
 		30E82D9F1F3822ED00536AFB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Navigation.storyboard; sourceTree = "<group>"; };
 		30E82DA11F3822F600536AFB /* History.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = History.storyboard; sourceTree = "<group>"; };
 		30E82DA41F38230700536AFB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Settings.storyboard; sourceTree = "<group>"; };
+		615E213BC9AF36CE52DAC63F /* Pods-Bipeople.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bipeople.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bipeople/Pods-Bipeople.debug.xcconfig"; sourceTree = "<group>"; };
+		9D8E7CA6306F737B6C7F5B98 /* Pods-Bipeople.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bipeople.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bipeople/Pods-Bipeople.release.xcconfig"; sourceTree = "<group>"; };
 		A21981281F3972FC00D0F5F7 /* HistoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCell.swift; sourceTree = "<group>"; };
 		A219812A1F39730C00D0F5F7 /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		A219812C1F39771E00D0F5F7 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
 		A219812E1F39772700D0F5F7 /* HistoryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailViewController.swift; sourceTree = "<group>"; };
 		A21981301F39774400D0F5F7 /* HistoryChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryChartViewController.swift; sourceTree = "<group>"; };
 		A258388B1F39A11A00BECEA3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		EA1522085776953070CF67BC /* Pods_Bipeople.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bipeople.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		F18C67251F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiPeopleNavigationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,17 +57,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F13AB3531F3A78AD0038B2CF /* CoreLocation.framework in Frameworks */,
+				CA581E36F745E69C960E75F5 /* Pods_Bipeople.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2AB0F81C88CFCBD3BE4DF3AD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				615E213BC9AF36CE52DAC63F /* Pods-Bipeople.debug.xcconfig */,
+				9D8E7CA6306F737B6C7F5B98 /* Pods-Bipeople.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		30E82D771F38224B00536AFB = {
 			isa = PBXGroup;
 			children = (
 				30E82D821F38224B00536AFB /* Bipeople */,
 				30E82D811F38224B00536AFB /* Products */,
+				2AB0F81C88CFCBD3BE4DF3AD /* Pods */,
+				8D2DA249BBD82F00E069ED2A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -107,6 +128,7 @@
 		30E82D971F38227500536AFB /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				F18C67251F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift */,
 			);
 			name = Navigation;
 			sourceTree = "<group>";
@@ -166,6 +188,15 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		8D2DA249BBD82F00E069ED2A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */,
+				EA1522085776953070CF67BC /* Pods_Bipeople.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -173,9 +204,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 30E82D921F38224B00536AFB /* Build configuration list for PBXNativeTarget "Bipeople" */;
 			buildPhases = (
+				7588AF5C94F67D9DB5B185BC /* [CP] Check Pods Manifest.lock */,
 				30E82D7C1F38224B00536AFB /* Sources */,
 				30E82D7D1F38224B00536AFB /* Frameworks */,
 				30E82D7E1F38224B00536AFB /* Resources */,
+				4B40915EB17413FB7590EBC2 /* [CP] Embed Pods Frameworks */,
+				15C4A209F1BBF9D9B000DCAB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -193,12 +227,19 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = futr_blu;
 				TargetAttributes = {
 					30E82D7F1F38224B00536AFB = {
 						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = NJRMGGTV4H;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -238,11 +279,68 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		15C4A209F1BBF9D9B000DCAB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Bipeople/Pods-Bipeople-resources.sh",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
+				"${PODS_ROOT}/GooglePlacePicker/Frameworks/GooglePlacePicker.framework/Resources/GooglePlacePicker.bundle",
+				"${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bipeople/Pods-Bipeople-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4B40915EB17413FB7590EBC2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bipeople/Pods-Bipeople-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7588AF5C94F67D9DB5B185BC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Bipeople-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		30E82D7C1F38224B00536AFB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F18C67261F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift in Sources */,
 				A21981311F39774400D0F5F7 /* HistoryChartViewController.swift in Sources */,
 				A219812F1F39772700D0F5F7 /* HistoryDetailViewController.swift in Sources */,
 				A219812D1F39771E00D0F5F7 /* HistoryTableViewController.swift in Sources */,
@@ -309,7 +407,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -317,7 +417,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -360,7 +464,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -368,7 +474,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -396,25 +506,37 @@
 		};
 		30E82D931F38224B00536AFB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 615E213BC9AF36CE52DAC63F /* Pods-Bipeople.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEVELOPMENT_TEAM = NJRMGGTV4H;
 				INFOPLIST_FILE = Bipeople/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "futr-blu.Bipeople";
+				PRODUCT_BUNDLE_IDENTIFIER = kr.or.connect.boostcamp.Bipeople;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		30E82D941F38224B00536AFB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9D8E7CA6306F737B6C7F5B98 /* Pods-Bipeople.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEVELOPMENT_TEAM = NJRMGGTV4H;
 				INFOPLIST_FILE = Bipeople/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "futr-blu.Bipeople";
+				PRODUCT_BUNDLE_IDENTIFIER = kr.or.connect.boostcamp.Bipeople;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
