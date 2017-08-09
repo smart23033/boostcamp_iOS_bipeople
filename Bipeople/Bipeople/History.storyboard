@@ -70,7 +70,7 @@
             </objects>
             <point key="canvasLocation" x="1845.5999999999999" y="1311.9940029985009"/>
         </scene>
-        <!--History Chart View Controller-->
+        <!--Data Source-->
         <scene sceneID="Ta9-0N-8XF">
             <objects>
                 <viewController id="rBX-VJ-YkM" customClass="HistoryChartViewController" customModule="Bipeople" customModuleProvider="target" sceneMemberID="viewController">
@@ -83,19 +83,46 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8cM-zC-Fsa">
-                                <rect key="frame" x="92" y="104" width="191" height="29"/>
+                                <rect key="frame" x="92" y="84" width="191" height="29"/>
                                 <segments>
                                     <segment title="daily"/>
                                     <segment title="weekly"/>
                                     <segment title="monthly"/>
                                 </segments>
                             </segmentedControl>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wcW-aI-mFE">
-                                <rect key="frame" x="16" y="178" width="343" height="320"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wcW-aI-mFE" userLabel="Chart">
+                                <rect key="frame" x="16" y="148.5" width="343" height="320"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NNG-aQ-p1g" userLabel="Calendar" customClass="FSCalendar">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="320"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="headerTitleColor">
+                                                <color key="value" red="0.073162533342838287" green="0.73797780275344849" blue="0.77331537008285522" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="titleWeekendColor">
+                                                <color key="value" red="1" green="0.11854632869999999" blue="0.2362108577" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="weekdayTextColor">
+                                                <color key="value" red="0.073162533340000002" green="0.73797780280000003" blue="0.77331537009999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="dataSource" destination="rBX-VJ-YkM" id="0TG-zo-2wN"/>
+                                            <outlet property="delegate" destination="rBX-VJ-YkM" id="obm-7X-sCT"/>
+                                        </connections>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="NNG-aQ-p1g" firstAttribute="leading" secondItem="wcW-aI-mFE" secondAttribute="leading" id="2JF-Wa-uN4"/>
+                                    <constraint firstItem="NNG-aQ-p1g" firstAttribute="top" secondItem="wcW-aI-mFE" secondAttribute="top" id="Y5w-rX-3sk"/>
+                                    <constraint firstAttribute="trailing" secondItem="NNG-aQ-p1g" secondAttribute="trailing" id="fi4-Eh-dMI"/>
+                                    <constraint firstAttribute="bottom" secondItem="NNG-aQ-p1g" secondAttribute="bottom" id="yjw-bd-zpD"/>
+                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h7T-SQ-fSD" customClass="CardView" customModule="Bipeople" customModuleProvider="target">
-                                <rect key="frame" x="16" y="514" width="343" height="133.5"/>
+                                <rect key="frame" x="16" y="484.5" width="343" height="133.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="X4R-i8-r9O">
                                         <rect key="frame" x="8" y="14" width="103" height="106.5"/>
@@ -169,26 +196,32 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="FsU-sR-QDa">
-                                <rect key="frame" x="82" y="140" width="211" height="30"/>
+                                <rect key="frame" x="57" y="120" width="262" height="20.5"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Lh-Ys-bJr">
-                                        <rect key="frame" x="0.0" y="0.0" width="57" height="30"/>
-                                        <state key="normal" title="17. 8. 15">
-                                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                    </button>
+                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="17-08-09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mdX-n4-4LX" userLabel="Start Label">
+                                        <rect key="frame" x="0.0" y="0.0" width="74" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="NoW-Yc-JUu" appends="YES" id="Pij-yy-MR9"/>
+                                        </connections>
+                                    </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="~" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bAw-TU-FYo">
-                                        <rect key="frame" x="77" y="0.0" width="57" height="30"/>
+                                        <rect key="frame" x="94" y="0.0" width="74" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZVh-Ga-CbT">
-                                        <rect key="frame" x="154" y="0.0" width="57" height="30"/>
-                                        <state key="normal" title="17. 9. 20">
-                                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                    </button>
+                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="17-09-21" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6x5-Lp-7sU" userLabel="End Label">
+                                        <rect key="frame" x="188" y="0.0" width="74" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="awz-Yp-EhW" appends="YES" id="BKT-pj-bHM"/>
+                                        </connections>
+                                    </label>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -208,8 +241,23 @@
                             <constraint firstItem="wcW-aI-mFE" firstAttribute="top" secondItem="FsU-sR-QDa" secondAttribute="bottom" constant="8" id="vXI-3P-inm"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="calendar" destination="NNG-aQ-p1g" id="dOy-65-5tH"/>
+                        <outlet property="endLabel" destination="6x5-Lp-7sU" id="tWp-qC-5Jl"/>
+                        <outlet property="startLabel" destination="mdX-n4-4LX" id="RNH-P7-zsH"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eob-kC-nO5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="NoW-Yc-JUu">
+                    <connections>
+                        <action selector="didTapStartLabel:" destination="rBX-VJ-YkM" id="3q1-Ko-Lpe"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="awz-Yp-EhW">
+                    <connections>
+                        <action selector="didTapEndLabel:" destination="rBX-VJ-YkM" id="Upv-5F-CKw"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2908" y="781.25937031484261"/>
         </scene>

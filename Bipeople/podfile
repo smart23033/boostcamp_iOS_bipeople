@@ -3,7 +3,14 @@
 
 target 'Bipeople' do
   use_frameworks!
+  # Gamja
   pod 'GooglePlaces'
   pod 'GooglePlacePicker'
   pod 'GoogleMaps'
+
+  # BLU
+
+  # SJSJ
+  pod ‘FSCalendar’
+
 end
