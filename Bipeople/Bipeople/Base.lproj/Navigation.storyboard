@@ -9,26 +9,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="Eu0-L4-ffC">
-            <objects>
-                <viewController id="LFz-HE-j3Z" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="T32-Jm-pd8"/>
-                        <viewControllerLayoutGuide type="bottom" id="q6o-iB-yuK"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="TWW-F3-u25">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="Iap-97-qiS"/>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Snp-87-AHs" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1532" y="814.54272863568224"/>
-        </scene>
         <!--Item-->
         <scene sceneID="RXW-Xd-4Qp">
             <objects>
@@ -41,12 +21,31 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="LFz-HE-j3Z" kind="relationship" relationship="rootViewController" id="c1D-4C-2ML"/>
+                        <segue destination="MC0-9L-o62" kind="relationship" relationship="rootViewController" id="6yw-Ng-ouS"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ARd-Kc-6cX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="790" y="815"/>
+        </scene>
+        <!--Bi People Navigation View Controller-->
+        <scene sceneID="Su5-lI-4JI">
+            <objects>
+                <viewController id="MC0-9L-o62" customClass="BiPeopleNavigationViewController" customModule="Bipeople" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Y3o-EC-2d3"/>
+                        <viewControllerLayoutGuide type="bottom" id="XbL-LW-ZKV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="yJC-rw-kB1">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="cHY-bb-SJt"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UQF-lg-G2n" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1564" y="815"/>
         </scene>
     </scenes>
 </document>

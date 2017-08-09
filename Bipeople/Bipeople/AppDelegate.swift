@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import GoogleMaps
+import GooglePlaces
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -14,6 +16,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
+        /**
+          * Add Google Map API Key
+          */
+        GMSServices.provideAPIKey("AIzaSyDHNdS74dfE2fMYP4CLMJ9wfipk4XZB7dw")
+        GMSPlacesClient.provideAPIKey("AIzaSyDHNdS74dfE2fMYP4CLMJ9wfipk4XZB7dw")
+        
         // Override point for customization after application launch.
         
         let tabBarController = window?.rootViewController as! UITabBarController
@@ -60,7 +69,7 @@ extension AppDelegate {
             nvc.topViewController?.navigationController?.navigationBar.isTranslucent = false
             nvc.topViewController?.navigationController?.navigationBar.barTintColor = UIColor(red: 28/255.0, green: 176/255.0, blue: 184/255.0, alpha: 1.0)
             nvc.topViewController?.navigationController?.navigationBar.tintColor = .white
-            nvc.topViewController?.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+            nvc.topViewController?.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         }
 
         
