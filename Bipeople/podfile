@@ -9,6 +9,9 @@ target 'Bipeople' do
   pod 'GoogleMaps'
 
   # BLU
+  pod 'Alamofire', git: 'https://github.com/Alamofire/Alamofire.git', branch: 'swift4'
+  pod 'CodableAlamofire', :git => 'https://github.com/Otbivnoe/CodableAlamofire.git'
+  pod 'RealmSwift'
 
   # SJSJ
   pod ‘FSCalendar’
