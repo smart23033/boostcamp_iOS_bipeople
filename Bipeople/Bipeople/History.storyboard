@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13168.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="GJH-ux-c6H">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13178.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="GJH-ux-c6H">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13147.4"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13156.2"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -27,7 +28,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start - End" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TfH-e1-Gyt">
-                                            <rect key="frame" x="8" y="34" width="262.5" height="21"/>
+                                            <rect key="frame" x="8" y="21" width="262.5" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -38,13 +39,22 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="createdAt" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3hi-AV-MFl">
+                                            <rect key="frame" x="8" y="50" width="262.5" height="16"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="id1-eA-g2Y" firstAttribute="centerY" secondItem="WFu-Ke-e3k" secondAttribute="centerY" id="4yH-9f-RLQ"/>
-                                        <constraint firstItem="TfH-e1-Gyt" firstAttribute="width" secondItem="WFu-Ke-e3k" secondAttribute="width" multiplier="0.7" id="Alp-F1-YLN"/>
-                                        <constraint firstItem="TfH-e1-Gyt" firstAttribute="centerY" secondItem="WFu-Ke-e3k" secondAttribute="centerY" id="cV5-RT-kLI"/>
+                                        <constraint firstItem="3hi-AV-MFl" firstAttribute="top" secondItem="TfH-e1-Gyt" secondAttribute="bottom" constant="8" id="5Og-Ve-6Tb"/>
+                                        <constraint firstItem="3hi-AV-MFl" firstAttribute="trailing" secondItem="TfH-e1-Gyt" secondAttribute="trailing" id="LoD-BI-1Q5"/>
+                                        <constraint firstItem="3hi-AV-MFl" firstAttribute="leading" secondItem="TfH-e1-Gyt" secondAttribute="leading" id="X0y-ys-ZkE"/>
+                                        <constraint firstItem="TfH-e1-Gyt" firstAttribute="width" secondItem="WFu-Ke-e3k" secondAttribute="width" multiplier="0.7" id="X2b-40-Ho9"/>
                                         <constraint firstItem="id1-eA-g2Y" firstAttribute="trailing" secondItem="WFu-Ke-e3k" secondAttribute="trailingMargin" id="iSR-Lf-hIA"/>
-                                        <constraint firstItem="TfH-e1-Gyt" firstAttribute="leading" secondItem="WFu-Ke-e3k" secondAttribute="leadingMargin" id="tCZ-Fl-cgJ"/>
+                                        <constraint firstItem="TfH-e1-Gyt" firstAttribute="leading" secondItem="WFu-Ke-e3k" secondAttribute="leadingMargin" id="x68-3q-55h"/>
+                                        <constraint firstItem="TfH-e1-Gyt" firstAttribute="top" secondItem="WFu-Ke-e3k" secondAttribute="topMargin" constant="13" id="yxn-2Z-IUH"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -404,6 +414,14 @@
                             <constraint firstItem="A5r-ZJ-gYD" firstAttribute="top" secondItem="pX7-EI-3Ey" secondAttribute="bottom" constant="8" id="tQt-oe-ynF"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="averageSpeedLabel" destination="jLs-Q9-gVU" id="BTu-ul-g0e"/>
+                        <outlet property="caloriesLabel" destination="Nhq-mk-vXI" id="isx-CG-ISR"/>
+                        <outlet property="distanceLabel" destination="OX8-c2-ulq" id="bQu-FH-gCT"/>
+                        <outlet property="highestSpeedLabel" destination="I4a-QS-Vnk" id="xfH-eO-Zj2"/>
+                        <outlet property="restTimeLabel" destination="A5l-aP-8ex" id="AQ8-bn-hmt"/>
+                        <outlet property="ridingTimeLabel" destination="up2-Gw-5d6" id="evZ-fr-Udp"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kgo-6Q-bdo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -416,7 +434,7 @@
                     <tabBarItem key="tabBarItem" systemItem="history" id="TNU-xF-B0o"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="LZD-ED-hzh">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
