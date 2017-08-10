@@ -1,4 +1,7 @@
 PODS:
+  - Alamofire (4.4.0)
+  - CodableAlamofire (0.9.0):
+    - Alamofire (~> 4.4)
   - FSCalendar (2.7.9)
   - GoogleMaps (2.4.0):
     - GoogleMaps/Maps (= 2.4.0)
@@ -10,19 +13,46 @@ PODS:
     - GooglePlaces (= 2.4.0)
   - GooglePlaces (2.4.0):
     - GoogleMaps/Base (= 2.4.0)
+  - Realm (2.9.1):
+    - Realm/Headers (= 2.9.1)
+  - Realm/Headers (2.9.1)
+  - RealmSwift (2.9.1):
+    - Realm (= 2.9.1)
 
 DEPENDENCIES:
+  - Alamofire (from `https://github.com/Alamofire/Alamofire.git`, branch `swift4`)
+  - CodableAlamofire (from `https://github.com/Otbivnoe/CodableAlamofire.git`)
   - FSCalendar
   - GoogleMaps
   - GooglePlacePicker
   - GooglePlaces
+  - RealmSwift
+
+EXTERNAL SOURCES:
+  Alamofire:
+    :branch: swift4
+    :git: https://github.com/Alamofire/Alamofire.git
+  CodableAlamofire:
+    :git: https://github.com/Otbivnoe/CodableAlamofire.git
+
+CHECKOUT OPTIONS:
+  Alamofire:
+    :commit: 9d6d16316edfb8ece47abebe1621d05ee6b0e6ed
+    :git: https://github.com/Alamofire/Alamofire.git
+  CodableAlamofire:
+    :commit: 32a155539c25a862aa979c2d4c53090afbafadae
+    :git: https://github.com/Otbivnoe/CodableAlamofire.git
 
 SPEC CHECKSUMS:
+  Alamofire: 4c2bf7fa03c4a626163606de0a417568c270575e
+  CodableAlamofire: 14c935ed3fbc51f703da97603147eda24dbe1d49
   FSCalendar: a04b09f16f811bc92e82f3cf852a15225233b9d5
   GoogleMaps: 8436ab5d1c25e36915b2f7416d0c8e3fa2e76c61
   GooglePlacePicker: 755f10343d71280c7b016823e73fbae9625dfa8a
   GooglePlaces: aafe5990fa7951e98e078761bbdaaf236d7e0c65
+  Realm: f91fb43bd474c4f731a116ebf7392c75dd015920
+  RealmSwift: 207f12a4a36b696c5183c60a1c06d70234a23e56
 
-PODFILE CHECKSUM: 6e8319e2f7887477acea0c1772b077cf4ec7e3a9
+PODFILE CHECKSUM: 5ac49fcf3665787d1271c1a432718d4fd0ca055f
 
-COCOAPODS: 1.3.0
+COCOAPODS: 1.2.1
