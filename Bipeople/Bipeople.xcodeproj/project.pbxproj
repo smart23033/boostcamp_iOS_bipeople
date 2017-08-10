@@ -21,6 +21,8 @@
 		A219812D1F39771E00D0F5F7 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219812C1F39771E00D0F5F7 /* HistoryTableViewController.swift */; };
 		A219812F1F39772700D0F5F7 /* HistoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219812E1F39772700D0F5F7 /* HistoryDetailViewController.swift */; };
 		A21981311F39774400D0F5F7 /* HistoryChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21981301F39774400D0F5F7 /* HistoryChartViewController.swift */; };
+		A25398801F3C166100DDE48E /* Record.swift in Sources */ = {isa = PBXBuildFile; fileRef = A253987F1F3C166100DDE48E /* Record.swift */; };
+		A25398821F3C166600DDE48E /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25398811F3C166600DDE48E /* Track.swift */; };
 		A258388C1F39A11A00BECEA3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A258388B1F39A11A00BECEA3 /* Extensions.swift */; };
 		CA581E36F745E69C960E75F5 /* Pods_Bipeople.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA1522085776953070CF67BC /* Pods_Bipeople.framework */; };
 		F13AB3531F3A78AD0038B2CF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */; };
@@ -46,6 +48,8 @@
 		A219812C1F39771E00D0F5F7 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
 		A219812E1F39772700D0F5F7 /* HistoryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailViewController.swift; sourceTree = "<group>"; };
 		A21981301F39774400D0F5F7 /* HistoryChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryChartViewController.swift; sourceTree = "<group>"; };
+		A253987F1F3C166100DDE48E /* Record.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Record.swift; sourceTree = "<group>"; };
+		A25398811F3C166600DDE48E /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		A258388B1F39A11A00BECEA3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		EA1522085776953070CF67BC /* Pods_Bipeople.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bipeople.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -96,14 +100,15 @@
 			isa = PBXGroup;
 			children = (
 				30E82D831F38224B00536AFB /* AppDelegate.swift */,
-				A219812A1F39730C00D0F5F7 /* CardView.swift */,
 				A258388B1F39A11A00BECEA3 /* Extensions.swift */,
-				30E82DAB1F38235E00536AFB /* Resources */,
-				30E82DA61F38230C00536AFB /* Settings */,
+				A219812A1F39730C00D0F5F7 /* CardView.swift */,
+				A253987E1F3C15A100DDE48E /* Model */,
 				30E82D981F38227D00536AFB /* Places */,
 				30E82D971F38227500536AFB /* Navigation */,
 				30E82D961F38226D00536AFB /* History */,
 				30E82D951F38225800536AFB /* Social */,
+				30E82DA61F38230C00536AFB /* Settings */,
+				30E82DAB1F38235E00536AFB /* Resources */,
 			);
 			path = Bipeople;
 			sourceTree = "<group>";
@@ -120,7 +125,6 @@
 			children = (
 				30E82DAA1F38234000536AFB /* Controller */,
 				30E82DA91F38233C00536AFB /* View */,
-				30E82DA81F38233600536AFB /* Model */,
 			);
 			name = History;
 			sourceTree = "<group>";
@@ -145,13 +149,6 @@
 			children = (
 			);
 			name = Settings;
-			sourceTree = "<group>";
-		};
-		30E82DA81F38233600536AFB /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Model;
 			sourceTree = "<group>";
 		};
 		30E82DA91F38233C00536AFB /* View */ = {
@@ -195,6 +192,15 @@
 				EA1522085776953070CF67BC /* Pods_Bipeople.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A253987E1F3C15A100DDE48E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A253987F1F3C166100DDE48E /* Record.swift */,
+				A25398811F3C166600DDE48E /* Track.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -341,7 +347,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F18C67261F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift in Sources */,
+				A25398821F3C166600DDE48E /* Track.swift in Sources */,
 				A21981311F39774400D0F5F7 /* HistoryChartViewController.swift in Sources */,
+				A25398801F3C166100DDE48E /* Record.swift in Sources */,
 				A219812F1F39772700D0F5F7 /* HistoryDetailViewController.swift in Sources */,
 				A219812D1F39771E00D0F5F7 /* HistoryTableViewController.swift in Sources */,
 				A21981291F3972FC00D0F5F7 /* HistoryCell.swift in Sources */,

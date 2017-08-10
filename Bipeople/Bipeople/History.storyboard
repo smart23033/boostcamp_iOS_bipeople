@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13168.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="GJH-ux-c6H">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13178.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="GJH-ux-c6H">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13147.4"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13156.2"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -91,7 +91,7 @@
                                 </segments>
                             </segmentedControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wcW-aI-mFE" userLabel="Chart">
-                                <rect key="frame" x="16" y="148.5" width="343" height="320"/>
+                                <rect key="frame" x="16" y="146" width="343" height="320"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NNG-aQ-p1g" userLabel="Calendar" customClass="FSCalendar">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="320"/>
@@ -122,7 +122,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h7T-SQ-fSD" customClass="CardView" customModule="Bipeople" customModuleProvider="target">
-                                <rect key="frame" x="16" y="484.5" width="343" height="133.5"/>
+                                <rect key="frame" x="16" y="482" width="343" height="133.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="X4R-i8-r9O">
                                         <rect key="frame" x="8" y="14" width="103" height="106.5"/>
@@ -195,27 +195,27 @@
                                     <constraint firstItem="X4R-i8-r9O" firstAttribute="width" secondItem="h7T-SQ-fSD" secondAttribute="width" multiplier="0.3" id="ghc-iv-JSg"/>
                                 </constraints>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="FsU-sR-QDa">
-                                <rect key="frame" x="57" y="120" width="262" height="20.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="FsU-sR-QDa">
+                                <rect key="frame" x="47.5" y="120" width="281.5" height="18"/>
                                 <subviews>
-                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="17-08-09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mdX-n4-4LX" userLabel="Start Label">
-                                        <rect key="frame" x="0.0" y="0.0" width="74" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2017-08-09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mdX-n4-4LX" userLabel="Start Label">
+                                        <rect key="frame" x="0.0" y="0.0" width="84" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="NoW-Yc-JUu" appends="YES" id="Pij-yy-MR9"/>
                                         </connections>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="~" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bAw-TU-FYo">
-                                        <rect key="frame" x="94" y="0.0" width="74" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="~" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bAw-TU-FYo">
+                                        <rect key="frame" x="104" y="0.0" width="76.5" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="17-09-21" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6x5-Lp-7sU" userLabel="End Label">
-                                        <rect key="frame" x="188" y="0.0" width="74" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2017-09-21" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6x5-Lp-7sU" userLabel="End Label">
+                                        <rect key="frame" x="200.5" y="0.0" width="81" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                         <connections>
@@ -238,6 +238,7 @@
                             <constraint firstItem="wcW-aI-mFE" firstAttribute="leading" secondItem="KMo-Zf-rbb" secondAttribute="leadingMargin" id="eWU-3y-Lik"/>
                             <constraint firstItem="h7T-SQ-fSD" firstAttribute="leading" secondItem="KMo-Zf-rbb" secondAttribute="leadingMargin" id="m4M-wS-fFr"/>
                             <constraint firstItem="h7T-SQ-fSD" firstAttribute="height" secondItem="KMo-Zf-rbb" secondAttribute="height" multiplier="0.2" id="pRc-vp-BoW"/>
+                            <constraint firstItem="FsU-sR-QDa" firstAttribute="width" secondItem="KMo-Zf-rbb" secondAttribute="width" multiplier="0.75" id="uWi-98-Z4W"/>
                             <constraint firstItem="wcW-aI-mFE" firstAttribute="top" secondItem="FsU-sR-QDa" secondAttribute="bottom" constant="8" id="vXI-3P-inm"/>
                         </constraints>
                     </view>
@@ -274,7 +275,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y3Z-50-kGl" customClass="CardView" customModule="Bipeople" customModuleProvider="target">
-                                <rect key="frame" x="16" y="100.5" width="343" height="213.5"/>
+                                <rect key="frame" x="16" y="140.5" width="343" height="213.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="gGZ-HV-N3j">
                                         <rect key="frame" x="8" y="22" width="103" height="170.5"/>
@@ -372,19 +373,19 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="주행 정보" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A5r-ZJ-gYD">
-                                <rect key="frame" x="16" y="72" width="63.5" height="20.5"/>
+                                <rect key="frame" x="16" y="112" width="63.5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="지도" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XdY-j6-lNB">
-                                <rect key="frame" x="16" y="339" width="29.5" height="20.5"/>
+                                <rect key="frame" x="16" y="379" width="29.5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cAP-c5-XNN">
-                                <rect key="frame" x="16" y="367.5" width="343" height="266.5"/>
+                                <rect key="frame" x="16" y="407.5" width="343" height="266.5"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
@@ -416,7 +417,7 @@
                     <tabBarItem key="tabBarItem" systemItem="history" id="TNU-xF-B0o"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="LZD-ED-hzh">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
