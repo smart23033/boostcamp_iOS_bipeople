@@ -30,6 +30,9 @@
 		A21981311F39774400D0F5F7 /* HistoryChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21981301F39774400D0F5F7 /* HistoryChartViewController.swift */; };
 		A258388C1F39A11A00BECEA3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A258388B1F39A11A00BECEA3 /* Extensions.swift */; };
 		CA581E36F745E69C960E75F5 /* Pods_Bipeople.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA1522085776953070CF67BC /* Pods_Bipeople.framework */; };
+		F1372F381F3C4A97002D52A2 /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1372F371F3C4A96002D52A2 /* NavigationManager.swift */; };
+		F1372F3B1F3C8F61002D52A2 /* CustomInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1372F3A1F3C8F61002D52A2 /* CustomInfoWindow.xib */; };
+		F1372F3D1F3C9019002D52A2 /* CustomInfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1372F3C1F3C9019002D52A2 /* CustomInfoWindow.swift */; };
 		F13AB3531F3A78AD0038B2CF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */; };
 		F18C67261F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18C67251F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift */; };
 /* End PBXBuildFile section */
@@ -62,6 +65,9 @@
 		A21981301F39774400D0F5F7 /* HistoryChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryChartViewController.swift; sourceTree = "<group>"; };
 		A258388B1F39A11A00BECEA3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		EA1522085776953070CF67BC /* Pods_Bipeople.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bipeople.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1372F371F3C4A96002D52A2 /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
+		F1372F3A1F3C8F61002D52A2 /* CustomInfoWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomInfoWindow.xib; sourceTree = "<group>"; };
+		F1372F3C1F3C9019002D52A2 /* CustomInfoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInfoWindow.swift; sourceTree = "<group>"; };
 		F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		F18C67251F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiPeopleNavigationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -144,6 +150,7 @@
 				30E82D971F38227500536AFB /* Navigation */,
 				30E82D961F38226D00536AFB /* History */,
 				30E82D951F38225800536AFB /* Social */,
+				F1372F3C1F3C9019002D52A2 /* CustomInfoWindow.swift */,
 			);
 			path = Bipeople;
 			sourceTree = "<group>";
@@ -168,6 +175,7 @@
 		30E82D971F38227500536AFB /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				F1372F371F3C4A96002D52A2 /* NavigationManager.swift */,
 				F18C67251F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift */,
 			);
 			name = Navigation;
@@ -224,6 +232,7 @@
 				30E82DA31F38230700536AFB /* Settings.storyboard */,
 				30E82DA11F3822F600536AFB /* History.storyboard */,
 				30E82D9E1F3822ED00536AFB /* Navigation.storyboard */,
+				F1372F3A1F3C8F61002D52A2 /* CustomInfoWindow.xib */,
 				30E82D9C1F3822E100536AFB /* Places.storyboard */,
 				30E82D991F3822D200536AFB /* Social.storyboard */,
 				30E82D8A1F38224B00536AFB /* Assets.xcassets */,
@@ -319,6 +328,7 @@
 				30E82D8B1F38224B00536AFB /* Assets.xcassets in Resources */,
 				30E82D891F38224B00536AFB /* Main.storyboard in Resources */,
 				30E82D9B1F3822D200536AFB /* Social.storyboard in Resources */,
+				F1372F3B1F3C8F61002D52A2 /* CustomInfoWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,9 +361,20 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Bipeople/Pods-Bipeople-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/CodableAlamofire/CodableAlamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/FSCalendar/FSCalendar.framework",
+				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
+				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CodableAlamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FSCalendar.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -375,7 +396,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -398,6 +419,8 @@
 				A219812B1F39730C00D0F5F7 /* CardView.swift in Sources */,
 				302016291F3C2BE20073A493 /* GetServices.swift in Sources */,
 				30E82D841F38224B00536AFB /* AppDelegate.swift in Sources */,
+				F1372F381F3C4A97002D52A2 /* NavigationManager.swift in Sources */,
+				F1372F3D1F3C9019002D52A2 /* CustomInfoWindow.swift in Sources */,
 				A258388C1F39A11A00BECEA3 /* Extensions.swift in Sources */,
 				302016251F3C26050073A493 /* ToiletResponse.swift in Sources */,
 			);
@@ -564,7 +587,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				DEVELOPMENT_TEAM = NJRMGGTV4H;
 				INFOPLIST_FILE = Bipeople/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = kr.or.connect.boostcamp.Bipeople;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -582,7 +605,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				DEVELOPMENT_TEAM = NJRMGGTV4H;
 				INFOPLIST_FILE = Bipeople/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = kr.or.connect.boostcamp.Bipeople;
 				PRODUCT_NAME = "$(TARGET_NAME)";

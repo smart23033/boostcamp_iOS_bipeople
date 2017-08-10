@@ -36,12 +36,13 @@ class BiPeopleNavigationViewController: UIViewController {
         locationManager.startUpdatingLocation()
         locationManager.delegate = self
         
+        
         /*******************************************************************************************/
         // Google Map View 높이 설정 - 맵 하단이 탭바 컨트롤러에 가려지는 것을 막기 위해, 탭바 높이 만큼 축소
         let mapViewHeight = view.frame.height - (tabBarController?.tabBar.frame.height ?? 0)
         let mapViewBounds = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: mapViewHeight)
         
-        //
+        // 카메라 초기화
         let camera = GMSCameraPosition.camera(withLatitude: 0.0, longitude: 0.0, zoom: zoomLevel)
         
         // Google Map View 초기화
@@ -58,6 +59,7 @@ class BiPeopleNavigationViewController: UIViewController {
         navigationMapView.isHidden = true
         self.view.insertSubview(self.navigationMapView, at: 0)
         
+        
         /*******************************************************************************************/
         // GMS(Google Mobile Service) 장소 자동완성 검색기능 설정
         resultsViewController = GMSAutocompleteResultsViewController()
@@ -68,13 +70,13 @@ class BiPeopleNavigationViewController: UIViewController {
         
         // 장소 검색창을 네비게이션 타이틀 위치에 삽입
         searchPlaceController.searchBar.sizeToFit()
-        self.navigationItem.titleView = searchPlaceController?.searchBar
+        self.navigationItem.titleView = searchPlaceController.searchBar
         
         // When UISearchController presents the results view, present it in
-        // this view controller, not one further up the chain.
+        // this view controller, not one further up the chain...
         self.definesPresentationContext = true
         
-        // Prevent the navigation bar from being hidden when searching.
+        // Prevent the navigation bar from being hidden when searching...
         searchPlaceController.hidesNavigationBarDuringPresentation = false
     }
 }
@@ -82,13 +84,23 @@ class BiPeopleNavigationViewController: UIViewController {
 /// CoreLocation 네비게이션 작동 시에 사용
 extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
     
-    // Handle incoming location events.
+    /// Handle incoming location events...
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location: CLLocation = locations.last!
-        print("Location: \(location)")
         
-        let camera = GMSCameraPosition.camera(withLatitude: location.coordinate.latitude, longitude: location.coordinate.longitude, zoom: zoomLevel)
+        guard let location = locations.last else {
+            print("Location is nil")
+            return
+        }
         
+        print("Updated Location: ", location)
+        
+        let camera = GMSCameraPosition.camera(
+            withLatitude: location.coordinate.latitude,
+            longitude: location.coordinate.longitude,
+            zoom: zoomLevel
+        )
+        
+        // 위치가 업데이트 된 지점으로 맵을 이동
         if navigationMapView.isHidden {
             navigationMapView.isHidden = false
             navigationMapView.camera = camera
@@ -97,44 +109,60 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
         }
     }
     
-    // Handle authorization for the location manager.
+    /// FOR DEBUG: Handle authorization for the location manager...
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .restricted:
-            print("Location access was restricted.")
+            print("Location access was restricted...")
+        
         case .denied:
-            print("User denied access to location.")
-            // Display the map using the default location.
+            print("User denied access to location...")
             navigationMapView.isHidden = false
+            
+            // 환경설정 페이지로 이동시켜서 설정하게 만들어야 함
+        
         case .notDetermined:
-            print("Location status not determined.")
+            print("Location status not determined...")
+        
         case .authorizedAlways: fallthrough
         case .authorizedWhenInUse:
-            print("Location status is OK.")
+            print("Location status is OK...")
         }
     }
     
-    // Handle location manager errors.
+    /// FOR DEBUG: Handle location manager errors...
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         locationManager.stopUpdatingLocation()
-        print("Error: \(error)")
+        print("location update fail with: ", error)
     }
 }
 
+/// 구글 맵뷰 Delegate
 extension BiPeopleNavigationViewController: GMSMapViewDelegate {
-    func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
-        pickPlace(coordinate)
+    
+    func mapView(_ mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView? {
+        
+        guard let infoWindow = Bundle.main.loadNibNamed("CustomInfoWindow", owner: self, options: nil)?.first as? CustomInfoWindow else {
+            print("NIL!!")
+            return nil
+        }
+        
+        print("INFOWINDOW")
+        return infoWindow
     }
     
-    func pickPlace(_ coordinate: CLLocationCoordinate2D) {
-        let VIEWPORT_DELTA = 0.001
+    /// 맵에서 위치가 선택(터치)된 경우
+    func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+    
+        let VIEWPORT_DELTA = 0.001 // 선택된 지점 주변 반경(맵에서 보여줄)
         
-        let northEast = CLLocationCoordinate2DMake(coordinate.latitude + VIEWPORT_DELTA, coordinate.longitude + VIEWPORT_DELTA)
-        let southWest = CLLocationCoordinate2DMake(coordinate.latitude - VIEWPORT_DELTA, coordinate.longitude - VIEWPORT_DELTA)
+        let northEast = CLLocationCoordinate2DMake(coordinate.latitude + VIEWPORT_DELTA, coordinate.longitude + VIEWPORT_DELTA) //   ㄱ
+        let southWest = CLLocationCoordinate2DMake(coordinate.latitude - VIEWPORT_DELTA, coordinate.longitude - VIEWPORT_DELTA) // ㄴ
         
         let viewport = GMSCoordinateBounds(coordinate: northEast, coordinate: southWest)
         let config = GMSPlacePickerConfig(viewport: viewport)
         
+        // 맵에서 선택(터치)된 지점의 주변 장소 후보들을 보여주는 화면으로 전환
         let placePicker = GMSPlacePicker(config: config)
         placePicker.pickPlace{ (place, error) -> () in
             
@@ -148,15 +176,15 @@ extension BiPeopleNavigationViewController: GMSMapViewDelegate {
                 return
             }
             
-            self.navigationManager.setMarker(
+            // 선택된 지점을 네비게이션 도착지로 결정하고, 도착지 마커를 표시
+            try? self.navigationManager.setMarker(
                 location: selectedPlace.coordinate,
                 name: selectedPlace.name,
                 address: selectedPlace.formattedAddress
             )
             
-            print(selectedPlace.name)
-            
-            // 해당 위치에 지명이 딸린 마커를 생성한다
+            // FOR DEBUG
+            print("Selected Place Name: ", selectedPlace.name)
         }
     }
 }
@@ -166,12 +194,13 @@ extension BiPeopleNavigationViewController: GMSAutocompleteResultsViewController
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController, didAutocompleteWith place: GMSPlace) {
         searchPlaceController?.isActive = false
-        // Do something with the selected place.
-        print("Place name: \(place.name)")
-        print("Place address: \(place.formattedAddress ?? "Unknown")")
-        print("Place attributions: \(place.attributions ?? NSAttributedString())")
         
-        /// 선택된 장소로 카메라를 이동
+        // FOR DEBUG
+        print("Place name: ", place.name)
+        print("Place address: ", place.formattedAddress ?? "Unknown")
+        print("Place attributions: ", place.attributions ?? NSAttributedString())
+        
+        // 선택된 장소로 화면을 전환하기 위한 카메라 정보
         let camera = GMSCameraPosition.camera(withLatitude: place.coordinate.latitude, longitude: place.coordinate.longitude, zoom: zoomLevel)
 
         if navigationMapView.isHidden {
@@ -181,23 +210,26 @@ extension BiPeopleNavigationViewController: GMSAutocompleteResultsViewController
             navigationMapView.animate(to: camera)
         }
         
-        self.navigationManager.setMarker(
+        // 장소 검색을 통해 선택된 지점을 도착지로 결정하고, 도착지 마커를 표시
+        try? self.navigationManager.setMarker(
             location: place.coordinate,
             name: place.name,
             address: place.formattedAddress
         )
     }
     
+    /// FOR DEBUG: 장소검색 자동완성에서 에러 발생 시
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController, didFailAutocompleteWithError error: Error) {
-        // TODO: handle the error.
-        print("Error: ", error.localizedDescription)
+        // TODO: handle the error...
+        print("result update fail with : ", error.localizedDescription)
     }
     
-    // Turn the network activity indicator on and off again.
+    /// Turn the network activity indicator on
     func didRequestAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
     }
     
+    /// Turn the network activity indicator off
     func didUpdateAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }

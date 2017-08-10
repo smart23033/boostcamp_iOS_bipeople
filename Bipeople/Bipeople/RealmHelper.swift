@@ -15,7 +15,6 @@ class RealmHelper: NSObject {
     }
     
     static func addData<T: Object>(data: T) {
-        let realm = try! Realm()
         
         try! realm.write {
             realm.add(data)
@@ -29,15 +28,15 @@ class RealmHelper: NSObject {
         }
     }
     
-    static func removeData<T: Object>(data: Results<T>) {
-        let realm = try! Realm()
+    static func removeData<T>(data: Results<T>) {
+        
         try! realm.write {
             realm.delete(data)
         }
     }
     
     static func removeAllData() {
-        let realm = try! Realm()
+        
         try! realm.write {
             realm.deleteAll()
         }
@@ -49,13 +48,13 @@ class RealmHelper: NSObject {
     }
     
     static func objectFromQuery<T: Object>(data: T, query: NSPredicate) -> T? {
-        let realm = try! Realm()
+        
         
         guard let object = realm.objects(T.self).filter("id = 1").first else { return nil }
         return object
     }
     static func updateObject<T: Object>(data: T, query: NSPredicate) {
-        let realm = try! Realm()
+        
         
         var object = realm.objects(T.self).filter("id = 1").first
         object = data

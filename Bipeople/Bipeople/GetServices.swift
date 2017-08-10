@@ -16,9 +16,8 @@ class GetServices {
     static func fetchList <T: Codable> (_ type: T.Type, success:@escaping (Any) -> Void, fail:@escaping (_ error:NSError)->Void)->Void  {
         Alamofire
             .request(URL(string: "http://openAPI.seoul.go.kr:8088/4944627561736d613130334c75587853/json/SearchPublicToiletPOIService/1/200/")!)
-            
             .responseJSON { response in
-                print(response.data!)
+                print(response.data)
                 print(response)
                 
                 //                let response: DataResponse<T> = response.flatMap {
@@ -42,14 +41,16 @@ class GetServices {
                 //                } catch {
                 //                    print("\(error)")
                 //                }
-                if let decoded = try? JSONDecoder().decode(
-                    PublicResponse.self,
-                    from: response.data!
-                    ) {
+                do {
+                    let decoded = try JSONDecoder().decode(
+                        PublicResponse.self,
+                        from: response.data!
+                    )
+                    
                     print("decoded:", decoded)
                     success(decoded)
-                } else {
-                    print("Not working")
+                } catch {
+                    print("Not working with: ", error)
                 }
                 
                 
