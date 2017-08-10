@@ -21,6 +21,7 @@
 import RealmSwift
 
 class Record: Object {
+    
     @objc dynamic var _id: Int = 0
     @objc dynamic var departure: String = ""
     @objc dynamic var arrival: String = ""
@@ -31,6 +32,20 @@ class Record: Object {
     @objc dynamic var highestSpeed: Double = 0.0
     @objc dynamic var calories: Double = 0.0
     @objc dynamic var createdAt: Date = Date()
+    
+    convenience init(departure: String, arrival: String, distance: Double, ridingTime: TimeInterval, restTime: TimeInterval, averageSpeed: Double, highestSpeed: Double, calories: Double) {
+        self.init()
+        self._id = Record.autoIncrement()
+        self.departure = departure
+        self.arrival = arrival
+        self.distance = distance
+        self.ridingTime = ridingTime
+        self.restTime = restTime
+        self.averageSpeed = averageSpeed
+        self.highestSpeed = highestSpeed
+        self.calories = calories
+        self.createdAt = Date()
+    }
     
     //Incrementa ID
     static func autoIncrement() -> Int {
