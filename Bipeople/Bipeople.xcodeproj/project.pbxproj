@@ -24,6 +24,7 @@
 		A258388C1F39A11A00BECEA3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A258388B1F39A11A00BECEA3 /* Extensions.swift */; };
 		CA581E36F745E69C960E75F5 /* Pods_Bipeople.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA1522085776953070CF67BC /* Pods_Bipeople.framework */; };
 		F13AB3531F3A78AD0038B2CF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */; };
+		F18B18041F3C27BE008A45FB /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18B18031F3C27BE008A45FB /* NavigationManager.swift */; };
 		F18C67261F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18C67251F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		A258388B1F39A11A00BECEA3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		EA1522085776953070CF67BC /* Pods_Bipeople.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bipeople.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		F18B18031F3C27BE008A45FB /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
 		F18C67251F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiPeopleNavigationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -129,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				F18C67251F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift */,
+				F18B18031F3C27BE008A45FB /* NavigationManager.swift */,
 			);
 			name = Navigation;
 			sourceTree = "<group>";
@@ -306,9 +309,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Bipeople/Pods-Bipeople-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/FSCalendar/FSCalendar.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FSCalendar.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -330,7 +336,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -342,6 +348,7 @@
 			files = (
 				F18C67261F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift in Sources */,
 				A21981311F39774400D0F5F7 /* HistoryChartViewController.swift in Sources */,
+				F18B18041F3C27BE008A45FB /* NavigationManager.swift in Sources */,
 				A219812F1F39772700D0F5F7 /* HistoryDetailViewController.swift in Sources */,
 				A219812D1F39771E00D0F5F7 /* HistoryTableViewController.swift in Sources */,
 				A21981291F3972FC00D0F5F7 /* HistoryCell.swift in Sources */,
