@@ -7,19 +7,18 @@
 //
 
 import Foundation
-import CodableAlamofire
 
-class Toilet: Decodable {
-    var poi_ID : String
-    var fName : String
-    var aName : String
-    var cName : String
-    var center_x1 : String
-    var center_y1 : String
-    var x_Wgs84 : String
-    var y_Wgs84 : String
-    var insertDate : String
-    var updateDate : String
+class Toilet: Codable {
+    var poi_ID : String?
+    var fName : String?
+    var aName : String?
+    var cName : String?
+    var center_x1 : Double?
+    var center_y1 : Double?
+    var x_Wgs84 : Double?
+    var y_Wgs84 : Double?
+    var insertDate : String?
+    var updateDate : String?
     
     private enum CodingKeys : String, CodingKey {
         case poi_ID = "POI_ID"
@@ -34,28 +33,28 @@ class Toilet: Decodable {
         case updateDate = "UPDATEDATE"
     }
     
-//    init(
-//        poi_ID: String,
-//        fName: String,
-//        aName: String,
-//        cName: String,
-//        center_x1: String,
-//        center_y1: String,
-//        x_Wgs84: String,
-//        y_Wgs84: String,
-//        insertDate: String,
-//        updateDate: String
-//        ) {
-//        self.poi_ID = poi_ID
-//        self.fName = fName
-//        self.aName = aName
-//        self.cName = cName
-//        self.center_x1 = center_x1
-//        self.center_y1 = center_y1
-//        self.x_Wgs84 = x_Wgs84
-//        self.y_Wgs84 = y_Wgs84
-//        self.insertDate = insertDate
-//        self.updateDate = updateDate
-//    }
-    
+    init(
+        poi_ID: String,
+        fName: String,
+        aName: String,
+        cName: String,
+        center_x1: Double,
+        center_y1: Double,
+        x_Wgs84: Double,
+        y_Wgs84: Double,
+        insertDate: String,
+        updateDate: String
+        ) {
+        self.poi_ID = poi_ID
+        self.fName = fName
+        self.aName = aName
+        self.cName = cName
+        self.center_x1 = center_x1
+        self.center_y1 = center_y1
+        self.x_Wgs84 = x_Wgs84
+        self.y_Wgs84 = y_Wgs84
+        self.insertDate = insertDate
+        self.updateDate = updateDate
+    }
 }
+

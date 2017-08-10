@@ -7,12 +7,12 @@
 //
 
 import UIKit
-import CodableAlamofire
 
-struct ToiletResponse: Decodable {
-    var listTotalCount : String
-    var result : String
-    var row : [Toilet]
+class ToiletResponse: Codable {
+    var listTotalCount : Int?
+    var result : [String : String]?
+    //[CODE: String, MESSAGE: String)?
+    var row : [Toilet]?
     
     private enum CodingKeys : String, CodingKey {
         case listTotalCount = "list_total_count"
@@ -20,13 +20,14 @@ struct ToiletResponse: Decodable {
         case row = "row"
     }
     
-//    init(
-//        listTotalCount: String,
-//        result: String,
-//        row:[Toilet]
-//        ) {
-//        self.listTotalCount = listTotalCount
-//        self.result = result
-//        self.row = row
-//    }
+    init(
+        listTotalCount: Int,
+        result: [String : String],
+        row:[Toilet]
+        ) {
+        self.listTotalCount = listTotalCount
+        self.result = result
+        self.row = row
+    }
 }
+

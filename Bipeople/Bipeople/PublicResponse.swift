@@ -6,39 +6,39 @@
 //  Copyright © 2017년 futr_blu. All rights reserved.
 //
 
-import CodableAlamofire
 
-struct PublicResponse: Decodable {
+struct PublicResponse: Codable {
     
-//    enum DataType: String, Codable {
-//        case wifi = "wifi"
-//        case toilet = "toilet"
-//        case facility = "facility"
-//    }
-//    var service: DataType?
+    //    enum DataType: String, Codable {
+    //        case wifi = "wifi"
+    //        case toilet = "toilet"
+    //        case facility = "facility"
+    //    }
+    //    var service: DataType?
     //var serviceModel : AnyClass?
-
-//    init?(service: DataType) {
-//        self.service = service
-//        switch service {
-//        case .wifi:
-//            self.serviceModel = PlaceListVC
-//        case .toilet:
-//            self.serviceModel = PlaceListVC
-//        case .facility:
-//            self.serviceModel = PlaceListVC
-//        }
-        //self.serviceModel =
-//    }
     
-    var searchPublicToiletPOIService : ToiletResponse
+    //    init?(service: DataType) {
+    //        self.service = service
+    //        switch service {
+    //        case .wifi:
+    //            self.serviceModel = PlaceListVC
+    //        case .toilet:
+    //            self.serviceModel = PlaceListVC
+    //        case .facility:
+    //            self.serviceModel = PlaceListVC
+    //        }
+    //self.serviceModel =
+    //    }
+    
+    var searchPublicToiletPOIService : ToiletResponse?
     private enum CodingKeys : String, CodingKey {
         case searchPublicToiletPOIService = "SearchPublicToiletPOIService"
     }
-//    init(searchPublicToiletPOIService: ToiletResponse) {
-//        self.searchPublicToiletPOIService = searchPublicToiletPOIService
-//    }
+    init(searchPublicToiletPOIService: ToiletResponse) {
+        self.searchPublicToiletPOIService = searchPublicToiletPOIService
+    }
 }
+
 
 //extension PublicResponse: Equatable {
 //    public static func ==(lhs: PublicResponse, rhs: PublicResponse) -> Bool {
