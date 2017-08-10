@@ -94,18 +94,11 @@ class HistoryChartViewController: UIViewController, FSCalendarDelegate {
     
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
         
-        let format = DateFormatter()
-        //        format.locale = Locale(identifier: "ko_kr")
-        //        format.timeZone = TimeZone(identifier: "KST")
-        format.dateFormat = "yyyy-MM-dd"
-        
-        print(format.string(from: date))
-        
         if startSwitch == .on && endSwitch == .off {
-            self.startLabel.text = format.string(from: date)
+            self.startLabel.text = date.toString()
         }
         else if startSwitch == .off && endSwitch == .on {
-            self.endLabel.text = format.string(from: date)
+            self.endLabel.text = date.toString()
         }
         
         self.calendar.isHidden = true

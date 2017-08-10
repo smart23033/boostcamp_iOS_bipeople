@@ -6,4 +6,12 @@
 //  Copyright © 2017년 futr_blu. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+class HistoryCell: UITableViewCell {
+    
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var distanceLabel: UILabel!
+    
+}

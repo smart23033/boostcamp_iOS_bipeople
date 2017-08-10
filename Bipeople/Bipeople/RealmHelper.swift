@@ -53,6 +53,7 @@ class RealmHelper: NSObject {
         guard let object = realm.objects(T.self).filter("id = 1").first else { return nil }
         return object
     }
+    
     static func updateObject<T: Object>(data: T, query: NSPredicate) {
         
         
