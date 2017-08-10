@@ -44,7 +44,7 @@ class GetServices {
                 //                }
                 if let decoded = try? JSONDecoder().decode(
                     PublicResponse.self,
-                    from: response as! Data
+                    from: response.data!
                     ) {
                     print("decoded:", decoded)
                     success(decoded)
