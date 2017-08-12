@@ -9,7 +9,6 @@
 import Foundation
 import Alamofire
 import RealmSwift
-import CodableAlamofire
 
 
 class GetServices {
@@ -17,7 +16,7 @@ class GetServices {
         Alamofire
             .request(URL(string: "http://openAPI.seoul.go.kr:8088/4944627561736d613130334c75587853/json/SearchPublicToiletPOIService/1/200/")!)
             .responseJSON { response in
-                print(response.data)
+                print(response.data ?? "response data is nil")
                 print(response)
                 
                 //                let response: DataResponse<T> = response.flatMap {

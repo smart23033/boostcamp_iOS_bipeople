@@ -61,6 +61,35 @@ class BiPeopleNavigationViewController: UIViewController {
         
         
         /*******************************************************************************************/
+        // 출발 버튼을 생성하여, 우측 하단에 배치
+        let posX = navigationMapView.frame.width - 66   // navigationMapView.frame.width * 0.84
+        let posY = navigationMapView.frame.height - 210 // navigationMapView.frame.height * 0.7
+        
+        let lengthOfSide = CGFloat(58)
+        
+        print("posX: ", posX)
+        print("posY: ", posY)
+        print("lengthOfSide: ", lengthOfSide)
+        
+        let startButton = UIButton(frame: CGRect(x: posX, y: posY, width: lengthOfSide, height: lengthOfSide))
+        
+        startButton.layer.cornerRadius = lengthOfSide * 0.5
+        startButton.clipsToBounds = true
+        startButton.layer.shadowColor = UIColor.black.cgColor
+        startButton.layer.shadowRadius = 2
+        startButton.layer.shadowOpacity = 0.8
+        startButton.layer.shadowOffset = CGSize.zero
+        startButton.setTitle("출발", for: .normal)
+        startButton.setTitleColor(UIColor.white, for: .normal)
+        startButton.backgroundColor = UIColor(red: 28/255.0, green: 176/255.0, blue: 184/255.0, alpha: 1.0)
+        startButton.autoresizingMask = []
+        
+        startButton.addTarget(self, action: #selector(didTapStartButton), for: .touchUpInside)
+        
+        self.view.addSubview(startButton)
+        
+        
+        /*******************************************************************************************/
         // GMS(Google Mobile Service) 장소 자동완성 검색기능 설정
         resultsViewController = GMSAutocompleteResultsViewController()
         searchPlaceController = UISearchController(searchResultsController: resultsViewController)
@@ -78,6 +107,22 @@ class BiPeopleNavigationViewController: UIViewController {
         
         // Prevent the navigation bar from being hidden when searching...
         searchPlaceController.hidesNavigationBarDuringPresentation = false
+    }
+    
+    @objc func didTapStartButton() {
+        
+        self.navigationManager.getGeoJSONFromTMap(failure: { (error) in
+            print("Error: ", error)
+        }) { data in
+            print("data: ", String(data:data, encoding: .utf8))
+            
+            let decoded = try JSONDecoder().decode(
+                GeoJSON.self,
+                from: data
+            )
+            
+            print(decoded)
+        }
     }
 }
 
@@ -140,15 +185,17 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
 /// 구글 맵뷰 Delegate
 extension BiPeopleNavigationViewController: GMSMapViewDelegate {
     
-    func mapView(_ mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView? {
+    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
         
-        guard let infoWindow = Bundle.main.loadNibNamed("CustomInfoWindow", owner: self, options: nil)?.first as? CustomInfoWindow else {
+        guard let infoWindow = Bundle.main.loadNibNamed("MarkerInfoWindow", owner: self, options: nil)?.first as? MarkerInfoWindow else {
             print("NIL!!")
-            return nil
+            return true
         }
         
-        print("INFOWINDOW")
-        return infoWindow
+        infoWindow.center = mapView.projection.point(for: marker.position)
+        self.view.addSubview(infoWindow)
+        
+        return false
     }
     
     /// 맵에서 위치가 선택(터치)된 경우
