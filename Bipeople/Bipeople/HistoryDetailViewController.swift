@@ -11,25 +11,28 @@ import RealmSwift
 
 class HistoryDetailViewController: UIViewController {
     
+    @IBOutlet weak var titleLabel: UINavigationItem!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var ridingTimeLabel: UILabel!
     @IBOutlet weak var restTimeLabel: UILabel!
     @IBOutlet weak var averageSpeedLabel: UILabel!
     @IBOutlet weak var highestSpeedLabel: UILabel!
     @IBOutlet weak var caloriesLabel: UILabel!
+    @IBOutlet weak var createdAt: UILabel!
+    
+    var record : Record?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let realm = try! Realm()
-        let records = Array(realm.objects(Record.self))
     
-        distanceLabel.text = "\(records.first?.distance ?? 0)"
-        ridingTimeLabel.text = "\(records.first?.ridingTime ?? 0)"
-        restTimeLabel.text = "\(records.first?.restTime ?? 0)"
-        averageSpeedLabel.text = "\(records.first?.averageSpeed ?? 0)"
-        highestSpeedLabel.text = "\(records.first?.highestSpeed ?? 0)"
-        caloriesLabel.text = "\(records.first?.calories ?? 0)"
+        titleLabel.title = "\(record?.departure ?? "unknown") - \(record?.arrival ?? "unknown")"
+        distanceLabel.text = "\(record?.distance ?? 0) km"
+        ridingTimeLabel.text = "\(record?.ridingTime ?? 0)"
+        restTimeLabel.text = "\(record?.restTime ?? 0)"
+        averageSpeedLabel.text = "\(record?.averageSpeed ?? 0) km/h"
+        highestSpeedLabel.text = "\(record?.highestSpeed ?? 0) km/h"
+        caloriesLabel.text = "\(record?.calories ?? 0) kcal"
+        createdAt.text = record?.createdAt.toString()
         
     }
     

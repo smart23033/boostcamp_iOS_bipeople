@@ -14,6 +14,7 @@ import GooglePlaces
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
+    var records = [Record]()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
@@ -32,6 +33,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         tabBarController.selectedIndex = 2
         
         changeTheme(navigationControllers: navControllers)
+        
+        RealmHelper.fetchData(dataList: &records)
+        
+        
+        /* 더미데이터 삽입 */
+        RealmHelper.removeAllData()
+        records.removeAll()
+    
+        for i in 0..<20 {
+            let record = Record(departure: "departure \(i)",
+                arrival: "arrival \(i)",
+                distance: Double(arc4random_uniform(1000)) / Double(10),
+                ridingTime: Double(arc4random_uniform(1000)) / Double(10),
+                restTime: Double(arc4random_uniform(1000)) / Double(10),
+                averageSpeed: Double(arc4random_uniform(1000)) / Double(10),
+                highestSpeed: Double(arc4random_uniform(1000)) / Double(10),
+                calories: Double(arc4random_uniform(1000)) / Double(10))
+            
+            RealmHelper.addData(data: record)
+            records.append(record)
+        }
+        /* 더미데이터 삽입 */
         
         return true
     }
@@ -64,11 +87,11 @@ extension AppDelegate {
     
     func changeTheme(navigationControllers: [UINavigationController]) {
         UIApplication.shared.statusBarStyle = .lightContent
-        UIApplication.shared.delegate?.window??.tintColor = UIColor(red: 28/255.0, green: 176/255.0, blue: 184/255.0, alpha: 1.0)
+        UIApplication.shared.delegate?.window??.tintColor = UIColor.primaryColor
         
         navigationControllers.forEach { (nvc) in
             nvc.topViewController?.navigationController?.navigationBar.isTranslucent = false
-            nvc.topViewController?.navigationController?.navigationBar.barTintColor = UIColor(red: 28/255.0, green: 176/255.0, blue: 184/255.0, alpha: 1.0)
+            nvc.topViewController?.navigationController?.navigationBar.barTintColor = UIColor.primaryColor
             nvc.topViewController?.navigationController?.navigationBar.tintColor = .white
             nvc.topViewController?.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         }
