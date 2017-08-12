@@ -42,8 +42,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         records.removeAll()
     
         for i in 0..<20 {
-            let record = Record(departure: "start \(i)",
-                arrival: "end \(i)",
+            let record = Record(departure: "departure \(i)",
+                arrival: "arrival \(i)",
                 distance: Double(arc4random_uniform(1000)) / Double(10),
                 ridingTime: Double(arc4random_uniform(1000)) / Double(10),
                 restTime: Double(arc4random_uniform(1000)) / Double(10),
@@ -87,11 +87,11 @@ extension AppDelegate {
     
     func changeTheme(navigationControllers: [UINavigationController]) {
         UIApplication.shared.statusBarStyle = .lightContent
-        UIApplication.shared.delegate?.window??.tintColor = UIColor(red: 28/255.0, green: 176/255.0, blue: 184/255.0, alpha: 1.0)
+        UIApplication.shared.delegate?.window??.tintColor = UIColor.primaryColor
         
         navigationControllers.forEach { (nvc) in
             nvc.topViewController?.navigationController?.navigationBar.isTranslucent = false
-            nvc.topViewController?.navigationController?.navigationBar.barTintColor = UIColor(red: 28/255.0, green: 176/255.0, blue: 184/255.0, alpha: 1.0)
+            nvc.topViewController?.navigationController?.navigationBar.barTintColor = UIColor.primaryColor
             nvc.topViewController?.navigationController?.navigationBar.tintColor = .white
             nvc.topViewController?.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         }

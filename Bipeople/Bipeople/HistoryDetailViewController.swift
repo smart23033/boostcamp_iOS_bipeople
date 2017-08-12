@@ -11,6 +11,7 @@ import RealmSwift
 
 class HistoryDetailViewController: UIViewController {
     
+    @IBOutlet weak var titleLabel: UINavigationItem!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var ridingTimeLabel: UILabel!
     @IBOutlet weak var restTimeLabel: UILabel!
@@ -24,6 +25,7 @@ class HistoryDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     
+        titleLabel.title = "\(record?.departure ?? "unknown") - \(record?.arrival ?? "unknown")"
         distanceLabel.text = "\(record?.distance ?? 0) km"
         ridingTimeLabel.text = "\(record?.ridingTime ?? 0)"
         restTimeLabel.text = "\(record?.restTime ?? 0)"
@@ -31,6 +33,7 @@ class HistoryDetailViewController: UIViewController {
         highestSpeedLabel.text = "\(record?.highestSpeed ?? 0) km/h"
         caloriesLabel.text = "\(record?.calories ?? 0) kcal"
         createdAt.text = record?.createdAt.toString()
+        
     }
     
 }

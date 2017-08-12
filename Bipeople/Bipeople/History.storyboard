@@ -428,6 +428,7 @@
                             <constraint firstItem="A5r-ZJ-gYD" firstAttribute="top" secondItem="pX7-EI-3Ey" secondAttribute="bottom" constant="8" id="tQt-oe-ynF"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Title" id="jX8-nY-z12"/>
                     <connections>
                         <outlet property="averageSpeedLabel" destination="jLs-Q9-gVU" id="BTu-ul-g0e"/>
                         <outlet property="caloriesLabel" destination="Nhq-mk-vXI" id="isx-CG-ISR"/>
@@ -436,6 +437,7 @@
                         <outlet property="highestSpeedLabel" destination="I4a-QS-Vnk" id="xfH-eO-Zj2"/>
                         <outlet property="restTimeLabel" destination="A5l-aP-8ex" id="AQ8-bn-hmt"/>
                         <outlet property="ridingTimeLabel" destination="up2-Gw-5d6" id="evZ-fr-Udp"/>
+                        <outlet property="titleLabel" destination="jX8-nY-z12" id="3hf-tx-IIz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kgo-6Q-bdo" userLabel="First Responder" sceneMemberID="firstResponder"/>
