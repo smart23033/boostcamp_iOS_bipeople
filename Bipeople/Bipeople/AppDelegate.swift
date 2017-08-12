@@ -95,7 +95,7 @@ extension AppDelegate {
             nvc.topViewController?.navigationController?.navigationBar.tintColor = .white
             nvc.topViewController?.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         }
-
+        
         
     }
 }
