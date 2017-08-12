@@ -81,7 +81,7 @@ class BiPeopleNavigationViewController: UIViewController {
         startButton.layer.shadowOffset = CGSize.zero
         startButton.setTitle("출발", for: .normal)
         startButton.setTitleColor(UIColor.white, for: .normal)
-        startButton.backgroundColor = UIColor(red: 28/255.0, green: 176/255.0, blue: 184/255.0, alpha: 1.0)
+        startButton.backgroundColor = UIColor.primaryColor
         startButton.autoresizingMask = []
         
         startButton.addTarget(self, action: #selector(didTapStartButton), for: .touchUpInside)
@@ -114,7 +114,7 @@ class BiPeopleNavigationViewController: UIViewController {
         self.navigationManager.getGeoJSONFromTMap(failure: { (error) in
             print("Error: ", error)
         }) { data in
-            print("data: ", String(data:data, encoding: .utf8))
+            print("data: ", String(data:data, encoding: .utf8) ?? "nil")
             
             let decoded = try JSONDecoder().decode(
                 GeoJSON.self,
