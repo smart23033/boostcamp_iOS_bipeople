@@ -9,6 +9,7 @@
 import UIKit
 
 extension Date {
+    // date to string
     func toString() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -17,7 +18,7 @@ extension Date {
 }
 
 extension Double {
-    /// Rounds the double to decimal places value
+    /// 소수점 x 자릿수부터 반올림
     func roundTo(places:Int) -> Double {
         let divisor = pow(10.0, Double(places))
         return (self * divisor).rounded() / divisor

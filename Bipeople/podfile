@@ -15,5 +15,6 @@ target 'Bipeople' do
 
   # SJSJ
   pod ‘FSCalendar’
+  pod 'ScrollableGraphView'
 
 end
