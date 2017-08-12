@@ -84,6 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension AppDelegate {
+    
     func changeTheme(navigationControllers: [UINavigationController]) {
         UIApplication.shared.statusBarStyle = .lightContent
         UIApplication.shared.delegate?.window??.tintColor = UIColor(red: 28/255.0, green: 176/255.0, blue: 184/255.0, alpha: 1.0)
