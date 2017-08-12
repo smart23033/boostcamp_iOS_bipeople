@@ -26,20 +26,20 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="89.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start - End" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TfH-e1-Gyt">
-                                            <rect key="frame" x="8" y="21" width="262.5" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Distance" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="id1-eA-g2Y">
                                             <rect key="frame" x="300" y="34" width="67" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.25098040700000002" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start - End" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TfH-e1-Gyt">
+                                            <rect key="frame" x="8" y="22" width="262.5" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="createdAt" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3hi-AV-MFl">
-                                            <rect key="frame" x="8" y="50" width="262.5" height="16"/>
+                                            <rect key="frame" x="8" y="51" width="262.5" height="16"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -47,20 +47,20 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="id1-eA-g2Y" firstAttribute="centerY" secondItem="WFu-Ke-e3k" secondAttribute="centerY" id="4yH-9f-RLQ"/>
-                                        <constraint firstItem="3hi-AV-MFl" firstAttribute="top" secondItem="TfH-e1-Gyt" secondAttribute="bottom" constant="8" id="5Og-Ve-6Tb"/>
-                                        <constraint firstItem="3hi-AV-MFl" firstAttribute="trailing" secondItem="TfH-e1-Gyt" secondAttribute="trailing" id="LoD-BI-1Q5"/>
-                                        <constraint firstItem="3hi-AV-MFl" firstAttribute="leading" secondItem="TfH-e1-Gyt" secondAttribute="leading" id="X0y-ys-ZkE"/>
-                                        <constraint firstItem="TfH-e1-Gyt" firstAttribute="width" secondItem="WFu-Ke-e3k" secondAttribute="width" multiplier="0.7" id="X2b-40-Ho9"/>
+                                        <constraint firstItem="TfH-e1-Gyt" firstAttribute="top" secondItem="WFu-Ke-e3k" secondAttribute="topMargin" constant="14" id="9fn-gr-3sW"/>
+                                        <constraint firstItem="3hi-AV-MFl" firstAttribute="trailing" secondItem="TfH-e1-Gyt" secondAttribute="trailing" id="BeS-ah-ylc"/>
+                                        <constraint firstItem="3hi-AV-MFl" firstAttribute="leading" secondItem="TfH-e1-Gyt" secondAttribute="leading" id="JjF-aS-pp8"/>
+                                        <constraint firstItem="TfH-e1-Gyt" firstAttribute="width" secondItem="WFu-Ke-e3k" secondAttribute="width" multiplier="0.7" id="PdT-4d-ZMz"/>
                                         <constraint firstItem="id1-eA-g2Y" firstAttribute="trailing" secondItem="WFu-Ke-e3k" secondAttribute="trailingMargin" id="iSR-Lf-hIA"/>
-                                        <constraint firstItem="TfH-e1-Gyt" firstAttribute="leading" secondItem="WFu-Ke-e3k" secondAttribute="leadingMargin" id="x68-3q-55h"/>
-                                        <constraint firstItem="TfH-e1-Gyt" firstAttribute="top" secondItem="WFu-Ke-e3k" secondAttribute="topMargin" constant="13" id="yxn-2Z-IUH"/>
+                                        <constraint firstItem="3hi-AV-MFl" firstAttribute="top" secondItem="TfH-e1-Gyt" secondAttribute="bottom" constant="8" id="jPQ-FP-SRg"/>
+                                        <constraint firstItem="TfH-e1-Gyt" firstAttribute="leading" secondItem="WFu-Ke-e3k" secondAttribute="leadingMargin" id="vi7-Ek-nxi"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="dateLabel" destination="3hi-AV-MFl" id="qY2-TC-Bf5"/>
                                     <outlet property="distanceLabel" destination="id1-eA-g2Y" id="dfM-Dm-117"/>
                                     <outlet property="titleLabel" destination="TfH-e1-Gyt" id="8c8-ti-Gqp"/>
-                                    <segue destination="0J0-6S-UEE" kind="show" id="Zx7-mN-UuS"/>
+                                    <segue destination="0J0-6S-UEE" kind="show" identifier="HistoryDetail" id="Zx7-mN-UuS"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -77,6 +77,9 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="tableView" destination="8Gg-os-3y7" id="VIW-fL-Koy"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EwV-Ix-g3z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -276,7 +279,7 @@
         <!--History Detail View Controller-->
         <scene sceneID="YRH-eu-dXH">
             <objects>
-                <viewController id="0J0-6S-UEE" customClass="HistoryDetailViewController" customModule="Bipeople" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HistoryDetailViewController" id="0J0-6S-UEE" customClass="HistoryDetailViewController" customModule="Bipeople" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="pX7-EI-3Ey"/>
                         <viewControllerLayoutGuide type="bottom" id="quY-DG-fPo"/>
@@ -399,12 +402,20 @@
                                 <rect key="frame" x="16" y="367.5" width="343" height="266.5"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2017. 08. 31" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pEY-Ad-bJG" userLabel="주행 날짜">
+                                <rect key="frame" x="286.5" y="74.5" width="72.5" height="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="XdY-j6-lNB" firstAttribute="top" secondItem="y3Z-50-kGl" secondAttribute="bottom" constant="25" id="1RV-Bo-PhW"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="pEY-Ad-bJG" secondAttribute="trailing" id="5vB-TI-N0V"/>
                             <constraint firstItem="cAP-c5-XNN" firstAttribute="top" secondItem="XdY-j6-lNB" secondAttribute="bottom" constant="8" id="6Xc-B3-mDn"/>
                             <constraint firstItem="XdY-j6-lNB" firstAttribute="leading" secondItem="Wb9-sf-EFr" secondAttribute="leadingMargin" id="8Ew-Fp-0Wd"/>
+                            <constraint firstItem="pEY-Ad-bJG" firstAttribute="centerY" secondItem="A5r-ZJ-gYD" secondAttribute="centerY" id="MwD-sF-xFj"/>
                             <constraint firstItem="y3Z-50-kGl" firstAttribute="leading" secondItem="Wb9-sf-EFr" secondAttribute="leadingMargin" id="OPd-ih-4vu"/>
                             <constraint firstItem="cAP-c5-XNN" firstAttribute="leading" secondItem="Wb9-sf-EFr" secondAttribute="leadingMargin" id="Zbp-im-Bpw"/>
                             <constraint firstItem="A5r-ZJ-gYD" firstAttribute="leading" secondItem="Wb9-sf-EFr" secondAttribute="leadingMargin" id="b4z-eu-ULK"/>
@@ -419,6 +430,7 @@
                     <connections>
                         <outlet property="averageSpeedLabel" destination="jLs-Q9-gVU" id="BTu-ul-g0e"/>
                         <outlet property="caloriesLabel" destination="Nhq-mk-vXI" id="isx-CG-ISR"/>
+                        <outlet property="createdAt" destination="pEY-Ad-bJG" id="6lf-jo-jUK"/>
                         <outlet property="distanceLabel" destination="OX8-c2-ulq" id="bQu-FH-gCT"/>
                         <outlet property="highestSpeedLabel" destination="I4a-QS-Vnk" id="xfH-eO-Zj2"/>
                         <outlet property="restTimeLabel" destination="A5l-aP-8ex" id="AQ8-bn-hmt"/>

@@ -11,42 +11,47 @@ import RealmSwift
 
 class HistoryTableViewController: UIViewController {
     
+    //MARK: Properties
+    
+    @IBOutlet weak var tableView: UITableView!
     var records: [Record]?
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
+    //MARK: Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
-//        RealmHelper.removeAllData()
         
-        // 데이터 배열로 넣어보기 진행 중!
-//        for i in 0..<20 {
-//            var record = Record()
-//            record._id = Record.autoIncrement()
-//            record.departure = "start \(i)"
-//            record.arrival = "end \(i)"
-//            record.averageSpeed = Double(arc4random_uniform(1000)) / Double(10)
-//            record.highestSpeed = Double(arc4random_uniform(1000)) / Double(10)
-//            record.calories = 300.1
-//            record.distance = Double(arc4random_uniform(1000)) / Double(10)
-//            record.ridingTime = 13004
-//            record.restTime = 100
-            
-//            let record = Record(departure: "start \(i)",
-//                arrival: "end \(i)",
-//                distance: Double(arc4random_uniform(1000)) / Double(10),
-//                ridingTime: Double(arc4random_uniform(1000)) / Double(10),
-//                restTime: Double(arc4random_uniform(1000)) / Double(10),
-//                averageSpeed:Double(arc4random_uniform(1000)) / Double(10),
-//                highestSpeed: Double(arc4random_uniform(1000)) / Double(10),
-//                calories: Double(arc4random_uniform(1000)) / Double(10))
-//
-//            RealmHelper.addData(data: record)
-//        }
+        records = appDelegate.records
+    
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+//        print(Realm.Configuration.defaultConfiguration.fileURL!)
+        records?.sort{ $0.createdAt < $1.createdAt }
+        tableView.reloadData()
+    }
+    
+    // MARK: Segues
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "HistoryDetail" {
+            guard let historyDetailViewController = segue.destination as? HistoryDetailViewController,
+                let indexPath = tableView.indexPathForSelectedRow else {
+                return
+            }
+
+            historyDetailViewController.record = records?[indexPath.row]
+        }
     }
     
 }
 
+//MARK: UITableViewDelegate
+
 extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let count = records?.count{
             return count
@@ -58,7 +63,19 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryCell", for: indexPath) as! HistoryCell
-     
+        
+        cell.titleLabel?.text = "\(records?[indexPath.row].departure ?? "unknown") - \(records?[indexPath.row].arrival ?? "unknown")"
+        cell.distanceLabel?.text = "\(records?[indexPath.row].distance ?? 0) km"
+        cell.dateLabel?.text = records?[indexPath.row].createdAt.toString()
+        
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if case .delete = editingStyle {
+            RealmHelper.removeData(data: records![indexPath.row])
+            records?.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
     }
 }

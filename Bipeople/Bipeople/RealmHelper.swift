@@ -29,7 +29,7 @@ class RealmHelper: NSObject {
         }
     }
     
-    static func removeData<T: Object>(data: Results<T>) {
+    static func removeData<T: Object>(data: T) {
         let realm = try! Realm()
         try! realm.write {
             realm.delete(data)

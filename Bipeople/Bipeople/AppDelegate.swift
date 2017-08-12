@@ -14,6 +14,7 @@ import GooglePlaces
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
+    var records = [Record]()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
@@ -32,6 +33,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         tabBarController.selectedIndex = 2
         
         changeTheme(navigationControllers: navControllers)
+        
+        RealmHelper.fetchData(dataList: &records)
+        
+        
+        /* 더미데이터 삽입 */
+        RealmHelper.removeAllData()
+        records.removeAll()
+    
+        for i in 0..<20 {
+            let record = Record(departure: "start \(i)",
+                arrival: "end \(i)",
+                distance: Double(arc4random_uniform(1000)) / Double(10),
+                ridingTime: Double(arc4random_uniform(1000)) / Double(10),
+                restTime: Double(arc4random_uniform(1000)) / Double(10),
+                averageSpeed: Double(arc4random_uniform(1000)) / Double(10),
+                highestSpeed: Double(arc4random_uniform(1000)) / Double(10),
+                calories: Double(arc4random_uniform(1000)) / Double(10))
+            
+            RealmHelper.addData(data: record)
+            records.append(record)
+        }
+        /* 더미데이터 삽입 */
         
         return true
     }
