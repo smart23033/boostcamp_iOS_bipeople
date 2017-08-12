@@ -116,12 +116,33 @@ class BiPeopleNavigationViewController: UIViewController {
         }) { data in
             print("data: ", String(data:data, encoding: .utf8) ?? "nil")
             
-            let decoded = try JSONDecoder().decode(
+            let routeInfo = try JSONDecoder().decode(
                 GeoJSON.self,
                 from: data
             )
             
-            print(decoded)
+            let path = GMSMutablePath()
+            
+            if let features = routeInfo.features {
+                for feature in features {
+                    if let coordinates = feature.geometry?.coordinates {
+                        if case let .single(coord) = coordinates {
+                            print(coord)
+                            path.add(CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0]))
+                        } else if case let .array(coords) = coordinates {
+                            for coord in coords {
+                                print(coord)
+                                path.add(CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0]))
+                            }
+                        }
+                    }
+                }
+            }
+            
+            let route = GMSPolyline(path: path)
+            route.map = self.navigationMapView
+            
+            print("routeInfo: ", routeInfo)
         }
     }
 }

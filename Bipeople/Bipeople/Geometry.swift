@@ -16,8 +16,8 @@ class Geometry: Codable {
         case array([[Double]])
     }
     
-    var type: String?                   /// Feature 도로 구간의 정보
-    var coordinates: Coordinates?       /// 좌표 정보
+    var type: String?                    /// Feature 도로 구간의 정보
+    var coordinates: Coordinates?        /// 좌표 정보
     
     private enum CodingKeys: String, CodingKey {
         case type
@@ -29,20 +29,15 @@ class Geometry: Codable {
         
         if let type = try? container.decode(String.self, forKey: .type) {
             self.type = type
-            return
         }
         
         if let coord = try? container.decode([Double].self, forKey: .coordinates) {
             self.coordinates = .single(coord)
-            return
-        }
-        
-        if let coords = try? container.decode([[Double]].self, forKey: .coordinates) {
+        } else if let coords = try? container.decode([[Double]].self, forKey: .coordinates) {
             self.coordinates = .array(coords)
-            return
         }
         
-        throw NSError()
+        return
     }
     
     func encode(to encoder: Encoder) throws {
