@@ -8,17 +8,29 @@
 
 import Foundation
 import GoogleMaps
+import Alamofire
+
+enum TmapAPIError: Error {
+    case invalidJSONData
+    case invalidRequest
+    case invalidResponse
+    case unknown
+}
 
 class NavigationManager {
     
+    private static let TMAP_API_URL: String = "https://apis.skplanetx.com/tmap/routes/pedestrian"
+    private static let version: Int         = 1
+    private static let format: String       = "json"
+    private static let appKey: String       = "5112af59-674c-38fd-89b0-ab54f1297284"
+    
     /// 싱글톤 패턴을 사용, 도착지 마커는 반드시 맵상에 1개만 존재해야 함
-    private static let destinationMarker: GMSMarker = {
+    private static var singletoneMarker: GMSMarker? = nil
+    
+    private var destinationMarker: GMSMarker? {
         
-        let marker = GMSMarker()
-        marker.icon = GMSMarker.markerImage(with: UIColor(red: 28/255.0, green: 176/255.0, blue: 184/255.0, alpha: 1.0))
-        
-        return marker
-    }()
+        return NavigationManager.singletoneMarker
+    }
     
     /// 네비게이션 매니저가 사용할 맵뷰
     var mapMarkerShowed: GMSMapView?
@@ -31,17 +43,85 @@ class NavigationManager {
             throw NSError()
         }
         
-        NavigationManager.destinationMarker.position = location
-        NavigationManager.destinationMarker.title = name ?? "Unknown"
-        NavigationManager.destinationMarker.snippet = address ?? "Unknown"
+        if destinationMarker == nil {
+            NavigationManager.singletoneMarker = GMSMarker()
+            NavigationManager.singletoneMarker?.icon = GMSMarker.markerImage(with: UIColor(red: 28/255.0, green: 176/255.0, blue: 184/255.0, alpha: 1.0))
+        }
+        
+        destinationMarker?.position = location
+        destinationMarker?.title = name ?? "Unknown"
+        destinationMarker?.snippet = address ?? "Unknown"
         
         DispatchQueue.main.async {
-            NavigationManager.destinationMarker.map = map
+            self.destinationMarker?.map = map
         }
     }
     
     /// TODO: T Map GeoJSON API를 통해 경로를 가져온다
-    func getGeoJSONFromTMap() throws {
+    func getGeoJSONFromTMap(failure: @escaping (Error) -> Void, success: @escaping (Data) throws -> Void) {
         
+        guard
+            let currentPosX = mapMarkerShowed?.myLocation?.coordinate.longitude,
+            let currentPosY = mapMarkerShowed?.myLocation?.coordinate.latitude
+        else {
+            print("현재 위치를 아직 찾지 못했습니다")
+            return
+        }
+        
+        guard
+            let destinationX = destinationMarker?.position.longitude,
+            let destinationY = destinationMarker?.position.latitude
+        else {
+            print("도착지를 먼저 설정해주세요")
+            return
+        }
+        
+        print("currentPosX: ", currentPosX)
+        print("currentPosY: ", currentPosY)
+        print("destinationX: ", destinationX)
+        print("destinationY: ", destinationY)
+        
+        var urlString: String = NavigationManager.TMAP_API_URL
+        let urlParams: [String:String] = [
+            "version" : String(NavigationManager.version),
+            "format" : NavigationManager.format,
+            "appKey" : NavigationManager.appKey
+        ]
+        
+        urlString.append(urlParams.reduce("?") { $0 + $1.0 + "=" + String(describing: $1.1) + "&" })
+        print(urlString)
+        
+        let requestBody: [String:Any] = [
+            "startX": currentPosX,
+            "startY": currentPosY,
+            "endX": destinationX,
+            "endY": destinationY,
+            "reqCoordType": "WGS84GEO",
+            "startName": "출발",
+            "endName": "도착",
+            "resCoordType": "WGS84GEO"
+        ]
+        
+        let headers: [String:String] = [
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "Accept": "application/json",
+            "Accept-Language": "ko"
+        ]
+        
+        Alamofire.request(urlString, method: .post, parameters: requestBody, encoding: URLEncoding.httpBody, headers: headers)
+            .responseJSON { response in
+
+                guard let data = response.data else {
+                    failure(TmapAPIError.invalidResponse)
+                    return
+                }
+
+                do {
+                    try success(data)
+                } catch {
+                    failure(error)
+                }
+        }
     }
 }
+

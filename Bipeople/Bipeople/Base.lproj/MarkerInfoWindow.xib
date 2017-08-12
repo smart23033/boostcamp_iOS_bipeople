@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13178.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13156.2"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="MarkerInfoWindow" customModule="Bipeople" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="217" height="62"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="goI-hp-skK">
+                    <rect key="frame" x="0.0" y="0.0" width="217" height="62"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Jca-yd-iz4">
+                            <rect key="frame" x="0.0" y="0.0" width="155" height="62"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a5u-Kn-4Zh" userLabel="Name">
+                                    <rect key="frame" x="0.0" y="0.0" width="155" height="31"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jgm-AN-zqT" userLabel="Address">
+                                    <rect key="frame" x="0.0" y="31" width="155" height="31"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ON-1t-4DH" userLabel="Start">
+                            <rect key="frame" x="155" y="0.0" width="62" height="62"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="0ON-1t-4DH" secondAttribute="height" multiplier="1:1" id="cWh-rH-xkx"/>
+                            </constraints>
+                            <state key="normal" title="Button" image="Start"/>
+                            <connections>
+                                <action selector="test:forEvent:" destination="iN0-l3-epB" eventType="touchDown" id="dyz-Fx-3hf"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="goI-hp-skK" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="Fuo-Dh-Wsa"/>
+                <constraint firstItem="goI-hp-skK" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="KNA-n8-gDs"/>
+                <constraint firstItem="goI-hp-skK" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="g14-Uz-5Mj"/>
+                <constraint firstItem="goI-hp-skK" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="qIM-xO-dLw"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="addressLabel" destination="jgm-AN-zqT" id="6Ve-Cx-6yD"/>
+                <outlet property="nameLabel" destination="a5u-Kn-4Zh" id="93F-Qa-f9i"/>
+                <outlet property="startButton" destination="0ON-1t-4DH" id="JHS-1r-0Ha"/>
+            </connections>
+            <point key="canvasLocation" x="45.5" y="41"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Start" width="128" height="128"/>
+    </resources>
+</document>
