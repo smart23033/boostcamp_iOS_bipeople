@@ -35,7 +35,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Distance" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="id1-eA-g2Y">
                                             <rect key="frame" x="300" y="34" width="67" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
+                                            <color key="textColor" red="0.25098040700000002" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="createdAt" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3hi-AV-MFl">
@@ -60,7 +60,7 @@
                                     <outlet property="dateLabel" destination="3hi-AV-MFl" id="qY2-TC-Bf5"/>
                                     <outlet property="distanceLabel" destination="id1-eA-g2Y" id="dfM-Dm-117"/>
                                     <outlet property="titleLabel" destination="TfH-e1-Gyt" id="8c8-ti-Gqp"/>
-                                    <segue destination="0J0-6S-UEE" kind="show" id="Zx7-mN-UuS"/>
+                                    <segue destination="0J0-6S-UEE" kind="show" identifier="HistoryDetail" id="Zx7-mN-UuS"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -77,15 +77,18 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="tableView" destination="8Gg-os-3y7" id="ivE-9g-0zx"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EwV-Ix-g3z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1845.5999999999999" y="1311.9940029985009"/>
         </scene>
-        <!--Data Source-->
+        <!--History Graph-->
         <scene sceneID="Ta9-0N-8XF">
             <objects>
-                <viewController id="rBX-VJ-YkM" customClass="HistoryChartViewController" customModule="Bipeople" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="rBX-VJ-YkM" userLabel="History Graph" customClass="HistoryChartViewController" customModule="Bipeople" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="I5j-mX-oeS"/>
                         <viewControllerLayoutGuide type="bottom" id="aLi-c2-5Co"/>
@@ -102,7 +105,7 @@
                                     <segment title="monthly"/>
                                 </segments>
                             </segmentedControl>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wcW-aI-mFE" userLabel="Chart">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wcW-aI-mFE" userLabel="Graph" customClass="ScrollableGraphView" customModule="ScrollableGraphView">
                                 <rect key="frame" x="16" y="148.5" width="343" height="320"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NNG-aQ-p1g" userLabel="Calendar" customClass="FSCalendar">
@@ -255,7 +258,9 @@
                     </view>
                     <connections>
                         <outlet property="calendar" destination="NNG-aQ-p1g" id="dOy-65-5tH"/>
+                        <outlet property="calendarView" destination="NNG-aQ-p1g" id="NmO-06-9Im"/>
                         <outlet property="endLabel" destination="6x5-Lp-7sU" id="tWp-qC-5Jl"/>
+                        <outlet property="graphView" destination="wcW-aI-mFE" id="2Li-2d-gmU"/>
                         <outlet property="startLabel" destination="mdX-n4-4LX" id="RNH-P7-zsH"/>
                     </connections>
                 </viewController>
@@ -273,10 +278,10 @@
             </objects>
             <point key="canvasLocation" x="2908" y="781.25937031484261"/>
         </scene>
-        <!--History Detail View Controller-->
+        <!--History Detail-->
         <scene sceneID="YRH-eu-dXH">
             <objects>
-                <viewController id="0J0-6S-UEE" customClass="HistoryDetailViewController" customModule="Bipeople" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="0J0-6S-UEE" userLabel="History Detail" customClass="HistoryDetailViewController" customModule="Bipeople" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="pX7-EI-3Ey"/>
                         <viewControllerLayoutGuide type="bottom" id="quY-DG-fPo"/>
@@ -399,6 +404,12 @@
                                 <rect key="frame" x="16" y="367.5" width="343" height="266.5"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2017-08-31" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DSo-rY-X0v">
+                                <rect key="frame" x="287" y="74.5" width="72" height="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -407,22 +418,27 @@
                             <constraint firstItem="XdY-j6-lNB" firstAttribute="leading" secondItem="Wb9-sf-EFr" secondAttribute="leadingMargin" id="8Ew-Fp-0Wd"/>
                             <constraint firstItem="y3Z-50-kGl" firstAttribute="leading" secondItem="Wb9-sf-EFr" secondAttribute="leadingMargin" id="OPd-ih-4vu"/>
                             <constraint firstItem="cAP-c5-XNN" firstAttribute="leading" secondItem="Wb9-sf-EFr" secondAttribute="leadingMargin" id="Zbp-im-Bpw"/>
+                            <constraint firstItem="DSo-rY-X0v" firstAttribute="centerY" secondItem="A5r-ZJ-gYD" secondAttribute="centerY" id="aC4-BU-PF8"/>
                             <constraint firstItem="A5r-ZJ-gYD" firstAttribute="leading" secondItem="Wb9-sf-EFr" secondAttribute="leadingMargin" id="b4z-eu-ULK"/>
                             <constraint firstItem="y3Z-50-kGl" firstAttribute="height" secondItem="Wb9-sf-EFr" secondAttribute="height" multiplier="0.32" id="d0n-EW-C61"/>
                             <constraint firstItem="y3Z-50-kGl" firstAttribute="trailing" secondItem="Wb9-sf-EFr" secondAttribute="trailingMargin" id="ele-Q8-4XX"/>
                             <constraint firstItem="cAP-c5-XNN" firstAttribute="height" secondItem="Wb9-sf-EFr" secondAttribute="height" multiplier="0.4" id="jC5-Cv-Hf9"/>
                             <constraint firstItem="cAP-c5-XNN" firstAttribute="trailing" secondItem="Wb9-sf-EFr" secondAttribute="trailingMargin" id="kqo-jb-d0j"/>
+                            <constraint firstAttribute="trailing" secondItem="DSo-rY-X0v" secondAttribute="trailing" constant="16" id="oPf-vb-tQJ"/>
                             <constraint firstItem="y3Z-50-kGl" firstAttribute="top" secondItem="A5r-ZJ-gYD" secondAttribute="bottom" constant="8" id="qf7-l2-X2B"/>
                             <constraint firstItem="A5r-ZJ-gYD" firstAttribute="top" secondItem="pX7-EI-3Ey" secondAttribute="bottom" constant="8" id="tQt-oe-ynF"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Title" id="psD-61-zu4"/>
                     <connections>
                         <outlet property="averageSpeedLabel" destination="jLs-Q9-gVU" id="BTu-ul-g0e"/>
                         <outlet property="caloriesLabel" destination="Nhq-mk-vXI" id="isx-CG-ISR"/>
+                        <outlet property="createdAt" destination="DSo-rY-X0v" id="UkT-e1-7eZ"/>
                         <outlet property="distanceLabel" destination="OX8-c2-ulq" id="bQu-FH-gCT"/>
                         <outlet property="highestSpeedLabel" destination="I4a-QS-Vnk" id="xfH-eO-Zj2"/>
                         <outlet property="restTimeLabel" destination="A5l-aP-8ex" id="AQ8-bn-hmt"/>
                         <outlet property="ridingTimeLabel" destination="up2-Gw-5d6" id="evZ-fr-Udp"/>
+                        <outlet property="titleLabel" destination="psD-61-zu4" id="hSZ-7a-Ceb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kgo-6Q-bdo" userLabel="First Responder" sceneMemberID="firstResponder"/>
