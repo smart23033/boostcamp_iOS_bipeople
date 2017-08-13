@@ -257,7 +257,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="calendar" destination="NNG-aQ-p1g" id="dOy-65-5tH"/>
                         <outlet property="calendarView" destination="NNG-aQ-p1g" id="NmO-06-9Im"/>
                         <outlet property="endLabel" destination="6x5-Lp-7sU" id="tWp-qC-5Jl"/>
                         <outlet property="graphView" destination="wcW-aI-mFE" id="2Li-2d-gmU"/>
