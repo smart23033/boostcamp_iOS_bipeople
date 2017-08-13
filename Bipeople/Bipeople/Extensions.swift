@@ -8,6 +8,8 @@
 
 import UIKit
 
+//MARK: Date
+
 extension Date {
     // date to string
     func toString() -> String {
@@ -17,6 +19,8 @@ extension Date {
     }
 }
 
+//MARK: Double
+
 extension Double {
     /// 소수점 x 자릿수부터 반올림
     func roundTo(places:Int) -> Double {
@@ -24,6 +28,8 @@ extension Double {
         return (self * divisor).rounded() / divisor
     }
 }
+
+//MARK: UIColor
 
 extension UIColor {
     static let primaryColor = UIColor(hex: 0x1cb0b8)
