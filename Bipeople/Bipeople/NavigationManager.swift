@@ -1,5 +1,5 @@
 //
-//  NavigationManager.swift
+//  swift
 //  Bipeople
 //
 //  Created by CONNECT on 2017. 8. 10..
@@ -24,28 +24,27 @@ class NavigationManager {
     private static let format: String       = "json"
     private static let appKey: String       = "5112af59-674c-38fd-89b0-ab54f1297284"
     
-    /// 싱글톤 패턴을 사용, 도착지 마커는 반드시 맵상에 1개만 존재해야 함
-    private static var singletoneMarker: GMSMarker? = nil
+    private var mapViewForNavigation: GMSMapView?
+    private var destinationMarker: GMSMarker?
+    private var navigationRoute: GMSPolyline?
     
-    private var destinationMarker: GMSMarker? {
-        
-        return NavigationManager.singletoneMarker
+    private var traces: [Trace] = []
+    
+    func setMapView(view: GMSMapView) {
+        mapViewForNavigation = view
     }
-    
-    /// 네비게이션 매니저가 사용할 맵뷰
-    var mapMarkerShowed: GMSMapView?
     
     /// 싱글톤 패턴이 사용 된, 도착지 마커를 맵 위에 설정
     func setMarker(location: CLLocationCoordinate2D, name: String?, address: String?) throws {
         
-        guard let map = mapMarkerShowed else {
-            print("`mapMarkerShowed`을 먼저 설정해주세요")
+        guard let map = mapViewForNavigation else {
+            print("`mapUsedForNavigation`을 먼저 설정해주세요")
             throw NSError()
         }
         
         if destinationMarker == nil {
-            NavigationManager.singletoneMarker = GMSMarker()
-            NavigationManager.singletoneMarker?.icon = GMSMarker.markerImage(with: UIColor.primaryColor)
+            destinationMarker = GMSMarker()
+            destinationMarker?.icon = GMSMarker.markerImage(with: UIColor.primary)
         }
         
         destinationMarker?.position = location
@@ -57,12 +56,22 @@ class NavigationManager {
         }
     }
     
+    func removeMarker() {
+        
+        destinationMarker?.map = nil
+    }
+    
+    func eraseRoute() {
+        
+        navigationRoute?.map = nil
+    }
+    
     /// TODO: T Map GeoJSON API를 통해 경로를 가져온다
     func getGeoJSONFromTMap(failure: @escaping (Error) -> Void, success: @escaping (Data) throws -> Void) {
         
         guard
-            let currentPosX = mapMarkerShowed?.myLocation?.coordinate.longitude,
-            let currentPosY = mapMarkerShowed?.myLocation?.coordinate.latitude
+            let currentPosX = mapViewForNavigation?.myLocation?.coordinate.longitude,
+            let currentPosY = mapViewForNavigation?.myLocation?.coordinate.latitude
         else {
             print("현재 위치를 아직 찾지 못했습니다")
             return
@@ -92,10 +101,10 @@ class NavigationManager {
         print(urlString)
         
         let requestBody: [String:Any] = [
-            "startX": currentPosX,
-            "startY": currentPosY,
-            "endX": destinationX,
-            "endY": destinationY,
+            "startX": currentPosX,  // 현재 위치 경도
+            "startY": currentPosY,  // 현재 위치 위도
+            "endX": destinationX,   // 목적지 경도
+            "endY": destinationY,   // 목적지 위도
             "reqCoordType": "WGS84GEO",
             "startName": "출발",
             "endName": "도착",
@@ -108,6 +117,7 @@ class NavigationManager {
             "Accept-Language": "ko"
         ]
         
+        // T Map에 현재 위치와, 목적지 경도/위도를 전달하여 경로를 요청
         Alamofire.request(urlString, method: .post, parameters: requestBody, encoding: URLEncoding.httpBody, headers: headers)
             .responseJSON { response in
 
@@ -122,6 +132,55 @@ class NavigationManager {
                     failure(error)
                 }
         }
+    }
+    
+    func drawRoute(from data: GeoJSON) {
+        let navigationPath = GMSMutablePath()
+        
+        print("GeoJSON data: ", data)
+        data.features?.forEach {
+            guard let coordinates = $0.geometry?.coordinates else {
+                print($0.geometry?.type ?? "empty")
+                return
+            }
+            
+            if case let .single(coord) = coordinates {
+                
+                print(coord)    // FOR DEBUG
+                navigationPath.add(CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0]))
+            } else if case let .array(coords) = coordinates {
+                coords.forEach { coord in
+                    
+                    print(coord)    // FOR DEBUG
+                    navigationPath.add(CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0]))
+                }
+            }
+        }
+        mapViewForNavigation?.clear()
+        
+        navigationRoute = GMSPolyline(path: navigationPath)
+        navigationRoute?.strokeWidth = 5
+        navigationRoute?.strokeColor = UIColor.primary
+        navigationRoute?.map = mapViewForNavigation
+    }
+    
+    func addTrace(coord: CLLocationCoordinate2D) {
+        
+        traces.append(Trace(coordinate: coord))
+    }
+    
+    func clearTraces() {
+        
+        traces.removeAll()
+    }
+    
+    func saveRecord() {
+        
+        // Record 생성
+        // traces.forEach {
+        //    $0.recordID = record._id
+        //    RealmHelper.addData
+        //}
     }
 }
 

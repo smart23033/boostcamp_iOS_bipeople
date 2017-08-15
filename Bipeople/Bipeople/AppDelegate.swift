@@ -87,11 +87,11 @@ extension AppDelegate {
     
     func changeTheme(navigationControllers: [UINavigationController]) {
         UIApplication.shared.statusBarStyle = .lightContent
-        UIApplication.shared.delegate?.window??.tintColor = UIColor.primaryColor
+        UIApplication.shared.delegate?.window??.tintColor = UIColor.primary
         
         navigationControllers.forEach { (nvc) in
             nvc.topViewController?.navigationController?.navigationBar.isTranslucent = false
-            nvc.topViewController?.navigationController?.navigationBar.barTintColor = UIColor.primaryColor
+            nvc.topViewController?.navigationController?.navigationBar.barTintColor = UIColor.primary
             nvc.topViewController?.navigationController?.navigationBar.tintColor = .white
             nvc.topViewController?.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         }

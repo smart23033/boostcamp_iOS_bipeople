@@ -155,7 +155,7 @@ extension HistoryChartViewController: ScrollableGraphViewDataSource {
         let linePlot = LinePlot(identifier: "one")
         
         linePlot.lineWidth = 5
-        linePlot.lineColor = UIColor.primaryColor
+        linePlot.lineColor = UIColor.primary
         linePlot.lineStyle = ScrollableGraphViewLineStyle.straight
         
         linePlot.shouldFill = false

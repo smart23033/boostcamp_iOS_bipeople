@@ -26,7 +26,7 @@ extension Double {
 }
 
 extension UIColor {
-    static let primaryColor = UIColor(hex: 0x1cb0b8)
+    static let primary = UIColor(hex: 0x1cb0b8)
     
     // Create a UIColor from RGB
     convenience init(red: Int, green: Int, blue: Int, a: CGFloat = 1.0) {
