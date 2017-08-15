@@ -19,7 +19,7 @@
 		A219812B1F39730C00D0F5F7 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219812A1F39730C00D0F5F7 /* CardView.swift */; };
 		A219812D1F39771E00D0F5F7 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219812C1F39771E00D0F5F7 /* HistoryTableViewController.swift */; };
 		A219812F1F39772700D0F5F7 /* HistoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219812E1F39772700D0F5F7 /* HistoryDetailViewController.swift */; };
-		A21981311F39774400D0F5F7 /* HistoryChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21981301F39774400D0F5F7 /* HistoryChartViewController.swift */; };
+		A21981311F39774400D0F5F7 /* HistoryGraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21981301F39774400D0F5F7 /* HistoryGraphViewController.swift */; };
 		A258388C1F39A11A00BECEA3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A258388B1F39A11A00BECEA3 /* Extensions.swift */; };
 		A2A299381F3C45D200E31ED9 /* Record.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A299371F3C45D200E31ED9 /* Record.swift */; };
 		A2A2993A1F3C45D700E31ED9 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A299391F3C45D700E31ED9 /* Track.swift */; };
@@ -61,7 +61,7 @@
 		A219812A1F39730C00D0F5F7 /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		A219812C1F39771E00D0F5F7 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
 		A219812E1F39772700D0F5F7 /* HistoryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailViewController.swift; sourceTree = "<group>"; };
-		A21981301F39774400D0F5F7 /* HistoryChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryChartViewController.swift; sourceTree = "<group>"; };
+		A21981301F39774400D0F5F7 /* HistoryGraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryGraphViewController.swift; sourceTree = "<group>"; };
 		A258388B1F39A11A00BECEA3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		A2A299371F3C45D200E31ED9 /* Record.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Record.swift; sourceTree = "<group>"; };
 		A2A299391F3C45D700E31ED9 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
@@ -225,7 +225,7 @@
 			children = (
 				A219812C1F39771E00D0F5F7 /* HistoryTableViewController.swift */,
 				A219812E1F39772700D0F5F7 /* HistoryDetailViewController.swift */,
-				A21981301F39774400D0F5F7 /* HistoryChartViewController.swift */,
+				A21981301F39774400D0F5F7 /* HistoryGraphViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -307,7 +307,7 @@
 				TargetAttributes = {
 					30E82D7F1F38224B00536AFB = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = NJRMGGTV4H;
+						DevelopmentTeam = LGYQPRQ6SD;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -428,7 +428,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F18C67261F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift in Sources */,
-				A21981311F39774400D0F5F7 /* HistoryChartViewController.swift in Sources */,
+				A21981311F39774400D0F5F7 /* HistoryGraphViewController.swift in Sources */,
 				3020162B1F3C2CF30073A493 /* DataResponse+MapResult.swift in Sources */,
 				F14C71B71F3F15EF005015B1 /* Geometry.swift in Sources */,
 				F19060AF1F3C94DE00DB67B8 /* MarkerInfoWindow.swift in Sources */,
@@ -636,11 +636,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				DEVELOPMENT_TEAM = NJRMGGTV4H;
+				DEVELOPMENT_TEAM = LGYQPRQ6SD;
 				INFOPLIST_FILE = Bipeople/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = kr.or.connect.boostcamp.Bipeople;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.or.connect.boostcamp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
@@ -654,11 +654,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				DEVELOPMENT_TEAM = NJRMGGTV4H;
+				DEVELOPMENT_TEAM = LGYQPRQ6SD;
 				INFOPLIST_FILE = Bipeople/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = kr.or.connect.boostcamp.Bipeople;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.or.connect.boostcamp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;

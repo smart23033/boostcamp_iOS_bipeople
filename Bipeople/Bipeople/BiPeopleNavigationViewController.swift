@@ -81,7 +81,7 @@ class BiPeopleNavigationViewController: UIViewController {
         startButton.layer.shadowOffset = CGSize.zero
         startButton.setTitle("출발", for: .normal)
         startButton.setTitleColor(UIColor.white, for: .normal)
-        startButton.backgroundColor = UIColor.primaryColor
+        startButton.backgroundColor = UIColor.primary
         startButton.autoresizingMask = []
         
         startButton.addTarget(self, action: #selector(didTapStartButton), for: .touchUpInside)

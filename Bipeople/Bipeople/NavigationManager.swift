@@ -45,7 +45,7 @@ class NavigationManager {
         
         if destinationMarker == nil {
             NavigationManager.singletoneMarker = GMSMarker()
-            NavigationManager.singletoneMarker?.icon = GMSMarker.markerImage(with: UIColor.primaryColor)
+            NavigationManager.singletoneMarker?.icon = GMSMarker.markerImage(with: UIColor.primary)
         }
         
         destinationMarker?.position = location
