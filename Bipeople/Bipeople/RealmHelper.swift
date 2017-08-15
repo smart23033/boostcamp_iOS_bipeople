@@ -48,15 +48,17 @@ class RealmHelper: NSObject {
     }
     
     static func objectFromQuery<T: Object>(data: T, query: NSPredicate) -> T? {
-        
-        
         guard let object = realm.objects(T.self).filter("id = 1").first else { return nil }
         return object
     }
     
+    //기간별 데이터 구할 때 쓰려고 일단 만들어봄.
+    static func fetchDatasFromQuery<T: Object>(dataList: Array<T>, query: NSPredicate) -> Results<T> {
+        let results = realm.objects(T.self).filter(query)
+        return results
+    }
+    
     static func updateObject<T: Object>(data: T, query: NSPredicate) {
-        
-        
         var object = realm.objects(T.self).filter("id = 1").first
         object = data
         try! realm.write {
@@ -70,5 +72,6 @@ class RealmHelper: NSObject {
 //            realm.add(updateTask)
 //        }
 //    }
+    
     
 }

@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 ridingTime: Double(arc4random_uniform(1000)) / Double(10),
                 restTime: Double(arc4random_uniform(1000)) / Double(10),
                 averageSpeed: Double(arc4random_uniform(1000)) / Double(10),
-                highestSpeed: Double(arc4random_uniform(1000)) / Double(10),
+                maximumSpeed: Double(arc4random_uniform(1000)) / Double(10),
                 calories: Double(arc4random_uniform(1000)) / Double(10))
             
             RealmHelper.addData(data: record)
@@ -87,11 +87,11 @@ extension AppDelegate {
     
     func changeTheme(navigationControllers: [UINavigationController]) {
         UIApplication.shared.statusBarStyle = .lightContent
-        UIApplication.shared.delegate?.window??.tintColor = UIColor.primaryColor
+        UIApplication.shared.delegate?.window??.tintColor = UIColor.primary
         
         navigationControllers.forEach { (nvc) in
             nvc.topViewController?.navigationController?.navigationBar.isTranslucent = false
-            nvc.topViewController?.navigationController?.navigationBar.barTintColor = UIColor.primaryColor
+            nvc.topViewController?.navigationController?.navigationBar.barTintColor = UIColor.primary
             nvc.topViewController?.navigationController?.navigationBar.tintColor = .white
             nvc.topViewController?.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         }

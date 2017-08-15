@@ -15,8 +15,48 @@ extension Date {
     func toString() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
+//       dateFormatter.timeZone   = TimeZone(abbreviation: "GMT")
         return dateFormatter.string(from: self)
     }
+    
+    func isSameDay(date: Date) -> Bool {
+        return Calendar.current.isDate(self, equalTo: date, toGranularity: .day)
+    }
+    
+    func generateDates(startDate :Date?, endDate: Date?, addbyUnit:Calendar.Component) -> [Date]
+    {
+        let calendar = Calendar.current
+        var datesArray: [Date] =  [Date]()
+        var newDate = startDate
+        
+        while true {
+            if newDate?.isSameDay(date: endDate!) == true {
+                break
+            }
+            
+            newDate = calendar.date(byAdding: addbyUnit, value: 1, to: newDate!)!
+            datesArray.append(newDate!)
+            
+        }
+        
+        return datesArray
+    }
+    
+}
+
+extension String {
+    
+    func toDate() -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone   = TimeZone(abbreviation: "GMT")
+        guard let date = dateFormatter.date(from: self) else {
+            return nil
+        }
+        
+        return date
+    }
+    
 }
 
 //MARK: Double
@@ -32,7 +72,7 @@ extension Double {
 //MARK: UIColor
 
 extension UIColor {
-    static let primaryColor = UIColor(hex: 0x1cb0b8)
+    static let primary = UIColor(hex: 0x1cb0b8)
     
     // Create a UIColor from RGB
     convenience init(red: Int, green: Int, blue: Int, a: CGFloat = 1.0) {
