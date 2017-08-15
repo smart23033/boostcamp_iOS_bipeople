@@ -29,11 +29,11 @@ class Record: Object {
     @objc dynamic var ridingTime: TimeInterval = 0.0
     @objc dynamic var restTime: TimeInterval = 0.0
     @objc dynamic var averageSpeed: Double = 0.0
-    @objc dynamic var highestSpeed: Double = 0.0
+    @objc dynamic var maximumSpeed: Double = 0.0
     @objc dynamic var calories: Double = 0.0
     @objc dynamic var createdAt: Date = Date()
     
-    convenience init(departure: String, arrival: String, distance: Double, ridingTime: TimeInterval, restTime: TimeInterval, averageSpeed: Double, highestSpeed: Double, calories: Double) {
+    convenience init(departure: String, arrival: String, distance: Double, ridingTime: TimeInterval, restTime: TimeInterval, averageSpeed: Double, maximumSpeed: Double, calories: Double) {
         self.init()
         self._id = Record.autoIncrement()
         self.departure = departure
@@ -42,18 +42,38 @@ class Record: Object {
         self.ridingTime = ridingTime
         self.restTime = restTime
         self.averageSpeed = averageSpeed
-        self.highestSpeed = highestSpeed
+        self.maximumSpeed = maximumSpeed
         self.calories = calories
-        self.createdAt = Date()
+        self.createdAt = generateRandomDate(daysBack: 50)
+      
     }
     
     //Incrementa ID
     static func autoIncrement() -> Int {
         let realm = try! Realm()
-        if let retNext = realm.objects(Record.self).sorted(byKeyPath: "_id").first?._id {
+        if let retNext = realm.objects(Record.self).sorted(byKeyPath: "_id").last?._id {
             return retNext + 1
         }else{
             return 1
         }
     }
+    
+    //랜덤날짜 생성
+    func generateRandomDate(daysBack: Int)-> Date {
+        let day = arc4random_uniform(UInt32(daysBack)+1)
+        let hour = arc4random_uniform(23)
+        let minute = arc4random_uniform(59)
+        
+        let today = Date()
+        let gregorian  = Calendar(identifier: Calendar.Identifier.gregorian)
+        var offsetComponents = DateComponents()
+        offsetComponents.day = Int(day)
+        offsetComponents.hour = Int(hour)
+        offsetComponents.minute = Int(minute)
+        
+        let randomDate = gregorian.date(byAdding: offsetComponents, to: today)
+        
+        return randomDate ?? Date()
+    }
+    
 }

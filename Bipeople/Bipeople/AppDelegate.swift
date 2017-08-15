@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 ridingTime: Double(arc4random_uniform(1000)) / Double(10),
                 restTime: Double(arc4random_uniform(1000)) / Double(10),
                 averageSpeed: Double(arc4random_uniform(1000)) / Double(10),
-                highestSpeed: Double(arc4random_uniform(1000)) / Double(10),
+                maximumSpeed: Double(arc4random_uniform(1000)) / Double(10),
                 calories: Double(arc4random_uniform(1000)) / Double(10))
             
             RealmHelper.addData(data: record)

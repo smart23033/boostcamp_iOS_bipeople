@@ -16,7 +16,7 @@ class HistoryDetailViewController: UIViewController {
     @IBOutlet weak var ridingTimeLabel: UILabel!
     @IBOutlet weak var restTimeLabel: UILabel!
     @IBOutlet weak var averageSpeedLabel: UILabel!
-    @IBOutlet weak var highestSpeedLabel: UILabel!
+    @IBOutlet weak var maximumSpeedLabel: UILabel!
     @IBOutlet weak var caloriesLabel: UILabel!
     @IBOutlet weak var createdAt: UILabel!
     
@@ -30,7 +30,7 @@ class HistoryDetailViewController: UIViewController {
         ridingTimeLabel.text = "\(record?.ridingTime ?? 0)"
         restTimeLabel.text = "\(record?.restTime ?? 0)"
         averageSpeedLabel.text = "\(record?.averageSpeed ?? 0) km/h"
-        highestSpeedLabel.text = "\(record?.highestSpeed ?? 0) km/h"
+        maximumSpeedLabel.text = "\(record?.maximumSpeed ?? 0) km/h"
         caloriesLabel.text = "\(record?.calories ?? 0) kcal"
         createdAt.text = record?.createdAt.toString()
         

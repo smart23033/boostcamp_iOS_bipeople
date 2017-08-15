@@ -8,14 +8,58 @@
 
 import UIKit
 
+//MARK: Date
+
 extension Date {
     // date to string
     func toString() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
+//       dateFormatter.timeZone   = TimeZone(abbreviation: "GMT")
         return dateFormatter.string(from: self)
     }
+    
+    func isSameDay(date: Date) -> Bool {
+        return Calendar.current.isDate(self, equalTo: date, toGranularity: .day)
+    }
+    
+    func generateDates(startDate :Date?, endDate: Date?, addbyUnit:Calendar.Component) -> [Date]
+    {
+        let calendar = Calendar.current
+        var datesArray: [Date] =  [Date]()
+        var newDate = startDate
+        
+        while true {
+            if newDate?.isSameDay(date: endDate!) == true {
+                break
+            }
+            
+            newDate = calendar.date(byAdding: addbyUnit, value: 1, to: newDate!)!
+            datesArray.append(newDate!)
+            
+        }
+        
+        return datesArray
+    }
+    
 }
+
+extension String {
+    
+    func toDate() -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone   = TimeZone(abbreviation: "GMT")
+        guard let date = dateFormatter.date(from: self) else {
+            return nil
+        }
+        
+        return date
+    }
+    
+}
+
+//MARK: Double
 
 extension Double {
     /// 소수점 x 자릿수부터 반올림
@@ -24,6 +68,8 @@ extension Double {
         return (self * divisor).rounded() / divisor
     }
 }
+
+//MARK: UIColor
 
 extension UIColor {
     static let primary = UIColor(hex: 0x1cb0b8)
