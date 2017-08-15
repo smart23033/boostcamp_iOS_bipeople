@@ -11,6 +11,6 @@ import Foundation
 /// T Map API 보행자 경로안내 Response JSON Format
 class GeoJSON: Codable {
     
-    var type: String            /// GeoJSON 표준 프로퍼티
-    var features: [Feature]? /// Point, Line 형상 정보
+    var type: String?           /// GeoJSON 표준 프로퍼티
+    var features: [Feature]?    /// Point, Line 형상 정보
 }
