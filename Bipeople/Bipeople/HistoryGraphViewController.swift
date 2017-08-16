@@ -51,10 +51,13 @@ class HistoryGraphViewController: UIViewController {
         }
     }
     
-    private var graphView: ScrollableGraphView?
+    @IBOutlet weak var distanceLabel: UILabel!
+    @IBOutlet weak var ridingTimeLabel: UILabel!
+    @IBOutlet weak var averageSpeedLabel: UILabel!
+    @IBOutlet weak var caloriesLabel: UILabel!
+    
     
     //MARK: Properties
-    
     var startSwitch = CalendarSwitch.off {
         didSet {
             switch startSwitch {
@@ -76,16 +79,20 @@ class HistoryGraphViewController: UIViewController {
         }
     }
     
-    var records: [Record] = []
+    
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    var records: [Record] = []
     
-    var requestedComponent: Set<Calendar.Component> = [.day]
-    var numberOfItems = 0
-    
+    private var graphView: ScrollableGraphView?
     var dataWithDate: [String:Double] = [:]
     
     var pickerData: [GraphType] = [.distance,.ridingTime,.calories]
     var selectedValue: String = ""
+    
+    var distance: Double?
+    var ridingTime: TimeInterval?
+    var calories: Double?
+    var averageSpeed: Double?
     
     //MARK: Life Cycle
     
@@ -145,11 +152,47 @@ class HistoryGraphViewController: UIViewController {
         
     }
     
+    func reloadDataSheet() {
+        
+        self.distance = 0
+        self.ridingTime = 0
+        self.averageSpeed = 0
+        self.calories = 0
+        
+        guard let startDate = self.startLabel.text?.toDate(),
+            let endDate = self.endLabel.text?.toDate()?.addingTimeInterval(24*60*60)
+            else {
+                return
+        }
+        
+        for record in records {
+            
+            guard record.createdAt >= startDate,
+                record.createdAt <= endDate else {
+                    return
+            }
+            
+            self.distance! += record.distance
+            self.ridingTime! += record.ridingTime
+            self.averageSpeed! += record.averageSpeed
+            self.calories! += record.calories
+        }
+        
+        self.averageSpeed = self.averageSpeed! / Double(records.count)
+        
+        self.distanceLabel.text = "\(self.distance ?? 0.0)km"
+        self.ridingTimeLabel.text = "\(self.ridingTime ?? 0)"
+        self.averageSpeedLabel.text = "\(self.averageSpeed ?? 0)m/s"
+        self.caloriesLabel.text = "\(self.calories ?? 0)kcal"
+        
+    }
+    
     //MARK: Actions
     
     @IBAction func didChangeSegControl(_ sender: UISegmentedControl) {
         
         reloadGraph()
+        reloadDataSheet()
         
     }
     @IBAction func didTapFilterLabel(_ sender: UITapGestureRecognizer) {
@@ -264,6 +307,7 @@ extension HistoryGraphViewController: FSCalendarDelegate {
         self.endLabel.textColor = .black
         
         reloadGraph()
+        reloadDataSheet()
         
     }
     
@@ -310,7 +354,7 @@ extension HistoryGraphViewController: ScrollableGraphViewDataSource {
     }
     
     func numberOfPoints() -> Int {
-//        print("numberOfPoints: ", dataWithDate.count)
+        //        print("numberOfPoints: ", dataWithDate.count)
         return dataWithDate.count
     }
     
@@ -331,6 +375,7 @@ extension HistoryGraphViewController: ScrollableGraphViewDataSource {
                     return [:]
             }
             
+            //타입에 따라 데이터의 타입 결정
             switch type {
             case .distance:
                 data = record.distance
@@ -341,7 +386,9 @@ extension HistoryGraphViewController: ScrollableGraphViewDataSource {
             default: break
             }
             
+            //세그먼트 컨트롤에 따라 누적값 설정부분
             let selectedSegment = Segments(rawValue: segmentedControl.selectedSegmentIndex)!
+            
             switch selectedSegment {
             case .day:
                 if datas[record.createdAt.toString()] != nil {
@@ -380,7 +427,6 @@ extension HistoryGraphViewController: ScrollableGraphViewDataSource {
                     }
                 }
             }
-            
         }
         
         return datas
@@ -440,6 +486,7 @@ extension HistoryGraphViewController: UIPickerViewDelegate, UIPickerViewDataSour
         filterLabel.text = selectedValue
         
         reloadGraph()
+        reloadDataSheet()
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
