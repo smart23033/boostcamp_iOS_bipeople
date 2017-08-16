@@ -51,10 +51,10 @@ class HistoryGraphViewController: UIViewController {
         }
     }
     
-    @IBOutlet weak var distanceLabel: UILabel!
-    @IBOutlet weak var ridingTimeLabel: UILabel!
-    @IBOutlet weak var averageSpeedLabel: UILabel!
-    @IBOutlet weak var caloriesLabel: UILabel!
+    @IBOutlet weak var distanceLabel: AnimatedLabel!
+    @IBOutlet weak var ridingTimeLabel: AnimatedLabel!
+    @IBOutlet weak var averageSpeedLabel: AnimatedLabel!
+    @IBOutlet weak var caloriesLabel: AnimatedLabel!
     
     
     //MARK: Properties
@@ -180,10 +180,10 @@ class HistoryGraphViewController: UIViewController {
         
         self.averageSpeed = self.averageSpeed! / Double(records.count)
         
-        self.distanceLabel.text = "\(self.distance ?? 0.0)km"
-        self.ridingTimeLabel.text = "\(self.ridingTime ?? 0)"
-        self.averageSpeedLabel.text = "\(self.averageSpeed ?? 0)m/s"
-        self.caloriesLabel.text = "\(self.calories ?? 0)kcal"
+        self.distanceLabel.countFromZero(to: Float(self.distance ?? 0))
+        self.ridingTimeLabel.countFromZero(to: Float(self.ridingTime ?? 0))
+        self.averageSpeedLabel.countFromZero(to: Float(self.averageSpeed ?? 0))
+        self.caloriesLabel.countFromZero(to: Float(self.calories ?? 0))
         
     }
     
