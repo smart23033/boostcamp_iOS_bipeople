@@ -27,7 +27,7 @@
             </objects>
             <point key="canvasLocation" x="790" y="815"/>
         </scene>
-        <!--TITLE-->
+        <!--Delegate-->
         <scene sceneID="Su5-lI-4JI">
             <objects>
                 <viewController id="MC0-9L-o62" customClass="BiPeopleNavigationViewController" customModule="Bipeople" customModuleProvider="target" sceneMemberID="viewController">
@@ -39,34 +39,55 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nhe-9Y-JBH">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pjH-rm-9aE" customClass="GMSMapView">
+                                <rect key="frame" x="-0.5" y="64" width="375" height="602.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="delegate" destination="MC0-9L-o62" id="cWq-3i-oxQ"/>
+                                </connections>
+                            </view>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nhe-9Y-JBH">
                                 <rect key="frame" x="309" y="539" width="58" height="58"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="58" id="9CT-Pp-CNx"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="58" id="9CT-Pp-CNx"/>
                                     <constraint firstAttribute="height" constant="58" id="HOO-XT-8RK"/>
                                 </constraints>
                                 <state key="normal" title="Button"/>
                                 <connections>
-                                    <action selector="didTapStartButton" destination="MC0-9L-o62" eventType="touchUpInside" id="uqI-0j-kgM"/>
+                                    <action selector="didTapStartButton:" destination="MC0-9L-o62" eventType="touchUpInside" id="C5M-7g-gQi"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="XbL-LW-ZKV" firstAttribute="top" secondItem="Nhe-9Y-JBH" secondAttribute="bottom" constant="70" id="QPD-de-EeN"/>
-                            <constraint firstAttribute="trailing" secondItem="Nhe-9Y-JBH" secondAttribute="trailing" constant="8" id="uxV-Pl-alg"/>
+                            <constraint firstItem="pjH-rm-9aE" firstAttribute="top" secondItem="Y3o-EC-2d3" secondAttribute="bottom" id="4jn-9c-Uzf"/>
+                            <constraint firstItem="pjH-rm-9aE" firstAttribute="trailing" secondItem="yJC-rw-kB1" secondAttribute="trailing" id="6lF-Ge-vwe"/>
+                            <constraint firstItem="pjH-rm-9aE" firstAttribute="bottom" secondItem="XbL-LW-ZKV" secondAttribute="top" id="LGT-E5-AHf"/>
+                            <constraint firstItem="Nhe-9Y-JBH" firstAttribute="bottom" secondItem="XbL-LW-ZKV" secondAttribute="top" constant="-70" id="QPD-de-EeN"/>
+                            <constraint firstItem="pjH-rm-9aE" firstAttribute="leading" secondItem="yJC-rw-kB1" secondAttribute="leading" id="c3n-yC-yPR"/>
+                            <constraint firstItem="Nhe-9Y-JBH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="yJC-rw-kB1" secondAttribute="leading" constant="20" symbolic="YES" id="uTH-2B-fzM"/>
+                            <constraint firstItem="Nhe-9Y-JBH" firstAttribute="trailing" secondItem="yJC-rw-kB1" secondAttribute="trailing" constant="-8" id="uxV-Pl-alg"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="keyPath" value="YES"/>
                         </userDefinedRuntimeAttributes>
                     </view>
                     <navigationItem key="navigationItem" title="TITLE" id="cHY-bb-SJt">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="PmP-QK-R8S"/>
-                        <barButtonItem key="rightBarButtonItem" title="Done" id="B5E-8w-wya"/>
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="PmP-QK-R8S">
+                            <connections>
+                                <action selector="didTapCancelButton:" destination="MC0-9L-o62" id="TtD-ip-Sny"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Done" id="B5E-8w-wya">
+                            <connections>
+                                <action selector="didTapDoneButton:" destination="MC0-9L-o62" id="v4g-py-F87"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="cancelButton" destination="PmP-QK-R8S" id="zWS-my-ZKW"/>
                         <outlet property="doneButton" destination="B5E-8w-wya" id="7i8-g3-5ug"/>
+                        <outlet property="navigationMapView" destination="pjH-rm-9aE" id="rhm-CF-b6J"/>
                         <outlet property="startButton" destination="Nhe-9Y-JBH" id="ywH-jw-Cbi"/>
                     </connections>
                 </viewController>

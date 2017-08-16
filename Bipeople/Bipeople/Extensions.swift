@@ -7,19 +7,22 @@
 //
 
 import UIKit
+import CoreLocation
 
-//MARK: Date
-
+/// MARK: Date Extension
 extension Date {
-    // date to string
+ 
+    /// date to string
     func toString() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-//       dateFormatter.timeZone   = TimeZone(abbreviation: "GMT")
+        // dateFormatter.timeZone   = TimeZone(abbreviation: "GMT")
+        
         return dateFormatter.string(from: self)
     }
     
     func isSameDay(date: Date) -> Bool {
+        
         return Calendar.current.isDate(self, equalTo: date, toGranularity: .day)
     }
     
@@ -44,6 +47,7 @@ extension Date {
     
 }
 
+/// MARK: String Extension
 extension String {
     
     func toDate() -> Date? {
@@ -59,9 +63,9 @@ extension String {
     
 }
 
-//MARK: Double
-
+/// MARK: Double Extension
 extension Double {
+    
     /// 소수점 x 자릿수부터 반올림
     func roundTo(places:Int) -> Double {
         let divisor = pow(10.0, Double(places))
@@ -69,12 +73,11 @@ extension Double {
     }
 }
 
-//MARK: UIColor
-
+/// MARK: UIColor Extension
 extension UIColor {
     static let primary = UIColor(hex: 0x1cb0b8)
     
-    // Create a UIColor from RGB
+    /// Create a UIColor from RGB
     convenience init(red: Int, green: Int, blue: Int, a: CGFloat = 1.0) {
         self.init(
             red: CGFloat(red) / 255.0,
@@ -84,7 +87,7 @@ extension UIColor {
         )
     }
     
-    // Create a UIColor from a hex value (E.g 0x000000)
+    /// Create a UIColor from a hex value (E.g 0x000000)
     convenience init(hex: Int, a: CGFloat = 1.0) {
         self.init(
             red: (hex >> 16) & 0xFF,
