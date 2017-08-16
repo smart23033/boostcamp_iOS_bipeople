@@ -11,7 +11,7 @@ import CoreLocation
 
 /// MARK: Date Extension
 extension Date {
- 
+    
     /// date to string
     func toString() -> String {
         let dateFormatter = DateFormatter()
@@ -24,6 +24,7 @@ extension Date {
     func isInSameWeek(date: Date) -> Bool {
         return Calendar.current.isDate(self, equalTo: date, toGranularity: .weekOfYear)
     }
+    
     func isInSameMonth(date: Date) -> Bool {
         return Calendar.current.isDate(self, equalTo: date, toGranularity: .month)
     }

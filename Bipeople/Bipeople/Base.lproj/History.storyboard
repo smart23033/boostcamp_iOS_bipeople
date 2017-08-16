@@ -193,25 +193,25 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="bottom" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="0FA-wd-pOZ">
                                         <rect key="frame" x="112" y="14" width="223" height="106.5"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="412,123,456,789 km" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XBm-Qs-26z">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="412,123,456,789 km" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XBm-Qs-26z" customClass="AnimatedLabel" customModule="Bipeople" customModuleProvider="target">
                                                 <rect key="frame" x="83.5" y="0.0" width="139.5" height="19"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="31d 24h 12m 11s" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P5q-9v-qjC">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="31d 24h 12m 11s" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P5q-9v-qjC" customClass="AnimatedLabel" customModule="Bipeople" customModuleProvider="target">
                                                 <rect key="frame" x="109.5" y="29" width="113.5" height="19.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="13km/h" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LkZ-TV-FZh">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="13km/h" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LkZ-TV-FZh" customClass="AnimatedLabel" customModule="Bipeople" customModuleProvider="target">
                                                 <rect key="frame" x="172.5" y="58.5" width="50.5" height="19"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123,454,123,123,650 kcal" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xN6-6b-JjU">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123,454,123,123,650 kcal" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xN6-6b-JjU" customClass="AnimatedLabel" customModule="Bipeople" customModuleProvider="target">
                                                 <rect key="frame" x="49" y="87.5" width="174" height="19"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <nil key="textColor"/>
@@ -279,11 +279,15 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="averageSpeedLabel" destination="LkZ-TV-FZh" id="K6c-A6-678"/>
                         <outlet property="calendarView" destination="NNG-aQ-p1g" id="X5u-tt-n3X"/>
+                        <outlet property="caloriesLabel" destination="xN6-6b-JjU" id="3BM-tm-Qix"/>
                         <outlet property="containerView" destination="mjy-SM-4kU" id="1ty-4U-x9U"/>
+                        <outlet property="distanceLabel" destination="XBm-Qs-26z" id="hJ0-IQ-8vY"/>
                         <outlet property="endLabel" destination="6x5-Lp-7sU" id="tWp-qC-5Jl"/>
                         <outlet property="filterLabel" destination="baD-OY-PGM" id="suM-h0-zdX"/>
                         <outlet property="prototypeGraphView" destination="wcW-aI-mFE" id="aF5-bZ-FFj"/>
+                        <outlet property="ridingTimeLabel" destination="P5q-9v-qjC" id="YBu-BV-7Dn"/>
                         <outlet property="segmentedControl" destination="8cM-zC-Fsa" id="7gc-TR-W0V"/>
                         <outlet property="startLabel" destination="mdX-n4-4LX" id="RNH-P7-zsH"/>
                     </connections>

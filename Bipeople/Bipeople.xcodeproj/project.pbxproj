@@ -24,6 +24,7 @@
 		A2A299381F3C45D200E31ED9 /* Record.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A299371F3C45D200E31ED9 /* Record.swift */; };
 		A2A2993A1F3C45D700E31ED9 /* Trace.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A299391F3C45D700E31ED9 /* Trace.swift */; };
 		A2A2993D1F3C6CF300E31ED9 /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A2993C1F3C6CF300E31ED9 /* NavigationManager.swift */; };
+		A2F35C111F447CF00016F1AF /* AnimatedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F35C101F447CF00016F1AF /* AnimatedLabel.swift */; };
 		CA581E36F745E69C960E75F5 /* Pods_Bipeople.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA1522085776953070CF67BC /* Pods_Bipeople.framework */; };
 		F13AB3531F3A78AD0038B2CF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */; };
 		F14C71B31F3ED1C6005015B1 /* GeoJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14C71B21F3ED1C6005015B1 /* GeoJSON.swift */; };
@@ -66,6 +67,7 @@
 		A2A299371F3C45D200E31ED9 /* Record.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Record.swift; sourceTree = "<group>"; };
 		A2A299391F3C45D700E31ED9 /* Trace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trace.swift; sourceTree = "<group>"; };
 		A2A2993C1F3C6CF300E31ED9 /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
+		A2F35C101F447CF00016F1AF /* AnimatedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedLabel.swift; sourceTree = "<group>"; };
 		EA1522085776953070CF67BC /* Pods_Bipeople.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bipeople.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		F14C71B21F3ED1C6005015B1 /* GeoJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoJSON.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				30E82D831F38224B00536AFB /* AppDelegate.swift */,
+				A2F35C101F447CF00016F1AF /* AnimatedLabel.swift */,
 				A219812A1F39730C00D0F5F7 /* CardView.swift */,
 				A258388B1F39A11A00BECEA3 /* Extensions.swift */,
 				302016221F3C23FA0073A493 /* RealmHelper.swift */,
@@ -436,6 +439,7 @@
 				F14C71B31F3ED1C6005015B1 /* GeoJSON.swift in Sources */,
 				A219812F1F39772700D0F5F7 /* HistoryDetailViewController.swift in Sources */,
 				A219812D1F39771E00D0F5F7 /* HistoryTableViewController.swift in Sources */,
+				A2F35C111F447CF00016F1AF /* AnimatedLabel.swift in Sources */,
 				A2A299381F3C45D200E31ED9 /* Record.swift in Sources */,
 				302016271F3C279B0073A493 /* Toilet.swift in Sources */,
 				303AD9CE1F3B01FF00A1DB0D /* PublicResponse.swift in Sources */,
