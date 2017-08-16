@@ -17,13 +17,15 @@ enum CalendarSwitch {
     case on, off
 }
 
-enum GraphType {
-    case distance
-    case ridingTime
-    case calories
-    case maximumSpeed
-    case averageSpeed
+enum GraphType: String {
+    case distance = "거리"
+    case ridingTime = "주행시간"
+    case calories = "칼로리"
+    case maximumSpeed = "최고속도"
+    case averageSpeed = "평균속도"
 }
+
+
 
 class HistoryGraphViewController: UIViewController {
     
@@ -33,6 +35,7 @@ class HistoryGraphViewController: UIViewController {
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var prototypeGraphView: ScrollableGraphView!
     @IBOutlet weak var calendarView: FSCalendar!
+    @IBOutlet weak var filterLabel: UILabel!
     @IBOutlet weak var startLabel: UILabel! {
         didSet {
             startLabel.text = Date().toString()
@@ -74,14 +77,15 @@ class HistoryGraphViewController: UIViewController {
     
     var requestedComponent: Set<Calendar.Component> = [.day]
     var numberOfItems = 0
-    var distanceWithDate: [String:Double] = [:]
+    var dataWithDate: [String:Double] = [:]
+    
+    var pickerData: [GraphType] = [.distance,.ridingTime,.calories]
+    var selectedValue: String = ""
     
     //MARK: Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        prototypeGraphView.isHidden = true
         
         records = appDelegate.records
         
@@ -89,6 +93,52 @@ class HistoryGraphViewController: UIViewController {
         self.calendarView.isHidden = true
     }
     
+    //MARK: Functions
+    
+    func getDataAndReloadGraph() {
+        guard let frame = prototypeGraphView?.frame else {
+            return
+        }
+        
+        graphView?.removeFromSuperview()
+        graphView = ScrollableGraphView(frame: frame, dataSource: self)
+        
+        guard let innerGraphView = graphView else {
+            return
+        }
+        
+        containerView.addSubview(innerGraphView)
+        
+        guard let startDate = self.startLabel.text?.toDate(),
+            let endDate = self.endLabel.text?.toDate()?.addingTimeInterval(24*60*60)
+            else {
+                return
+        }
+        
+        //값을 가져오는 부분
+        let predicate = NSPredicate(format: "createdAt >= %@ AND createdAt <= %@", startDate as NSDate, endDate as NSDate)
+        records = Array(RealmHelper.fetchFromType(of: Record(), with: predicate))
+        
+        records.sort{ $0.createdAt < $1.createdAt }
+        
+        switch selectedValue {
+        case GraphType.distance.rawValue:
+            dataWithDate = getDataWithDate(type: .distance, startDate: startDate, endDate: endDate)
+        case GraphType.ridingTime.rawValue:
+            dataWithDate = getDataWithDate(type: .ridingTime, startDate: startDate, endDate: endDate)
+        case GraphType.calories.rawValue:
+            dataWithDate = getDataWithDate(type: .calories, startDate: startDate, endDate: endDate)
+        default:
+            break
+        }
+        
+        guard let maxValue = dataWithDate.values.sorted(by: >).first else {
+            return
+        }
+        
+        setupGraph(graphView: innerGraphView, max: maxValue)
+        
+    }
     
     //MARK: Actions
     
@@ -104,6 +154,27 @@ class HistoryGraphViewController: UIViewController {
         default:
             break
         }
+    }
+    @IBAction func didTapFilterLabel(_ sender: UITapGestureRecognizer) {
+        let alertView = UIAlertController(
+            title: "Select item from list",
+            message: "\n\n\n\n\n\n\n",
+            preferredStyle: .actionSheet)
+        
+        let pickerView = UIPickerView(frame:
+            CGRect(x: 0, y: 50, width: self.view.bounds.width, height: 130))
+        
+        pickerView.dataSource = self
+        pickerView.delegate = self
+        
+        alertView.view.addSubview(pickerView)
+        
+        let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil)
+        
+        alertView.addAction(action)
+        present(alertView, animated: true, completion: { () -> Void in
+            pickerView.frame.size.width = alertView.view.frame.size.width
+        })
     }
     
     @IBAction func didTapStartLabel(_ sender: UITapGestureRecognizer) {
@@ -164,21 +235,6 @@ extension HistoryGraphViewController: FSCalendarDelegate {
     }
     
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
-       
-        guard let frame = prototypeGraphView?.frame else {
-            return
-        }
-        
-        graphView?.removeFromSuperview()
-        graphView = ScrollableGraphView(frame: frame, dataSource: self)
-        
-        guard let innerGraphView = graphView else {
-            return
-        }
-    
-        containerView.addSubview(innerGraphView)
-        
-        distanceWithDate = [:]
         
         //스위치가 켜지고 꺼짐에 따라 뷰가 다르게 보이는 부분
         if startSwitch == .on && endSwitch == .off {
@@ -210,40 +266,29 @@ extension HistoryGraphViewController: FSCalendarDelegate {
         self.startLabel.textColor = .black
         self.endLabel.textColor = .black
         
-        guard let startDate = self.startLabel.text?.toDate(),
-            let endDate = self.endLabel.text?.toDate()?.addingTimeInterval(24*60*60)
-            else {
-                return
-        }
+        //        시간 차를 구하고 세그에 따라 numberOfItems를 결정하는 부분
+        //        guard let startDate = self.startLabel.text?.toDate(),
+        //            let endDate = self.endLabel.text?.toDate()?.addingTimeInterval(24*60*60)
+        //            else {
+        //                return
+        //        }
+        //        let timeDifference = Calendar.current.dateComponents(requestedComponent, from: startDate, to: endDate)
+        //        print(timeDifference)
+        //
+        //        세그먼트 컨트롤에 따라 날짜 수 다르게 설정되는 부분
+        //        switch segmentedControl.selectedSegmentIndex {
+        //        case 0:
+        //            numberOfItems = timeDifference.day!
+        //        case 1:
+        //            numberOfItems = timeDifference.weekOfMonth!
+        //        case 2:
+        //            numberOfItems = timeDifference.month!
+        //        default:
+        //            break
+        //        }
         
-        //시간 차를 구하고 세그에 따라 numberOfItems를 결정하는 부분
-        let timeDifference = Calendar.current.dateComponents(requestedComponent, from: startDate, to: endDate)
+        getDataAndReloadGraph()
         
-        print(timeDifference)
-        
-        switch segmentedControl.selectedSegmentIndex {
-        case 0:
-            numberOfItems = timeDifference.day!
-        case 1:
-            numberOfItems = timeDifference.weekOfMonth!
-        case 2:
-            numberOfItems = timeDifference.month!
-        default:
-            break
-        }
-        
-        //값을 가져오는 부분
-        let predicate = NSPredicate(format: "createdAt >= %@ AND createdAt <= %@", startDate as NSDate, endDate as NSDate)
-        records = Array(RealmHelper.fetchFromType(of: Record(), with: predicate))
-        
-        records.sort{ $0.createdAt < $1.createdAt }
-        
-        distanceWithDate = getDistanceData(startDate: startDate, endDate: endDate)
-        
-        print(records)
-        print(distanceWithDate)
-        
-        setupGraph(graphView: innerGraphView)
     }
     
 }
@@ -252,8 +297,10 @@ extension HistoryGraphViewController: FSCalendarDelegate {
 
 extension HistoryGraphViewController: ScrollableGraphViewDataSource {
     
+    
     func value(forPlot plot: Plot, atIndex pointIndex: Int) -> Double {
-        let sortedDates = distanceWithDate.keys.sorted(by: <)
+        
+        let sortedDates = dataWithDate.keys.sorted(by: <)
         
         switch(plot.identifier) {
         case "distance":
@@ -262,37 +309,40 @@ extension HistoryGraphViewController: ScrollableGraphViewDataSource {
                 print("pointIndex: ", pointIndex)
                 return 0
             }
-
+            
             var distances = [Double]()
             
             for date in sortedDates {
-                distanceWithDate.forEach({ (key,value) in
+                dataWithDate.forEach({ (key,value) in
                     if key == date {
                         distances.append(value)
                     }
                 })
             }
-        
-        return distances[pointIndex]
-        
+            
+            return distances[pointIndex]
+            
         default:
             return 0
         }
     }
     
     func label(atIndex pointIndex: Int) -> String {
-        return "\(pointIndex)"
+        let sortedDates = dataWithDate.keys.sorted(by: <)
+        
+        return "\(sortedDates[pointIndex])"
     }
     
     func numberOfPoints() -> Int {
-        print("numberOfPoints: ", distanceWithDate.count)
-        return distanceWithDate.count
+        print("numberOfPoints: ", dataWithDate.count)
+        return dataWithDate.count
     }
     
-    //거리 데이터 구하기
-    private func getDistanceData(startDate: Date, endDate: Date) -> [String:Double] {
+    //날짜별 데이터 획득
+    private func getDataWithDate(type: GraphType ,startDate: Date, endDate: Date) -> [String:Double] {
         
-        var data: [String:Double] = [:]
+        var datas: [String:Double] = [:]
+        var data = Double()
         
         guard records.count > 0 else {
             return [:]
@@ -305,22 +355,30 @@ extension HistoryGraphViewController: ScrollableGraphViewDataSource {
                     return [:]
             }
             
-            let distance = record.distance
+            switch type {
+            case .distance:
+                data = record.distance
+            case .ridingTime:
+                data = record.ridingTime
+            case .calories:
+                data = record.calories
+            default: break
+            }
             
-            if data[record.createdAt.toString()] != nil {
-                data[record.createdAt.toString()]! += distance
+            if datas[record.createdAt.toString()] != nil {
+                datas[record.createdAt.toString()]! += data
             } else {
-                data[record.createdAt.toString()] = distance
+                datas[record.createdAt.toString()] = data
             }
             
         }
         
-        return data
+        return datas
     }
     
     //MARK: setup graph
     
-    func setupGraph(graphView: ScrollableGraphView) {
+    func setupGraph(graphView: ScrollableGraphView, max: Double) {
         
         // Setup the first line plot.
         let linePlot = LinePlot(identifier: "distance")
@@ -341,12 +399,40 @@ extension HistoryGraphViewController: ScrollableGraphViewDataSource {
         referenceLines.referenceLineLabelFont = UIFont.boldSystemFont(ofSize: 8)
         referenceLines.referenceLineColor = UIColor.black.withAlphaComponent(0.2)
         referenceLines.referenceLineLabelColor = UIColor.black
-        
         referenceLines.dataPointLabelColor = UIColor.black.withAlphaComponent(1)
+        
         
         graphView.addReferenceLines(referenceLines: referenceLines)
         graphView.addPlot(plot: linePlot)
         
+        graphView.rangeMax = max
+        graphView.dataPointSpacing = 70
+        
+    }
+}
+
+extension HistoryGraphViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
     }
     
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return pickerData.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return pickerData[row].rawValue
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    {
+        selectedValue = pickerData[pickerView.selectedRow(inComponent: 0)].rawValue
+        filterLabel.text = selectedValue
+        
+        getDataAndReloadGraph()
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 35
+    }
 }

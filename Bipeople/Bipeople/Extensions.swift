@@ -21,7 +21,14 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
-    func isSameDay(date: Date) -> Bool {
+    func isInSameWeek(date: Date) -> Bool {
+        return Calendar.current.isDate(self, equalTo: date, toGranularity: .weekOfYear)
+    }
+    func isInSameMonth(date: Date) -> Bool {
+        return Calendar.current.isDate(self, equalTo: date, toGranularity: .month)
+    }
+    
+    func isInSameDay(date: Date) -> Bool {
         
         return Calendar.current.isDate(self, equalTo: date, toGranularity: .day)
     }
@@ -33,7 +40,7 @@ extension Date {
         var newDate = startDate
         
         while true {
-            if newDate?.isSameDay(date: endDate!) == true {
+            if newDate?.isInSameDay(date: endDate!) == true {
                 break
             }
             
