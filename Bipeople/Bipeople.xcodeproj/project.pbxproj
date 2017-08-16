@@ -22,7 +22,7 @@
 		A21981311F39774400D0F5F7 /* HistoryGraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21981301F39774400D0F5F7 /* HistoryGraphViewController.swift */; };
 		A258388C1F39A11A00BECEA3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A258388B1F39A11A00BECEA3 /* Extensions.swift */; };
 		A2A299381F3C45D200E31ED9 /* Record.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A299371F3C45D200E31ED9 /* Record.swift */; };
-		A2A2993A1F3C45D700E31ED9 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A299391F3C45D700E31ED9 /* Track.swift */; };
+		A2A2993A1F3C45D700E31ED9 /* Trace.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A299391F3C45D700E31ED9 /* Trace.swift */; };
 		A2A2993D1F3C6CF300E31ED9 /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A2993C1F3C6CF300E31ED9 /* NavigationManager.swift */; };
 		CA581E36F745E69C960E75F5 /* Pods_Bipeople.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA1522085776953070CF67BC /* Pods_Bipeople.framework */; };
 		F13AB3531F3A78AD0038B2CF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */; };
@@ -64,7 +64,7 @@
 		A21981301F39774400D0F5F7 /* HistoryGraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryGraphViewController.swift; sourceTree = "<group>"; };
 		A258388B1F39A11A00BECEA3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		A2A299371F3C45D200E31ED9 /* Record.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Record.swift; sourceTree = "<group>"; };
-		A2A299391F3C45D700E31ED9 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
+		A2A299391F3C45D700E31ED9 /* Trace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trace.swift; sourceTree = "<group>"; };
 		A2A2993C1F3C6CF300E31ED9 /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
 		EA1522085776953070CF67BC /* Pods_Bipeople.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bipeople.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -260,7 +260,7 @@
 			isa = PBXGroup;
 			children = (
 				A2A299371F3C45D200E31ED9 /* Record.swift */,
-				A2A299391F3C45D700E31ED9 /* Track.swift */,
+				A2A299391F3C45D700E31ED9 /* Trace.swift */,
 				F14C71B21F3ED1C6005015B1 /* GeoJSON.swift */,
 				F14C71B41F3ED200005015B1 /* Feature.swift */,
 				F14C71B61F3F15EF005015B1 /* Geometry.swift */,
@@ -445,7 +445,7 @@
 				A2A2993D1F3C6CF300E31ED9 /* NavigationManager.swift in Sources */,
 				A219812B1F39730C00D0F5F7 /* CardView.swift in Sources */,
 				F14C71B51F3ED200005015B1 /* Feature.swift in Sources */,
-				A2A2993A1F3C45D700E31ED9 /* Track.swift in Sources */,
+				A2A2993A1F3C45D700E31ED9 /* Trace.swift in Sources */,
 				302016291F3C2BE20073A493 /* GetServices.swift in Sources */,
 				30E82D841F38224B00536AFB /* AppDelegate.swift in Sources */,
 				A258388C1F39A11A00BECEA3 /* Extensions.swift in Sources */,
@@ -638,7 +638,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				DEVELOPMENT_TEAM = LGYQPRQ6SD;
 				INFOPLIST_FILE = Bipeople/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = kr.or.connect.boostcamp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -656,7 +656,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				DEVELOPMENT_TEAM = LGYQPRQ6SD;
 				INFOPLIST_FILE = Bipeople/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = kr.or.connect.boostcamp;
 				PRODUCT_NAME = "$(TARGET_NAME)";

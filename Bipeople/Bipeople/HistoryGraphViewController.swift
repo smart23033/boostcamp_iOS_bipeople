@@ -117,10 +117,10 @@ class HistoryGraphViewController: UIViewController {
         
         //값을 가져오는 부분
         let predicate = NSPredicate(format: "createdAt >= %@ AND createdAt <= %@", startDate as NSDate, endDate as NSDate)
-        records = Array(RealmHelper.fetchDatasFromQuery(dataList: records, query: predicate))
+        records = Array(RealmHelper.fetchFromType(of: Record(), with: predicate))
         
         records.sort{ $0.createdAt < $1.createdAt }
-
+        
         switch selectedValue {
         case GraphType.distance.rawValue:
             dataWithDate = getDataWithDate(type: .distance, startDate: startDate, endDate: endDate)
@@ -266,26 +266,26 @@ extension HistoryGraphViewController: FSCalendarDelegate {
         self.startLabel.textColor = .black
         self.endLabel.textColor = .black
         
-//        시간 차를 구하고 세그에 따라 numberOfItems를 결정하는 부분
-//        guard let startDate = self.startLabel.text?.toDate(),
-//            let endDate = self.endLabel.text?.toDate()?.addingTimeInterval(24*60*60)
-//            else {
-//                return
-//        }
-//        let timeDifference = Calendar.current.dateComponents(requestedComponent, from: startDate, to: endDate)
-//        print(timeDifference)
-//
-//        세그먼트 컨트롤에 따라 날짜 수 다르게 설정되는 부분
-//        switch segmentedControl.selectedSegmentIndex {
-//        case 0:
-//            numberOfItems = timeDifference.day!
-//        case 1:
-//            numberOfItems = timeDifference.weekOfMonth!
-//        case 2:
-//            numberOfItems = timeDifference.month!
-//        default:
-//            break
-//        }
+        //        시간 차를 구하고 세그에 따라 numberOfItems를 결정하는 부분
+        //        guard let startDate = self.startLabel.text?.toDate(),
+        //            let endDate = self.endLabel.text?.toDate()?.addingTimeInterval(24*60*60)
+        //            else {
+        //                return
+        //        }
+        //        let timeDifference = Calendar.current.dateComponents(requestedComponent, from: startDate, to: endDate)
+        //        print(timeDifference)
+        //
+        //        세그먼트 컨트롤에 따라 날짜 수 다르게 설정되는 부분
+        //        switch segmentedControl.selectedSegmentIndex {
+        //        case 0:
+        //            numberOfItems = timeDifference.day!
+        //        case 1:
+        //            numberOfItems = timeDifference.weekOfMonth!
+        //        case 2:
+        //            numberOfItems = timeDifference.month!
+        //        default:
+        //            break
+        //        }
         
         getDataAndReloadGraph()
         
@@ -297,7 +297,7 @@ extension HistoryGraphViewController: FSCalendarDelegate {
 
 extension HistoryGraphViewController: ScrollableGraphViewDataSource {
     
-
+    
     func value(forPlot plot: Plot, atIndex pointIndex: Int) -> Double {
         
         let sortedDates = dataWithDate.keys.sorted(by: <)

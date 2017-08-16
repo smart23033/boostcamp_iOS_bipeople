@@ -34,7 +34,9 @@ class Record: Object {
     @objc dynamic var createdAt: Date = Date()
     
     convenience init(departure: String, arrival: String, distance: Double, ridingTime: TimeInterval, restTime: TimeInterval, averageSpeed: Double, maximumSpeed: Double, calories: Double) {
+        
         self.init()
+        
         self._id = Record.autoIncrement()
         self.departure = departure
         self.arrival = arrival
@@ -45,7 +47,14 @@ class Record: Object {
         self.maximumSpeed = maximumSpeed
         self.calories = calories
         self.createdAt = generateRandomDate(daysBack: 50)
-      
+    }
+    
+    convenience init(departure: String, arrival: String) {
+        
+        self.init()
+        
+        self.departure = departure
+        self.arrival = arrival
     }
     
     //Incrementa ID
