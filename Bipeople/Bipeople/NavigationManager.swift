@@ -8,9 +8,13 @@
 
 import Foundation
 import GoogleMaps
+import GooglePlaces
 import Alamofire
+import RealmSwift
 
 enum TmapAPIError: Error {
+    case invalidCurrentLocation
+    case invalidDestination
     case invalidJSONData
     case invalidRequest
     case invalidResponse
@@ -20,81 +24,74 @@ enum TmapAPIError: Error {
 class NavigationManager {
     
     private static let TMAP_API_URL: String = "https://apis.skplanetx.com/tmap/routes/pedestrian"
-    private static let version: Int         = 1
-    private static let format: String       = "json"
-    private static let appKey: String       = "5112af59-674c-38fd-89b0-ab54f1297284"
+    private static let VERSION: Int         = 1
+    private static let FORMAT: String       = "json"
+    private static let APP_KEY: String       = "5112af59-674c-38fd-89b0-ab54f1297284"
     
-    private var mapViewForNavigation: GMSMapView?
+    private static let MINIMUM_RIDING_VELOCITY: Double      = 1.5   /// meters / seconds
+    private static let RIDING_VELOCITY_THRESHOLD: Double    = 14   /// meters / seconds
+    
+    private var mapViewForNavigation: GMSMapView
+    
     private var destinationMarker: GMSMarker?
     private var navigationRoute: GMSPolyline?
-    
+
+    private var record: Record?
     private var traces: [Trace] = []
     
-    func setMapView(view: GMSMapView) {
-        mapViewForNavigation = view
+    init(mapView: GMSMapView) {
+        mapViewForNavigation = mapView  
     }
     
     /// 싱글톤 패턴이 사용 된, 도착지 마커를 맵 위에 설정
-    func setMarker(location: CLLocationCoordinate2D, name: String?, address: String?) throws {
-        
-        guard let map = mapViewForNavigation else {
-            print("`mapUsedForNavigation`을 먼저 설정해주세요")
-            throw NSError()
-        }
+    func setMarker(place: GMSPlace) {
         
         if destinationMarker == nil {
             destinationMarker = GMSMarker()
             destinationMarker?.icon = GMSMarker.markerImage(with: UIColor.primary)
         }
         
-        destinationMarker?.position = location
-        destinationMarker?.title = name ?? "Unknown"
-        destinationMarker?.snippet = address ?? "Unknown"
+        mapViewForNavigation.clear()
+        
+        guard let marker = destinationMarker else {
+            return
+        }
+        
+        marker.position = place.coordinate
+        marker.title = place.name
+        marker.snippet = place.formattedAddress ?? "Unknown"
         
         DispatchQueue.main.async {
-            self.destinationMarker?.map = map
+            marker.map = self.mapViewForNavigation
         }
-    }
-    
-    func removeMarker() {
-        
-        destinationMarker?.map = nil
-    }
-    
-    func eraseRoute() {
-        
-        navigationRoute?.map = nil
     }
     
     /// TODO: T Map GeoJSON API를 통해 경로를 가져온다
-    func getGeoJSONFromTMap(failure: @escaping (Error) -> Void, success: @escaping (Data) throws -> Void) {
+    func getGeoJSONFromTMap(toward place: GMSPlace, failure: @escaping (Error) -> Void, success: @escaping (Data) throws -> Void) {
         
         guard
-            let currentPosX = mapViewForNavigation?.myLocation?.coordinate.longitude,
-            let currentPosY = mapViewForNavigation?.myLocation?.coordinate.latitude
+            let currentPosX = mapViewForNavigation.myLocation?.coordinate.longitude,
+            let currentPosY = mapViewForNavigation.myLocation?.coordinate.latitude
         else {
             print("현재 위치를 아직 찾지 못했습니다")
+            failure(TmapAPIError.invalidCurrentLocation)
             return
         }
         
-        guard
-            let destinationX = destinationMarker?.position.longitude,
-            let destinationY = destinationMarker?.position.latitude
-        else {
-            print("도착지를 먼저 설정해주세요")
-            return
-        }
+        print("currentPosX: ", currentPosX)     // FOR DEBUG
+        print("currentPosY: ", currentPosY)     // FOR DEBUG
         
-        print("currentPosX: ", currentPosX)
-        print("currentPosY: ", currentPosY)
-        print("destinationX: ", destinationX)
-        print("destinationY: ", destinationY)
+        let destinationX = place.coordinate.longitude
+        let destinationY = place.coordinate.latitude
+        
+        print("destinationX: ", destinationX)   // FOR DEBUG
+        print("destinationY: ", destinationY)   // FOR DEBUG
         
         var urlString: String = NavigationManager.TMAP_API_URL
         let urlParams: [String:String] = [
-            "version" : String(NavigationManager.version),
-            "format" : NavigationManager.format,
-            "appKey" : NavigationManager.appKey
+            "version" : String(NavigationManager.VERSION),
+            "format" : NavigationManager.FORMAT,
+            "appKey" : NavigationManager.APP_KEY
         ]
         
         urlString.append(urlParams.reduce("?") { $0 + $1.0 + "=" + String(describing: $1.1) + "&" })
@@ -156,31 +153,104 @@ class NavigationManager {
                 }
             }
         }
-        mapViewForNavigation?.clear()
         
         navigationRoute = GMSPolyline(path: navigationPath)
-        navigationRoute?.strokeWidth = 5
-        navigationRoute?.strokeColor = UIColor.primary
-        navigationRoute?.map = mapViewForNavigation
-    }
-    
-    func addTrace(coord: CLLocationCoordinate2D) {
         
-        traces.append(Trace(coordinate: coord))
+        guard let route = navigationRoute else {
+            return
+        }
+        
+        route.strokeWidth = 5
+        route.strokeColor = UIColor.primary
+        
+        DispatchQueue.main.async {
+            route.map = self.mapViewForNavigation
+        }
     }
     
-    func clearTraces() {
+    func initDatas(departure: String, arrival: String) {
         
         traces.removeAll()
+        record = Record(departure: departure, arrival: arrival)
     }
     
-    func saveRecord() {
+    func addTrace(location: CLLocation, updatedTime: TimeInterval) throws {
         
-        // Record 생성
-        // traces.forEach {
-        //    $0.recordID = record._id
-        //    RealmHelper.addData
-        //}
+        guard let record = record else {
+            
+            let error = NSError(
+                domain: "kr.or.connect.boostcamp",
+                code: -1,
+                userInfo: [
+                    NSLocalizedDescriptionKey : "record must be initialized before addTrace"
+                ]
+            )
+            
+            throw error
+        }
+        
+        if let last = traces.last {
+            
+            record.distance += location.distance(from: CLLocation(latitude: last.latitude, longitude: last.longitude))
+            
+            switch location.speed {
+                
+                case _ where location.speed < NavigationManager.MINIMUM_RIDING_VELOCITY :
+                    
+                    print("Rest Time...")
+                    record.restTime += updatedTime - last.timestamp
+                
+                case _ where location.speed > NavigationManager.MINIMUM_RIDING_VELOCITY :
+                    
+                    print("Speed ​​measurement error due to low GPS reception rate")
+                
+                default:
+                    
+                    record.maximumSpeed = max(record.maximumSpeed, location.speed)
+            }
+        }
+        
+        traces.append(Trace(recordID: record._id, coord : location.coordinate, timestamp: updatedTime))
+    }
+    
+    func saveData() throws {
+        
+        guard let record = record else {
+            
+            let error = NSError(
+                domain: "kr.or.connect.boostcamp",
+                code: -1,
+                userInfo: [
+                    NSLocalizedDescriptionKey : "record must be initialized before addTrace"
+                ]
+            )
+            
+            throw error
+        }
+        
+        guard traces.count > 0 else {
+            
+            let error = NSError(
+                domain: "kr.or.connect.boostcamp",
+                code: -1,
+                userInfo: [
+                    NSLocalizedDescriptionKey : "Recording is possible only if at least one trace data exists"
+                ]
+            )
+            
+            throw error
+        }
+        
+        if let firstTrace = traces.first, let lastTrace = traces.last {
+            
+            record.ridingTime = lastTrace.timestamp - firstTrace.timestamp
+            
+            let excerciseTime = record.ridingTime - record.restTime
+            record.calories = excerciseTime * 0.139
+            record.averageSpeed = record.distance / excerciseTime
+        }
+        
+        RealmHelper.add(data: record)
     }
 }
 

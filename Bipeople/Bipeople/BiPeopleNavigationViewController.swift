@@ -15,13 +15,26 @@ import GooglePlacePicker
 class BiPeopleNavigationViewController: UIViewController {
     
     /// navigationItem에서 보이지 않게 하기 위해 nil로 만들면
-    /// @IBOutlet UIBarButtonItem들이 메모리 해제 되는 것을 막기 위해 저장
-    var navigationButtons: [String:UIBarButtonItem]!
+    /// @IBOutlet weak ~Button들이 메모리 해제 되는 것을 막기 위해 저장
+    var navigationButtons: [String:UIBarButtonItem] = [:]
     
-    @IBOutlet weak var cancelButton: UIBarButtonItem!   /// 기록 취소 후 네비게이션 모드 종료
-    @IBOutlet weak var doneButton: UIBarButtonItem!     /// 기록 저장 후 네비게이션 모드 종료
+    /// 기록 취소 후 네비게이션 모드 종료 버튼
+    @IBOutlet weak var cancelButton: UIBarButtonItem! {
+        willSet(newVal) {
+            navigationButtons["left"] = newVal
+            navigationItem.leftBarButtonItem = nil
+        }
+    }
     
-    /// 네비게이션 주행 시작
+    /// 기록 저장 후 네비게이션 모드 종료 버튼
+    @IBOutlet weak var doneButton: UIBarButtonItem! {
+        willSet(newVal) {
+            navigationButtons["right"] = newVal
+            navigationItem.rightBarButtonItem = nil
+        }
+    }
+    
+    /// 네비게이션 시작 버튼
     @IBOutlet weak var startButton: UIButton! {
         didSet {
             // 출발 버튼을 원형 플로팅 버튼으로 변경
@@ -35,36 +48,55 @@ class BiPeopleNavigationViewController: UIViewController {
             startButton.setTitleColor(UIColor.white, for: .normal)
             startButton.backgroundColor = UIColor.primary
             startButton.autoresizingMask = []
-            
-            startButton.isHidden = true
         }
     }
     
-    var navigationManager: NavigationManager = .init()
+    @IBOutlet weak var navigationMapView: GMSMapView! {
+        didSet {
+            navigationMapView.settings.myLocationButton = true
+            navigationMapView.settings.compassButton = true
+            navigationMapView.settings.scrollGestures = true
+            navigationMapView.settings.zoomGestures = true
+            navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            navigationMapView.isMyLocationEnabled = true
+        }
+    }
     
-    var resultsViewController: GMSAutocompleteResultsViewController!
-    var searchPlaceController: UISearchController!
-
-    var locationManager: CLLocationManager = .init()
-    var currentLocation: CLLocation?
-
-    var navigationMapView: GMSMapView!
+    /// 구글 장소 자동완성 검색창
+    lazy var searchPlaceController: UISearchController = {
+        
+        // GMS(Google Mobile Service) 장소 자동완성 검색기능 설정
+        let resultsViewController = GMSAutocompleteResultsViewController()
+        let innerSearchPlaceController = UISearchController(searchResultsController: resultsViewController)
+        
+        resultsViewController.delegate = self
+        innerSearchPlaceController.searchResultsUpdater = resultsViewController
+        
+        // 장소 검색창을 네비게이션 타이틀 위치에 삽입
+        innerSearchPlaceController.searchBar.sizeToFit()
+        
+        // Prevent the navigation bar from being hidden when searching...
+        innerSearchPlaceController.hidesNavigationBarDuringPresentation = false
+        
+        return innerSearchPlaceController
+    } ()
+    
+    var navigationManager: NavigationManager!
+    var locationManager: CLLocationManager!
     var zoomLevel: Float = 15.0
     
     var isNavigationOn: Bool = false {
         didSet(oldVal) {
-            // startButton.isHidden = true
-            startButton.isHidden = oldVal
+            startButton.isHidden = true
             if oldVal {
-                navigationManager.removeMarker()
-                navigationManager.eraseRoute()
-                
-                self.navigationItem.titleView = searchPlaceController?.searchBar
                 self.navigationItem.leftBarButtonItem = nil
                 self.navigationItem.rightBarButtonItem = nil
+                self.navigationItem.titleView = searchPlaceController.searchBar
+                
+                self.navigationMapView.clear()
             } else {
                 self.navigationItem.titleView = nil
-                self.navigationItem.title = "Let's GO!!"
+                self.navigationItem.title = "Tracking..."
                 self.navigationItem.leftBarButtonItem = navigationButtons["cancel"]
                 self.navigationItem.rightBarButtonItem = navigationButtons["done"]
             }
@@ -73,6 +105,8 @@ class BiPeopleNavigationViewController: UIViewController {
     
     override func viewDidLoad() {
         
+        /*******************************************************************************************/
+        // 첫 화면에 네비게이션 버튼을 없애고, 장소 검색창이 보이도록 설정
         navigationButtons = [
             "cancel"    : cancelButton,
             "done"      : doneButton
@@ -80,85 +114,68 @@ class BiPeopleNavigationViewController: UIViewController {
         
         navigationItem.leftBarButtonItem = nil
         navigationItem.rightBarButtonItem = nil
-        
-        /*******************************************************************************************/
-        // CLLocationManager 초기화
-        locationManager = CLLocationManager()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
-        locationManager.distanceFilter = 50
-        locationManager.startUpdatingLocation()
-        locationManager.delegate = self
-        
-        
-        /*******************************************************************************************/
-        // Google Map View 높이 설정 - 맵 하단이 탭바 컨트롤러에 가려지는 것을 막기 위해, 탭바 높이 만큼 축소
-        let mapViewHeight = view.frame.height - (tabBarController?.tabBar.frame.height ?? 0)
-        let mapViewBounds = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: mapViewHeight)
-        
-        // 카메라 초기화
-        let camera = GMSCameraPosition.camera(withLatitude: 0.0, longitude: 0.0, zoom: zoomLevel)
-        
-        // Google Map View 초기화
-        navigationMapView = GMSMapView.map(withFrame: mapViewBounds, camera: camera)
-        navigationMapView.settings.myLocationButton = true
-        navigationMapView.settings.compassButton = true
-        navigationMapView.settings.scrollGestures = true
-        navigationMapView.settings.zoomGestures = true
-        navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        navigationMapView.settings.myLocationButton = true
-        navigationMapView.isMyLocationEnabled = true
-        navigationMapView.delegate = self
-        
-        // 네비게이션 매니저가 사용할 맵뷰로 설정
-        navigationManager.setMapView(view: navigationMapView)
-        
-        // Map View를 위치가 갱신될 때 까지는, 보이지 않는 상태로 View 최하단에 삽입
-        navigationMapView.isHidden = true
-        self.view.insertSubview(self.navigationMapView, at: 0)
-        
-        
-        /*******************************************************************************************/
-        // GMS(Google Mobile Service) 장소 자동완성 검색기능 설정
-        resultsViewController = GMSAutocompleteResultsViewController()
-        searchPlaceController = UISearchController(searchResultsController: resultsViewController)
-        
-        resultsViewController.delegate = self
-        searchPlaceController.searchResultsUpdater = resultsViewController
-        
-        // 장소 검색창을 네비게이션 타이틀 위치에 삽입
-        searchPlaceController.searchBar.sizeToFit()
-        self.navigationItem.titleView = searchPlaceController.searchBar
+        navigationItem.titleView = searchPlaceController.searchBar
         
         // When UISearchController presents the results view, present it in
         // this view controller, not one further up the chain...
         self.definesPresentationContext = true
         
-        // Prevent the navigation bar from being hidden when searching...
-        searchPlaceController.hidesNavigationBarDuringPresentation = false
+        /*******************************************************************************************/
+        // CLLocationManager 초기화
+        locationManager = CLLocationManager()
+        locationManager.requestAlwaysAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        locationManager.distanceFilter = 1     // 이전 위치에서 얼마나 거리 차이가 나면 update location을 실행할지 결정
+        locationManager.startUpdatingLocation()
+        locationManager.delegate = self
+        
+        
+        /*******************************************************************************************/
+        // NavigationManager 초기화
+        navigationManager = NavigationManager(mapView: navigationMapView)
     }
     
-    @IBAction func didTapStartButton() {
+    @IBAction func didTapStartButton(_ sender: Any) {
+        
+        isNavigationOn = true
+    }
+    
+    
+    @IBAction func didTapCancelButton(_ sender: Any) {
         
         isNavigationOn = false
-        navigationMapView.isHidden = true
+    }
+    
+    @IBAction func didTapDoneButton(_ sender: Any) {
         
-        self.navigationManager.getGeoJSONFromTMap(failure: { (error) in
-            print("Error: ", error)
-            self.navigationMapView.isHidden = false
-        }) { data in
-            print("data: ", String(data:data, encoding: .utf8) ?? "nil")
+        isNavigationOn = false
+    }
+    
+    func getRouteAndDraw(toward place: GMSPlace) -> (() -> Void) {
+        
+        return {
+            self.navigationMapView.isHidden = true
             
-            let geoJSON = try JSONDecoder().decode(
-                GeoJSON.self,
-                from: data
-            )
-            
-            self.navigationManager.drawRoute(from: geoJSON)
-            self.navigationMapView.isHidden = false
+            self.navigationManager.getGeoJSONFromTMap(toward: place, failure: { (error) in
+                print("Error: ", error)
+                
+                self.navigationMapView.isHidden = false
+                self.startButton.isHidden = true
+            }) { data in
+                print("data: ", String(data:data, encoding: .utf8) ?? "nil")
+                
+                let geoJSON = try JSONDecoder().decode(
+                    GeoJSON.self,
+                    from: data
+                )
+                
+                self.navigationManager.drawRoute(from: geoJSON)
+                self.navigationManager.setMarker(place: place)
+                
+                self.navigationMapView.isHidden = false
+                self.startButton.isHidden = false
+            }
         }
-        
-        
     }
 }
 
@@ -168,22 +185,18 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
     /// Handle incoming location events...
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        guard let location = locations.last else {
+        guard let updatedLocation = locations.last else {
             print("Location is nil")
             return
         }
         
-        print("Updated Location: ", location)
+        print("Updated Location: ", updatedLocation)
         
         let camera = GMSCameraPosition.camera(
-            withLatitude: location.coordinate.latitude,
-            longitude: location.coordinate.longitude,
+            withLatitude: updatedLocation.coordinate.latitude,
+            longitude: updatedLocation.coordinate.longitude,
             zoom: zoomLevel
         )
-        
-        if isNavigationOn {
-            // GMSGeometryIsLocationOnPathTolerance(<#T##point: CLLocationCoordinate2D##CLLocationCoordinate2D#>, <#T##path: GMSPath##GMSPath#>, <#T##geodesic: Bool##Bool#>, <#T##tolerance: CLLocationDistance##CLLocationDistance#>)
-        }
         
         // 위치가 업데이트 된 지점으로 맵을 이동
         if navigationMapView.isHidden {
@@ -191,6 +204,23 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
             navigationMapView.camera = camera
         } else {
             navigationMapView.animate(to: camera)
+        }
+        
+        // TODO: 기록 저장
+        if isNavigationOn {
+            // USE GMSGeometryIsLocationOnPathTolerance(location, path, true, 50.0)
+            // if navigationManager.isBreakaway(current: location) {
+            
+            //}
+            
+            do {
+                try navigationManager.addTrace(
+                    location: updatedLocation,
+                    updatedTime: Date().timeIntervalSince1970
+                )
+            } catch {
+                print("Error Occurred: ", error)
+            }
         }
     }
     
@@ -204,7 +234,21 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
             print("User denied access to location...")
             navigationMapView.isHidden = false
             
-            // 환경설정 페이지로 이동시켜서 설정하게 만들어야 함
+            // Alert 문을 띄우고 앱 이용을 위해 위치 권한이 필요함을 알리고
+            // 확인을 누르면 환경설정 탭으로,
+            // 취소를 누르면 앱을 종료해야 함
+            
+            // TODO: 아래 Logic을 AlertController의 ConfirmButton의 Completion Handler로
+//            guard
+//                let settingsUrl = URL(string: UIApplicationOpenSettingsURLString),
+//                UIApplication.shared.canOpenURL(settingsUrl)
+//            else {
+//                return
+//            }
+//
+//            UIApplication.shared.open(settingsUrl) {
+//                print("Settings open ", $0 ? "success" : "failed")
+//            }
         
         case .notDetermined:
             print("Location status not determined...")
@@ -252,26 +296,16 @@ extension BiPeopleNavigationViewController: GMSMapViewDelegate {
 
 /// 장소를 맵을 선택(터치)하여 선택해서
 extension BiPeopleNavigationViewController: GMSPlacePickerViewControllerDelegate {
+    
     func placePicker(_ viewController: GMSPlacePickerViewController, didPick place: GMSPlace) {
         
         // FOR DEBUG
-        print("Selected Place Name: ", place.name)
+        print("Selected Place name: ", place.name)
+        print("Selected Place address: ", place.formattedAddress ?? "Unknown")
+        print("Selected Place attributions: ", place.attributions ?? NSAttributedString())
         
         // Dismiss the place picker.
-        viewController.dismiss(animated: true) {
-            self.navigationItem.titleView = nil
-            self.navigationItem.leftBarButtonItem = nil
-            self.navigationItem.rightBarButtonItem = nil
-            
-            // 선택된 지점을 네비게이션 도착지로 결정하고, 도착지 마커를 표시
-            try? self.navigationManager.setMarker(
-                location: place.coordinate,
-                name: place.name,
-                address: place.formattedAddress
-            )
-            
-            self.isNavigationOn = true
-        }
+        viewController.dismiss(animated: true, completion: getRouteAndDraw(toward: place))
     }
     
     func placePicker(_ viewController: GMSPlacePickerViewController, didFailWithError error: Error) {
@@ -295,12 +329,12 @@ extension BiPeopleNavigationViewController: GMSPlacePickerViewControllerDelegate
 extension BiPeopleNavigationViewController: GMSAutocompleteResultsViewControllerDelegate {
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController, didAutocompleteWith place: GMSPlace) {
-        searchPlaceController?.isActive = false
+        searchPlaceController.isActive = false
         
         // FOR DEBUG
-        print("Place name: ", place.name)
-        print("Place address: ", place.formattedAddress ?? "Unknown")
-        print("Place attributions: ", place.attributions ?? NSAttributedString())
+        print("Searched Place name: ", place.name)
+        print("Searched Place address: ", place.formattedAddress ?? "Unknown")
+        print("Searched Place attributions: ", place.attributions ?? NSAttributedString())
         
         // 선택된 장소로 화면을 전환하기 위한 카메라 정보
         let camera = GMSCameraPosition.camera(withLatitude: place.coordinate.latitude, longitude: place.coordinate.longitude, zoom: zoomLevel)
@@ -312,18 +346,7 @@ extension BiPeopleNavigationViewController: GMSAutocompleteResultsViewController
             navigationMapView.animate(to: camera)
         }
         
-        self.navigationItem.titleView = nil
-        self.navigationItem.leftBarButtonItem = nil
-        self.navigationItem.rightBarButtonItem = nil
-        
-        // 장소 검색을 통해 선택된 지점을 도착지로 결정하고, 도착지 마커를 표시
-        try? self.navigationManager.setMarker(
-            location: place.coordinate,
-            name: place.name,
-            address: place.formattedAddress
-        )
-        
-        self.isNavigationOn = true
+        getRouteAndDraw(toward: place)()
     }
     
     /// FOR DEBUG: 장소검색 자동완성에서 에러 발생 시

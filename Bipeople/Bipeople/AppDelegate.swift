@@ -34,11 +34,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         changeTheme(navigationControllers: navControllers)
         
-        RealmHelper.fetchData(dataList: &records)
-        
+        records = Array(RealmHelper.fetchFromType(of: Record()))
         
         /* 더미데이터 삽입 */
-        RealmHelper.removeAllData()
+        RealmHelper.removeAll()
         records.removeAll()
     
         for i in 0..<20 {
@@ -51,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 maximumSpeed: Double(arc4random_uniform(1000)) / Double(10),
                 calories: Double(arc4random_uniform(1000)) / Double(10))
             
-            RealmHelper.addData(data: record)
+            RealmHelper.add(data: record)
             records.append(record)
         }
         /* 더미데이터 삽입 */

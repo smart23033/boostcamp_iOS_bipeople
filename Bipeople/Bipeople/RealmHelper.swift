@@ -9,33 +9,48 @@
 import Foundation
 import RealmSwift
 
-class RealmHelper: NSObject {
+public class RealmHelper: NSObject {
+    
     private static var realm: Realm {
         return try! Realm()
     }
     
-    static func addData<T: Object>(data: T) {
+    class func add<T: Object>(data: T) {
         
         try! realm.write {
             realm.add(data)
         }
     }
     
-    static func fetchData<T: Object>(dataList: inout Array<T>) {
-        let obj = realm.objects(T.self)
-        for data in obj {
-            dataList.append(data)
+    class func add<T: Object>(datas: Array<T>) {
+        
+        try! realm.write {
+            for data in datas {
+                realm.add(data)
+            }
         }
     }
     
-    static func removeData<T: Object>(data: T) {
+    class func fetchFromType<T: Object>(of: T) -> Results<T> {
+        let results = realm.objects(T.self)
+        
+        return results
+    }
+    
+    class func fetchFromType<T: Object>(of: T, with query: NSPredicate) -> Results<T> {
+        let results = realm.objects(T.self).filter(query)
+        
+        return results
+    }
+    
+    class func remove<T: Object>(data: T) {
         
         try! realm.write {
             realm.delete(data)
         }
     }
     
-    static func removeAllData() {
+    class func removeAll() {
         
         try! realm.write {
             realm.deleteAll()
@@ -43,35 +58,34 @@ class RealmHelper: NSObject {
         
     }
     
-    static func objectFromType<T: Object>(data: T) -> Results<T> {
-        return realm.objects(T.self)
-    }
+//    class func objectFromType<T: Object>(of data: T) -> Results<T> {
+//
+//        return realm.objects(T.self)
+//    }
     
-    static func objectFromQuery<T: Object>(data: T, query: NSPredicate) -> T? {
-        guard let object = realm.objects(T.self).filter("id = 1").first else { return nil }
-        return object
-    }
+//    class func objectFromType<T: Object>(of data: T, from query: NSPredicate) -> T? {
+//        guard let object = realm.objects(T.self).filter("id = 1").first else {
+//            return nil
+//        }
+//
+//        return object
+//    }
     
-    //기간별 데이터 구할 때 쓰려고 일단 만들어봄.
-    static func fetchDatasFromQuery<T: Object>(dataList: Array<T>, query: NSPredicate) -> Results<T> {
-        let results = realm.objects(T.self).filter(query)
-        return results
-    }
+//    class func updateObject<T: Object>(data: T, query: NSPredicate) {
+//
+//        var object = realm.objects(T.self).filter("id = 1").first
+//        object = data
+//
+//        try! realm.write {
+//            realm.add(data, update: true)
+//        }
+//    }
     
-    static func updateObject<T: Object>(data: T, query: NSPredicate) {
-        var object = realm.objects(T.self).filter("id = 1").first
-        object = data
-        try! realm.write {
-            realm.add(object!, update: true)
-        }
-    }
-    
-//    static func updateData<T: Object>(data: T, query: NSPredicate) {
+//    class func updateData<T: Object>(data: T, query: NSPredicate) {
 //        
 //        try! realm.write {
 //            realm.add(updateTask)
 //        }
 //    }
-    
     
 }

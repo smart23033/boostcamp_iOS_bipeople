@@ -22,11 +22,12 @@ class Trace: Object {
     @objc dynamic var longitude: CLLocationDegrees = 0.0
     @objc dynamic var timestamp: TimeInterval = 0.0
     
-    convenience init(coordinate: CLLocationCoordinate2D) {
+    convenience init(recordID: Int, coord: CLLocationCoordinate2D, timestamp: TimeInterval) {
         self.init()
         
-        self.latitude = coordinate.latitude
-        self.longitude = coordinate.longitude
-        self.timestamp = Date().timeIntervalSince1970
+        self.recordID = recordID
+        self.latitude = coord.latitude
+        self.longitude = coord.longitude
+        self.timestamp = timestamp
     }
 }
