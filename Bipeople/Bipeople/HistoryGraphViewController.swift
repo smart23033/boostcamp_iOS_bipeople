@@ -25,6 +25,8 @@ enum GraphType: String {
     case averageSpeed = "평균속도"
 }
 
+
+
 class HistoryGraphViewController: UIViewController {
     
     //MARK: Outlets
@@ -112,6 +114,13 @@ class HistoryGraphViewController: UIViewController {
             else {
                 return
         }
+        
+        //값을 가져오는 부분
+        let predicate = NSPredicate(format: "createdAt >= %@ AND createdAt <= %@", startDate as NSDate, endDate as NSDate)
+        records = Array(RealmHelper.fetchDatasFromQuery(dataList: records, query: predicate))
+        
+        records.sort{ $0.createdAt < $1.createdAt }
+
         switch selectedValue {
         case GraphType.distance.rawValue:
             dataWithDate = getDataWithDate(type: .distance, startDate: startDate, endDate: endDate)
@@ -329,7 +338,7 @@ extension HistoryGraphViewController: ScrollableGraphViewDataSource {
         return dataWithDate.count
     }
     
-    //거리 데이터 구하기
+    //날짜별 데이터 획득
     private func getDataWithDate(type: GraphType ,startDate: Date, endDate: Date) -> [String:Double] {
         
         var datas: [String:Double] = [:]
