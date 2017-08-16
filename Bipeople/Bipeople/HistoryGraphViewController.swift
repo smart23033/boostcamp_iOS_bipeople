@@ -25,7 +25,11 @@ enum GraphType: String {
     case averageSpeed = "평균속도"
 }
 
-
+enum Segments: Int {
+    case day = 0
+    case week
+    case month
+}
 
 class HistoryGraphViewController: UIViewController {
     
@@ -77,6 +81,7 @@ class HistoryGraphViewController: UIViewController {
     
     var requestedComponent: Set<Calendar.Component> = [.day]
     var numberOfItems = 0
+    
     var dataWithDate: [String:Double] = [:]
     
     var pickerData: [GraphType] = [.distance,.ridingTime,.calories]
@@ -95,7 +100,7 @@ class HistoryGraphViewController: UIViewController {
     
     //MARK: Functions
     
-    func getDataAndReloadGraph() {
+    func reloadGraph() {
         guard let frame = prototypeGraphView?.frame else {
             return
         }
@@ -144,16 +149,8 @@ class HistoryGraphViewController: UIViewController {
     
     @IBAction func didChangeSegControl(_ sender: UISegmentedControl) {
         
-        switch sender.selectedSegmentIndex {
-        case 0:
-            requestedComponent = [.day]
-        case 1:
-            requestedComponent = [.weekOfMonth]
-        case 2:
-            requestedComponent = [.month]
-        default:
-            break
-        }
+        reloadGraph()
+        
     }
     @IBAction func didTapFilterLabel(_ sender: UITapGestureRecognizer) {
         let alertView = UIAlertController(
@@ -266,28 +263,7 @@ extension HistoryGraphViewController: FSCalendarDelegate {
         self.startLabel.textColor = .black
         self.endLabel.textColor = .black
         
-        //        시간 차를 구하고 세그에 따라 numberOfItems를 결정하는 부분
-        //        guard let startDate = self.startLabel.text?.toDate(),
-        //            let endDate = self.endLabel.text?.toDate()?.addingTimeInterval(24*60*60)
-        //            else {
-        //                return
-        //        }
-        //        let timeDifference = Calendar.current.dateComponents(requestedComponent, from: startDate, to: endDate)
-        //        print(timeDifference)
-        //
-        //        세그먼트 컨트롤에 따라 날짜 수 다르게 설정되는 부분
-        //        switch segmentedControl.selectedSegmentIndex {
-        //        case 0:
-        //            numberOfItems = timeDifference.day!
-        //        case 1:
-        //            numberOfItems = timeDifference.weekOfMonth!
-        //        case 2:
-        //            numberOfItems = timeDifference.month!
-        //        default:
-        //            break
-        //        }
-        
-        getDataAndReloadGraph()
+        reloadGraph()
         
     }
     
@@ -334,7 +310,7 @@ extension HistoryGraphViewController: ScrollableGraphViewDataSource {
     }
     
     func numberOfPoints() -> Int {
-        print("numberOfPoints: ", dataWithDate.count)
+//        print("numberOfPoints: ", dataWithDate.count)
         return dataWithDate.count
     }
     
@@ -365,10 +341,44 @@ extension HistoryGraphViewController: ScrollableGraphViewDataSource {
             default: break
             }
             
-            if datas[record.createdAt.toString()] != nil {
-                datas[record.createdAt.toString()]! += data
-            } else {
-                datas[record.createdAt.toString()] = data
+            let selectedSegment = Segments(rawValue: segmentedControl.selectedSegmentIndex)!
+            switch selectedSegment {
+            case .day:
+                if datas[record.createdAt.toString()] != nil {
+                    datas[record.createdAt.toString()]! += data
+                } else {
+                    datas[record.createdAt.toString()] = data
+                }
+            case .week:
+                guard var startDateOfWeek = Calendar.current.dateInterval(of: .weekOfYear, for: records[0].createdAt)?.start else {
+                    return [:]
+                }
+                datas[startDateOfWeek.toString()] = data
+                
+                records.forEach { (record) in
+                    if startDateOfWeek == Calendar.current.dateInterval(of: .weekOfYear, for: record.createdAt)?.start {
+                        datas[startDateOfWeek.toString()]! += data
+                    }
+                    else {
+                        startDateOfWeek = (Calendar.current.dateInterval(of: .weekOfYear, for: record.createdAt)?.start)!
+                        datas[startDateOfWeek.toString()] = data
+                    }
+                }
+            case .month:
+                guard var startDateOfMonth = Calendar.current.dateInterval(of: .month, for: records[0].createdAt)?.start else {
+                    return [:]
+                }
+                datas[startDateOfMonth.toString()] = data
+                
+                records.forEach { (record) in
+                    if startDateOfMonth == Calendar.current.dateInterval(of: .month, for: record.createdAt)?.start {
+                        datas[startDateOfMonth.toString()]! += data
+                    }
+                    else {
+                        startDateOfMonth = (Calendar.current.dateInterval(of: .month, for: record.createdAt)?.start)!
+                        datas[startDateOfMonth.toString()] = data
+                    }
+                }
             }
             
         }
@@ -429,7 +439,7 @@ extension HistoryGraphViewController: UIPickerViewDelegate, UIPickerViewDataSour
         selectedValue = pickerData[pickerView.selectedRow(inComponent: 0)].rawValue
         filterLabel.text = selectedValue
         
-        getDataAndReloadGraph()
+        reloadGraph()
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
