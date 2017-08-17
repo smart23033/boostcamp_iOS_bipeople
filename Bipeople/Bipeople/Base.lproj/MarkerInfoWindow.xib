@@ -41,10 +41,7 @@
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="0ON-1t-4DH" secondAttribute="height" multiplier="1:1" id="cWh-rH-xkx"/>
                             </constraints>
-                            <state key="normal" title="Button" image="Start"/>
-                            <connections>
-                                <action selector="test:forEvent:" destination="iN0-l3-epB" eventType="touchDown" id="dyz-Fx-3hf"/>
-                            </connections>
+                            <state key="normal" title="Button" image="start"/>
                         </button>
                     </subviews>
                 </stackView>
@@ -59,14 +56,13 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
-                <outlet property="addressLabel" destination="jgm-AN-zqT" id="6Ve-Cx-6yD"/>
-                <outlet property="nameLabel" destination="a5u-Kn-4Zh" id="93F-Qa-f9i"/>
-                <outlet property="startButton" destination="0ON-1t-4DH" id="JHS-1r-0Ha"/>
+                <outlet property="addressLabel" destination="jgm-AN-zqT" id="lFB-EO-wMz"/>
+                <outlet property="nameLabel" destination="a5u-Kn-4Zh" id="VJd-n0-uQt"/>
             </connections>
             <point key="canvasLocation" x="45.5" y="41"/>
         </view>
     </objects>
     <resources>
-        <image name="Start" width="128" height="128"/>
+        <image name="start" width="128" height="128"/>
     </resources>
 </document>

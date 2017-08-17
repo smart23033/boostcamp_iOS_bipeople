@@ -14,6 +14,8 @@ PODS:
   - Realm (2.9.1):
     - Realm/Headers (= 2.9.1)
   - Realm/Headers (2.9.1)
+  - RealmGeoQueries (1.2):
+    - RealmSwift
   - RealmSwift (2.9.1):
     - Realm (= 2.9.1)
   - ScrollableGraphView (4.0.4)
@@ -24,6 +26,7 @@ DEPENDENCIES:
   - GoogleMaps
   - GooglePlacePicker
   - GooglePlaces
+  - RealmGeoQueries
   - RealmSwift
   - ScrollableGraphView
 
@@ -44,9 +47,10 @@ SPEC CHECKSUMS:
   GooglePlacePicker: 755f10343d71280c7b016823e73fbae9625dfa8a
   GooglePlaces: aafe5990fa7951e98e078761bbdaaf236d7e0c65
   Realm: f91fb43bd474c4f731a116ebf7392c75dd015920
+  RealmGeoQueries: 84f2628e2fcc7593a41639c7b8526d6e88a1f071
   RealmSwift: 207f12a4a36b696c5183c60a1c06d70234a23e56
   ScrollableGraphView: 072ea302f4ca27779692656a49d51fe537b2b1e7
 
-PODFILE CHECKSUM: 550a535b5e78b7bcf73f11abd9842a0fea9b501f
+PODFILE CHECKSUM: c38d4d45954db3e97c242d04a0151c2403a95801
 
 COCOAPODS: 1.3.0

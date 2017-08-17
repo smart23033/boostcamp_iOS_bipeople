@@ -29,12 +29,12 @@ class NavigationManager {
     private static let APP_KEY: String       = "5112af59-674c-38fd-89b0-ab54f1297284"
     
     private static let MINIMUM_RIDING_VELOCITY: Double      = 1.5   /// meters / seconds
-    private static let RIDING_VELOCITY_THRESHOLD: Double    = 14   /// meters / seconds
+    private static let RIDING_VELOCITY_THRESHOLD: Double    = 14    /// meters / seconds
     
     private var mapViewForNavigation: GMSMapView
     
+    private var navigationPath: GMSMutablePath?
     private var destinationMarker: GMSMarker?
-    private var navigationRoute: GMSPolyline?
 
     private var record: Record?
     private var traces: [Trace] = []
@@ -59,7 +59,7 @@ class NavigationManager {
         
         marker.position = place.coordinate
         marker.title = place.name
-        marker.snippet = place.formattedAddress ?? "Unknown"
+        marker.snippet = place.formattedAddress ?? LiteralString.unknown.rawValue
         
         DispatchQueue.main.async {
             marker.map = self.mapViewForNavigation
@@ -73,7 +73,7 @@ class NavigationManager {
             let currentPosX = mapViewForNavigation.myLocation?.coordinate.longitude,
             let currentPosY = mapViewForNavigation.myLocation?.coordinate.latitude
         else {
-            print("현재 위치를 아직 찾지 못했습니다")
+            print("현재 위치를 아직 찾지 못했습니다")     // FOR DEBUG
             failure(TmapAPIError.invalidCurrentLocation)
             return
         }
@@ -95,7 +95,7 @@ class NavigationManager {
         ]
         
         urlString.append(urlParams.reduce("?") { $0 + $1.0 + "=" + String(describing: $1.1) + "&" })
-        print(urlString)
+        print(urlString)            // FOR DEBUG
         
         let requestBody: [String:Any] = [
             "startX": currentPosX,  // 현재 위치 경도
@@ -132,34 +132,33 @@ class NavigationManager {
     }
     
     func drawRoute(from data: GeoJSON) {
-        let navigationPath = GMSMutablePath()
         
-        print("GeoJSON data: ", data)
+        navigationPath = GMSMutablePath()
+        guard let path = navigationPath else {
+            return
+        }
+        
+        print("GeoJSON data: ", data)   // FOR DEBUG
         data.features?.forEach {
             guard let coordinates = $0.geometry?.coordinates else {
-                print($0.geometry?.type ?? "empty")
+                print($0.geometry?.type ?? "empty")     // FOR DEBUG
                 return
             }
             
             if case let .single(coord) = coordinates {
                 
                 print(coord)    // FOR DEBUG
-                navigationPath.add(CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0]))
+                path.add(CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0]))
             } else if case let .array(coords) = coordinates {
                 coords.forEach { coord in
                     
                     print(coord)    // FOR DEBUG
-                    navigationPath.add(CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0]))
+                    path.add(CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0]))
                 }
             }
         }
         
-        navigationRoute = GMSPolyline(path: navigationPath)
-        
-        guard let route = navigationRoute else {
-            return
-        }
-        
+        let route = GMSPolyline(path: navigationPath)
         route.strokeWidth = 5
         route.strokeColor = UIColor.primary
         
@@ -168,10 +167,67 @@ class NavigationManager {
         }
     }
     
-    func initDatas(departure: String, arrival: String) {
+    func initDatas() throws {
         
+        guard
+            let currentLocation = mapViewForNavigation.myLocation?.coordinate,
+            let destination = destinationMarker?.position
+        else {
+            record = nil
+            
+            let error = NSError(
+                domain: Bundle.main.bundleIdentifier ?? "nil",
+                code: -1,
+                userInfo: [
+                    NSLocalizedDescriptionKey : "First, wait current location updated And set the destination"
+                ]
+            )
+            
+            throw error
+        }
+        
+        record = Record()
         traces.removeAll()
-        record = Record(departure: departure, arrival: arrival)
+        
+        GMSGeocoder().reverseGeocodeCoordinate(currentLocation) { response, error in
+            
+            guard error == nil else {
+                print("Reverse Geocode from current coordinate failed with error: ", error!)    // FOR DEBUG
+                return
+            }
+            
+            guard let record = self.record else {
+                print("Record is not ready")    // FOR DEBUG
+                return
+            }
+            
+            guard let address = response?.firstResult() else {
+                print("Reverse Geocode result is empty")    // FOR DEBUG
+                return
+            }
+            
+            record.departure = (address.subLocality ?? "") + " " + (address.thoroughfare ?? "")
+        }
+        
+        GMSGeocoder().reverseGeocodeCoordinate(destination) { response, error in
+            
+            guard error == nil else {
+                print("Reverse Geocode from current coordinate failed with error: ", error!)    // FOR DEBUG
+                return
+            }
+            
+            guard let record = self.record else {
+                print("Record is not ready")    // FOR DEBUG
+                return
+            }
+            
+            guard let address = response?.firstResult() else {
+                print("Reverse Geocode result is empty")    // FOR DEBUG
+                return
+            }
+            
+            record.departure = (address.subLocality ?? "") + " " + (address.thoroughfare ?? "")
+        }
     }
     
     func addTrace(location: CLLocation, updatedTime: TimeInterval) throws {
@@ -179,10 +235,10 @@ class NavigationManager {
         guard let record = record else {
             
             let error = NSError(
-                domain: "kr.or.connect.boostcamp",
+                domain: Bundle.main.bundleIdentifier ?? "nil",
                 code: -1,
                 userInfo: [
-                    NSLocalizedDescriptionKey : "record must be initialized before addTrace"
+                    NSLocalizedDescriptionKey : "Record must be initialized before addTrace"
                 ]
             )
             
@@ -197,12 +253,12 @@ class NavigationManager {
                 
                 case _ where location.speed < NavigationManager.MINIMUM_RIDING_VELOCITY :
                     
-                    print("Rest Time...")
+                    print("Rest Time...")     // FOR DEBUG
                     record.restTime += updatedTime - last.timestamp
                 
                 case _ where location.speed > NavigationManager.MINIMUM_RIDING_VELOCITY :
                     
-                    print("Speed ​​measurement error due to low GPS reception rate")
+                    print("Speed ​​measurement error due to low GPS reception rate")     // FOR DEBUG
                 
                 default:
                     
@@ -218,10 +274,10 @@ class NavigationManager {
         guard let record = record else {
             
             let error = NSError(
-                domain: "kr.or.connect.boostcamp",
+                domain: Bundle.main.bundleIdentifier ?? "nil",
                 code: -1,
                 userInfo: [
-                    NSLocalizedDescriptionKey : "record must be initialized before addTrace"
+                    NSLocalizedDescriptionKey : "Record must be initialized before addTrace"
                 ]
             )
             
@@ -231,7 +287,7 @@ class NavigationManager {
         guard traces.count > 0 else {
             
             let error = NSError(
-                domain: "kr.or.connect.boostcamp",
+                domain: Bundle.main.bundleIdentifier ?? "nil",
                 code: -1,
                 userInfo: [
                     NSLocalizedDescriptionKey : "Recording is possible only if at least one trace data exists"
@@ -247,10 +303,11 @@ class NavigationManager {
             
             let excerciseTime = record.ridingTime - record.restTime
             record.calories = excerciseTime * 0.139
-            record.averageSpeed = record.distance / excerciseTime
+            record.averageSpeed = excerciseTime > 0 ? record.distance / excerciseTime : 0
         }
         
         RealmHelper.add(data: record)
+        RealmHelper.add(datas: traces)
     }
 }
 

@@ -11,6 +11,7 @@ target 'Bipeople' do
   # BLU
   pod 'Alamofire', git: 'https://github.com/Alamofire/Alamofire.git', branch: 'swift4'
   pod 'RealmSwift'
+  pod 'RealmGeoQueries'
 
   # SJSJ
   pod ‘FSCalendar’

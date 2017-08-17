@@ -49,20 +49,13 @@ class Record: Object {
         self.createdAt = generateRandomDate(daysBack: 50)
     }
     
-    convenience init(departure: String, arrival: String) {
-        
-        self.init()
-        
-        self.departure = departure
-        self.arrival = arrival
-    }
-    
     //Incrementa ID
     static func autoIncrement() -> Int {
+        
         let realm = try! Realm()
         if let retNext = realm.objects(Record.self).sorted(byKeyPath: "_id").last?._id {
             return retNext + 1
-        }else{
+        } else {
             return 1
         }
     }
