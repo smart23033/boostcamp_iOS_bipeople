@@ -21,7 +21,6 @@ enum GraphType: String {
     case distance = "거리"
     case ridingTime = "주행시간(분)"
     case calories = "칼로리"
-    case maximumSpeed = "최고속도"
     case averageSpeed = "평균속도"
 }
 
@@ -106,7 +105,7 @@ class HistoryGraphViewController: UIViewController {
     private var graphView: ScrollableGraphView?
     var dataWithDate: [String:Double] = [:]
     
-    var pickerData: [GraphType] = [.distance,.ridingTime,.calories]
+    var pickerData: [GraphType] = [.distance,.ridingTime,.calories,.averageSpeed]
     var selectedValue: String = ""
     
     var distance: Double?
@@ -160,6 +159,8 @@ class HistoryGraphViewController: UIViewController {
             dataWithDate = getDataWithDate(type: .ridingTime, startDate: startDate, endDate: endDate)
         case GraphType.calories.rawValue:
             dataWithDate = getDataWithDate(type: .calories, startDate: startDate, endDate: endDate)
+        case GraphType.averageSpeed.rawValue:
+            dataWithDate = getDataWithDate(type: .averageSpeed, startDate: startDate, endDate: endDate)
         default:
             break
         }
@@ -242,19 +243,28 @@ class HistoryGraphViewController: UIViewController {
                 data = record.ridingTime.minutesForGraph
             case .calories:
                 data = record.calories
-            default: break
+            case .averageSpeed:
+                data = record.averageSpeed
             }
             
             //세그먼트 컨트롤에 따라 누적값 설정부분
             let selectedSegment = Segments(rawValue: segmentedControl.selectedSegmentIndex)!
             
+            var countForAverageSpeed = 1.0
+
             switch selectedSegment {
             case .day:
                 if datas[record.createdAt.toString()] != nil {
                     datas[record.createdAt.toString()]! += data
+                    countForAverageSpeed += 1
                 } else {
                     datas[record.createdAt.toString()] = data
                 }
+                
+                if type == .averageSpeed {
+                    datas[record.createdAt.toString()]! /= countForAverageSpeed
+                }
+                
             case .week:
                 guard var startDateOfWeek = Calendar.current.dateInterval(of: .weekOfYear, for: records[0].createdAt)?.start else {
                     return [:]
@@ -264,10 +274,15 @@ class HistoryGraphViewController: UIViewController {
                 records.forEach { (record) in
                     if startDateOfWeek == Calendar.current.dateInterval(of: .weekOfYear, for: record.createdAt)?.start {
                         datas[startDateOfWeek.toString()]! += data
+                        countForAverageSpeed += 1
                     }
                     else {
                         startDateOfWeek = (Calendar.current.dateInterval(of: .weekOfYear, for: record.createdAt)?.start)!
                         datas[startDateOfWeek.toString()] = data
+                    }
+                    
+                    if type == .averageSpeed {
+                        datas[record.createdAt.toString()]! /= countForAverageSpeed
                     }
                 }
             case .month:
@@ -279,10 +294,15 @@ class HistoryGraphViewController: UIViewController {
                 records.forEach { (record) in
                     if startDateOfMonth == Calendar.current.dateInterval(of: .month, for: record.createdAt)?.start {
                         datas[startDateOfMonth.toString()]! += data
+                        countForAverageSpeed += 1
                     }
                     else {
                         startDateOfMonth = (Calendar.current.dateInterval(of: .month, for: record.createdAt)?.start)!
                         datas[startDateOfMonth.toString()] = data
+                    }
+                    
+                    if type == .averageSpeed {
+                        datas[record.createdAt.toString()]! /= countForAverageSpeed
                     }
                 }
             }
