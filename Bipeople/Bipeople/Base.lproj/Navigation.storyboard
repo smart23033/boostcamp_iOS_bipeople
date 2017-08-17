@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13156.2"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -27,10 +28,10 @@
             </objects>
             <point key="canvasLocation" x="790" y="815"/>
         </scene>
-        <!--Delegate-->
+        <!--Navigation-->
         <scene sceneID="Su5-lI-4JI">
             <objects>
-                <viewController id="MC0-9L-o62" customClass="BiPeopleNavigationViewController" customModule="Bipeople" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="MC0-9L-o62" userLabel="Navigation" customClass="BiPeopleNavigationViewController" customModule="Bipeople" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Y3o-EC-2d3"/>
                         <viewControllerLayoutGuide type="bottom" id="XbL-LW-ZKV"/>
@@ -46,6 +47,18 @@
                                     <outlet property="delegate" destination="MC0-9L-o62" id="cWq-3i-oxQ"/>
                                 </connections>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="68s-vc-AQZ" userLabel="Places Button">
+                                <rect key="frame" x="309" y="74" width="58" height="58"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="58" id="2Ml-hp-bsD"/>
+                                    <constraint firstAttribute="height" constant="58" id="CYQ-If-pm8"/>
+                                    <constraint firstAttribute="width" secondItem="68s-vc-AQZ" secondAttribute="height" multiplier="1:1" id="Uuq-3F-TKH"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="didTapPlacesButton:" destination="MC0-9L-o62" eventType="touchUpInside" id="DBk-ry-bg4"/>
+                                </connections>
+                            </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nhe-9Y-JBH">
                                 <rect key="frame" x="309" y="539" width="58" height="58"/>
                                 <constraints>
@@ -60,11 +73,14 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="68s-vc-AQZ" firstAttribute="top" secondItem="Y3o-EC-2d3" secondAttribute="bottom" constant="10" id="4Qt-gw-nvh"/>
                             <constraint firstItem="pjH-rm-9aE" firstAttribute="top" secondItem="Y3o-EC-2d3" secondAttribute="bottom" id="4jn-9c-Uzf"/>
                             <constraint firstItem="pjH-rm-9aE" firstAttribute="trailing" secondItem="yJC-rw-kB1" secondAttribute="trailing" id="6lF-Ge-vwe"/>
                             <constraint firstItem="pjH-rm-9aE" firstAttribute="bottom" secondItem="XbL-LW-ZKV" secondAttribute="top" id="LGT-E5-AHf"/>
+                            <constraint firstItem="68s-vc-AQZ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="yJC-rw-kB1" secondAttribute="leading" constant="20" symbolic="YES" id="POb-16-BDM"/>
                             <constraint firstItem="Nhe-9Y-JBH" firstAttribute="bottom" secondItem="XbL-LW-ZKV" secondAttribute="top" constant="-70" id="QPD-de-EeN"/>
                             <constraint firstItem="pjH-rm-9aE" firstAttribute="leading" secondItem="yJC-rw-kB1" secondAttribute="leading" id="c3n-yC-yPR"/>
+                            <constraint firstAttribute="trailing" secondItem="68s-vc-AQZ" secondAttribute="trailing" constant="8" id="fNg-fu-8TZ"/>
                             <constraint firstItem="Nhe-9Y-JBH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="yJC-rw-kB1" secondAttribute="leading" constant="20" symbolic="YES" id="uTH-2B-fzM"/>
                             <constraint firstItem="Nhe-9Y-JBH" firstAttribute="trailing" secondItem="yJC-rw-kB1" secondAttribute="trailing" constant="-8" id="uxV-Pl-alg"/>
                         </constraints>
@@ -88,12 +104,53 @@
                         <outlet property="cancelButton" destination="PmP-QK-R8S" id="zWS-my-ZKW"/>
                         <outlet property="doneButton" destination="B5E-8w-wya" id="7i8-g3-5ug"/>
                         <outlet property="navigationMapView" destination="pjH-rm-9aE" id="rhm-CF-b6J"/>
-                        <outlet property="startButton" destination="Nhe-9Y-JBH" id="ywH-jw-Cbi"/>
+                        <outlet property="placesButton" destination="68s-vc-AQZ" id="X0C-do-AiC"/>
+                        <outlet property="startButton" destination="Nhe-9Y-JBH" id="sg7-si-7RV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UQF-lg-G2n" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1564" y="815"/>
+        </scene>
+        <!--Place Detail View Controller-->
+        <scene sceneID="3PE-bI-FO0">
+            <objects>
+                <viewController storyboardIdentifier="PlaceDetailViewController" id="m3B-xh-QwJ" customClass="PlaceDetailViewController" customModule="Bipeople" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="dxY-LI-MhT"/>
+                        <viewControllerLayoutGuide type="bottom" id="Taq-vk-vTn"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="BtA-YC-nsJ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="WtD-hK-K0n">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="b3n-EM-zdK">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="WtD-hK-K0n" firstAttribute="top" secondItem="BtA-YC-nsJ" secondAttribute="top" id="36H-b0-mbD"/>
+                            <constraint firstItem="WtD-hK-K0n" firstAttribute="leading" secondItem="BtA-YC-nsJ" secondAttribute="leading" id="DHg-tG-vuj"/>
+                            <constraint firstAttribute="trailing" secondItem="WtD-hK-K0n" secondAttribute="trailing" id="Y2p-2b-amX"/>
+                            <constraint firstItem="WtD-hK-K0n" firstAttribute="bottom" secondItem="BtA-YC-nsJ" secondAttribute="bottom" id="zIL-LE-SvI"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="collectionView" destination="WtD-hK-K0n" id="Lb6-72-iay"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6La-uV-AT6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2372" y="815"/>
         </scene>
     </scenes>
 </document>

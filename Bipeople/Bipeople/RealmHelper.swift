@@ -24,8 +24,8 @@ public class RealmHelper: NSObject {
     
     class func add<T: Object>(datas: Array<T>) {
         
-        try! realm.write {
-            for data in datas {
+        for data in datas {
+            try! realm.write {
                 realm.add(data)
             }
         }

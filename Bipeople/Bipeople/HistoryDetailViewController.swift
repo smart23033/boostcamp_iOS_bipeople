@@ -39,8 +39,8 @@ class HistoryDetailViewController: UIViewController {
             return
         }
         
-        let predicate = NSPredicate(format: "recordID = %@", recordID)
-        traces = Array(RealmHelper.fetchFromType(of: Trace(), with: predicate))
+//        let predicate = NSPredicate(format: "recordID = %@", recordID)
+//        traces = Array(RealmHelper.fetchFromType(of: Trace(), with: predicate))
         
         titleLabel.title = "\(record?.departure ?? "unknown") - \(record?.arrival ?? "unknown")"
         distanceLabel.text = "\(record?.distance ?? 0) km"

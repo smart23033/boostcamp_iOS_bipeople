@@ -12,60 +12,27 @@ import RealmSwift
 
 
 class GetServices {
-    static func fetchList <T: Codable> (_ type: T.Type, success:@escaping (Any) -> Void, fail:@escaping (_ error:NSError)->Void)->Void  {
+    
+    static func fetchList <T: Codable> (url:String, _ type: T.Type, success:@escaping (T) -> Void, fail:@escaping (_ error:NSError)->Void)->Void  {
+        guard let url = URL(string: url) else { return }
         Alamofire
-            .request(URL(string: "http://openAPI.seoul.go.kr:8088/4944627561736d613130334c75587853/json/SearchPublicToiletPOIService/1/200/")!)
+            .request(url)
             .responseJSON { response in
-                print(response.data ?? "response data is nil")
-                print(response)
                 
-                //                let response: DataResponse<T> = response.flatMap {
-                //                    json in
-                //                    print(json)
-                //                }
-                //                switch response.result.value {
-                //                case .some(let items):
-                //                    print(response)
-                //                //print(items)
-                //                case .none:
-                //                    print("없다")
-                //                }
-                //                do {
-                //                    let decoded = try JSONDecoder().decode(
-                //                        PublicResponse.self,
-                //                        from: response.data!
-                //                    )
-                //
-                //                    print("decoded:", decoded)
-                //                } catch {
-                //                    print("\(error)")
-                //                }
+                guard let data = response.data else { return }
+                
                 do {
                     let decoded = try JSONDecoder().decode(
-                        PublicResponse.self,
-                        from: response.data!
+                        T.self,
+                        from: data
                     )
-                    
                     print("decoded:", decoded)
                     success(decoded)
                 } catch {
                     print("Not working with: ", error)
                 }
-                
-                
         }
     }
-    //    static func fetchTest() {
-    //        let url = URL(string: "http://openAPI.seoul.go.kr:8088/4944627561736d613130334c75587853/json/SearchPublicToiletPOIService/1/200/")!
-    //        let decoder = JSONDecoder()
-    //        decoder.dateDecodingStrategy = .secondsSince1970 // It is necessary for correct decoding. Timestamp -> Date.
-    //
-    //        Alamofire.request(url).responseDecodableObject(keyPath: nil, decoder: decoder) { (response: DataResponse<[PublicResponse]>) in
-    //            let repo = response.result.value
-    //            print(repo)
-    //        }
-    //    }
-    
     
 }
 

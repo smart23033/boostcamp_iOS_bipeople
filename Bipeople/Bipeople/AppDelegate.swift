@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 import GoogleMaps
 import GooglePlaces
 
@@ -18,6 +19,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        savePlaces()
+        print(Realm.Configuration.defaultConfiguration.fileURL ?? "No path for realm") // FOR DEBUG
+        
         /**
           * Add Google Map API Key
           */
@@ -28,19 +32,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let tabBarController = window?.rootViewController as! UITabBarController
         let navControllers = tabBarController.childViewControllers as! [UINavigationController]
-     
-        // 리터럴값 보기 좀 그렇다.
-        tabBarController.selectedIndex = 2
         
         changeTheme(navigationControllers: navControllers)
         
         records = Array(RealmHelper.fetchFromType(of: Record()))
         
         /* 더미데이터 삽입 */
-        RealmHelper.removeAll()
-        records.removeAll()
+        // RealmHelper.removeAll()
+        // records.removeAll()
     
-        for i in 0..<20 {
+        for i in 0 ..< 5 {
             let record = Record(departure: "departure \(i)",
                 arrival: "arrival \(i)",
                 distance: Double(arc4random_uniform(1000)) / Double(10),
@@ -79,8 +80,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-    
 }
+
+//MARK: ChangeTheme
 
 extension AppDelegate {
     
@@ -94,7 +96,82 @@ extension AppDelegate {
             nvc.topViewController?.navigationController?.navigationBar.tintColor = .white
             nvc.topViewController?.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         }
+    }
+}
+
+//MARK: GetPlaceInfo
+
+extension AppDelegate {
+    
+    func savePlaces() {
+        GetServices.fetchList(url : "http://openAPI.seoul.go.kr:8088/4944627561736d613130334c75587853/json/SearchPublicToiletPOIService/1/1000/" ,
+            PublicToilet.self,
+            success: { response in
+            let toilets = response.searchPublicToiletPOIService.row
+                .map { toilet -> Place in
+                    let place = Place()
+                    //place.id = Place.incrementID()
+                    place.lat = toilet.y_Wgs84
+                    place.lng = toilet.x_Wgs84
+                    place.placeType = .toilet
+                    place.location = toilet.fName
+                    
+                    return place
+            }
+            let realm = try! Realm()
+            try! realm.write {
+                realm.add(toilets)
+            }
+        }){ (error) in
+            print("에러")
+        }
+        GetServices.fetchList(url : "http://openapi.seoul.go.kr:8088/6464794f66736d613131377946497a4d/json/PublicWiFiPlaceInfo/1/1000",
+            PublicWiFi.self,
+            success: { response in
+            let wifis = response.publicWiFiPlaceInfo.row
+                .map { wifi -> Place in
+                    let place = Place()
+                    //                    place.id = Place.incrementID()
+                    place.lat = wifi.INSTL_Y
+                    place.lng = wifi.INSTL_X
+                    place.placeType = .wifi
+                    place.location = wifi.PLACE_NAME
+                    return place
+            }
+
+            let realm = try! Realm()
+            try! realm.write {
+                realm.add(wifis)
+            }
+        }){ (error) in
+            print("에러")
+        }
         
-        
+        GetServices.fetchList(
+            url : "http://openapi.seoul.go.kr:8088/4467715062736d61313031666a6d5867/json/GeoInfoBikeConvenientFacilitiesWGS/1/1000/" ,
+            PublicFacility.self,
+            success: { response in
+                let facilities = response.geoInfoBikeConvenientFacilitiesWGS.row
+                    .map { facility -> Place in
+                        let place = Place()
+                        //place.id = Place.incrementID()
+                        place.lat = Double(facility.LAT)!
+                        place.lng = Double(facility.LNG)!
+                        place.placeType = .store
+                        place.location = facility.ADDRESS
+                        place.imageURL = facility.FILENAME
+                        
+                        print("!!!!!!!", place.placeType)
+                        
+                        return place
+                }
+                let realm = try! Realm()
+                try! realm.write {
+                    realm.add(facilities)
+                }
+                
+        }){ (error) in
+            print("에러")
+        }
     }
 }
