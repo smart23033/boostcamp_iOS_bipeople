@@ -7,9 +7,9 @@
 //
 
 import UIKit
-import CoreLocation
 
 /// MARK: Date Extension
+
 extension Date {
     
     /// date to string
@@ -55,7 +55,44 @@ extension Date {
     
 }
 
+//MARK: TimeInterval Extension
+
+extension TimeInterval {
+    var seconds: Int {
+        return Int(self.truncatingRemainder(dividingBy: 60))
+    }
+    var minutes: Int {
+        return Int((self/60).truncatingRemainder(dividingBy: 60))
+    }
+    var hours: Int {
+        return Int((self/3600).truncatingRemainder(dividingBy: 24))
+    }
+    var days: Int {
+        return Int(self/86400)
+    }
+    
+    //그래프의 y축에 사용될 분
+    var minutesForGraph: Double {
+        return self/60
+    }
+    
+    var stringTime: String {
+        guard self.days == 0 else {
+            return "\(self.days)d \(self.hours)h \(self.minutes)m \(self.seconds)s"
+        }
+        guard self.hours == 0 else {
+            return "\(self.hours)h \(self.minutes)m \(self.seconds)s"
+        }
+        guard self.minutes == 0 else {
+            return "\(self.minutes)m \(self.seconds)s"
+        }
+        return "\(self.seconds)s"
+    }
+}
+
+
 /// MARK: String Extension
+
 extension String {
     
     func toDate() -> Date? {
@@ -72,6 +109,7 @@ extension String {
 }
 
 /// MARK: Double Extension
+
 extension Double {
     
     /// 소수점 x 자릿수부터 반올림
@@ -82,6 +120,7 @@ extension Double {
 }
 
 /// MARK: UIColor Extension
+
 extension UIColor {
     static let primary = UIColor(hex: 0x1cb0b8)
     

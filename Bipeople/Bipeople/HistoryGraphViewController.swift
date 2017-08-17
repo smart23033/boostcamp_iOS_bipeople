@@ -19,9 +19,8 @@ enum CalendarSwitch {
 
 enum GraphType: String {
     case distance = "거리"
-    case ridingTime = "주행시간"
+    case ridingTime = "주행시간(분)"
     case calories = "칼로리"
-    case maximumSpeed = "최고속도"
     case averageSpeed = "평균속도"
 }
 
@@ -52,12 +51,32 @@ class HistoryGraphViewController: UIViewController {
     }
     
     @IBOutlet weak var distanceLabel: AnimatedLabel!
-    @IBOutlet weak var ridingTimeLabel: AnimatedLabel!
     @IBOutlet weak var averageSpeedLabel: AnimatedLabel!
     @IBOutlet weak var caloriesLabel: AnimatedLabel!
     
+    @IBOutlet weak var dayLabel: AnimatedLabel! {
+        didSet {
+            dayLabel.decimalPoints = .zero
+        }
+    }
+    @IBOutlet weak var hourLabel: AnimatedLabel! {
+        didSet {
+            hourLabel.decimalPoints = .zero
+        }
+    }
+    @IBOutlet weak var minuteLabel: AnimatedLabel! {
+        didSet {
+            minuteLabel.decimalPoints = .zero
+        }
+    }
+    @IBOutlet weak var secondLabel: AnimatedLabel! {
+        didSet {
+            secondLabel.decimalPoints = .zero
+        }
+    }
     
     //MARK: Properties
+    
     var startSwitch = CalendarSwitch.off {
         didSet {
             switch startSwitch {
@@ -86,7 +105,7 @@ class HistoryGraphViewController: UIViewController {
     private var graphView: ScrollableGraphView?
     var dataWithDate: [String:Double] = [:]
     
-    var pickerData: [GraphType] = [.distance,.ridingTime,.calories]
+    var pickerData: [GraphType] = [.distance,.ridingTime,.calories,.averageSpeed]
     var selectedValue: String = ""
     
     var distance: Double?
@@ -140,6 +159,8 @@ class HistoryGraphViewController: UIViewController {
             dataWithDate = getDataWithDate(type: .ridingTime, startDate: startDate, endDate: endDate)
         case GraphType.calories.rawValue:
             dataWithDate = getDataWithDate(type: .calories, startDate: startDate, endDate: endDate)
+        case GraphType.averageSpeed.rawValue:
+            dataWithDate = getDataWithDate(type: .averageSpeed, startDate: startDate, endDate: endDate)
         default:
             break
         }
@@ -176,15 +197,118 @@ class HistoryGraphViewController: UIViewController {
             self.ridingTime! += record.ridingTime
             self.averageSpeed! += record.averageSpeed
             self.calories! += record.calories
+            
         }
         
         self.averageSpeed = self.averageSpeed! / Double(records.count)
         
+        let days = self.ridingTime?.days
+        let hours = self.ridingTime?.hours
+        let minutes = self.ridingTime?.minutes
+        let seconds = self.ridingTime?.seconds
+            
         self.distanceLabel.countFromZero(to: Float(self.distance ?? 0))
-        self.ridingTimeLabel.countFromZero(to: Float(self.ridingTime ?? 0))
         self.averageSpeedLabel.countFromZero(to: Float(self.averageSpeed ?? 0))
         self.caloriesLabel.countFromZero(to: Float(self.calories ?? 0))
         
+        self.dayLabel.countFromZero(to:Float(days ?? 0))
+        self.hourLabel.countFromZero(to: Float(hours ?? 0))
+        self.minuteLabel.countFromZero(to: Float(minutes ?? 0))
+        self.secondLabel.countFromZero(to: Float(seconds ?? 0))
+        
+    }
+    
+    //날짜별 데이터 획득
+    func getDataWithDate(type: GraphType ,startDate: Date, endDate: Date) -> [String:Double] {
+        
+        var datas: [String:Double] = [:]
+        var data = Double()
+        
+        guard records.count > 0 else {
+            return [:]
+        }
+        
+        for record in records {
+            
+            guard record.createdAt >= startDate,
+                record.createdAt <= endDate else {
+                    return [:]
+            }
+            
+            //타입에 따라 데이터의 타입 결정
+            switch type {
+            case .distance:
+                data = record.distance
+            case .ridingTime:
+                data = record.ridingTime.minutesForGraph
+            case .calories:
+                data = record.calories
+            case .averageSpeed:
+                data = record.averageSpeed
+            }
+            
+            //세그먼트 컨트롤에 따라 누적값 설정부분
+            let selectedSegment = Segments(rawValue: segmentedControl.selectedSegmentIndex)!
+            
+            var countForAverageSpeed = 1.0
+
+            switch selectedSegment {
+            case .day:
+                if datas[record.createdAt.toString()] != nil {
+                    datas[record.createdAt.toString()]! += data
+                    countForAverageSpeed += 1
+                } else {
+                    datas[record.createdAt.toString()] = data
+                }
+                
+                if type == .averageSpeed {
+                    datas[record.createdAt.toString()]! /= countForAverageSpeed
+                }
+                
+            case .week:
+                guard var startDateOfWeek = Calendar.current.dateInterval(of: .weekOfYear, for: records[0].createdAt)?.start else {
+                    return [:]
+                }
+                datas[startDateOfWeek.toString()] = data
+                
+                records.forEach { (record) in
+                    if startDateOfWeek == Calendar.current.dateInterval(of: .weekOfYear, for: record.createdAt)?.start {
+                        datas[startDateOfWeek.toString()]! += data
+                        countForAverageSpeed += 1
+                    }
+                    else {
+                        startDateOfWeek = (Calendar.current.dateInterval(of: .weekOfYear, for: record.createdAt)?.start)!
+                        datas[startDateOfWeek.toString()] = data
+                    }
+                    
+                    if type == .averageSpeed {
+                        datas[startDateOfWeek.toString()]! /= countForAverageSpeed
+                    }
+                }
+            case .month:
+                guard var startDateOfMonth = Calendar.current.dateInterval(of: .month, for: records[0].createdAt)?.start else {
+                    return [:]
+                }
+                datas[startDateOfMonth.toString()] = data
+                
+                records.forEach { (record) in
+                    if startDateOfMonth == Calendar.current.dateInterval(of: .month, for: record.createdAt)?.start {
+                        datas[startDateOfMonth.toString()]! += data
+                        countForAverageSpeed += 1
+                    }
+                    else {
+                        startDateOfMonth = (Calendar.current.dateInterval(of: .month, for: record.createdAt)?.start)!
+                        datas[startDateOfMonth.toString()] = data
+                    }
+                    
+                    if type == .averageSpeed {
+                        datas[startDateOfMonth.toString()]! /= countForAverageSpeed
+                    }
+                }
+            }
+        }
+        
+        return datas
     }
     
     //MARK: Actions
@@ -323,10 +447,9 @@ extension HistoryGraphViewController: ScrollableGraphViewDataSource {
         let sortedDates = dataWithDate.keys.sorted(by: <)
         
         switch(plot.identifier) {
-        case "distance":
+        case "plot":
             
             guard pointIndex < sortedDates.count else {
-                print("pointIndex: ", pointIndex)
                 return 0
             }
             
@@ -358,86 +481,10 @@ extension HistoryGraphViewController: ScrollableGraphViewDataSource {
         return dataWithDate.count
     }
     
-    //날짜별 데이터 획득
-    private func getDataWithDate(type: GraphType ,startDate: Date, endDate: Date) -> [String:Double] {
-        
-        var datas: [String:Double] = [:]
-        var data = Double()
-        
-        guard records.count > 0 else {
-            return [:]
-        }
-        
-        for record in records {
-            
-            guard record.createdAt >= startDate,
-                record.createdAt <= endDate else {
-                    return [:]
-            }
-            
-            //타입에 따라 데이터의 타입 결정
-            switch type {
-            case .distance:
-                data = record.distance
-            case .ridingTime:
-                data = record.ridingTime
-            case .calories:
-                data = record.calories
-            default: break
-            }
-            
-            //세그먼트 컨트롤에 따라 누적값 설정부분
-            let selectedSegment = Segments(rawValue: segmentedControl.selectedSegmentIndex)!
-            
-            switch selectedSegment {
-            case .day:
-                if datas[record.createdAt.toString()] != nil {
-                    datas[record.createdAt.toString()]! += data
-                } else {
-                    datas[record.createdAt.toString()] = data
-                }
-            case .week:
-                guard var startDateOfWeek = Calendar.current.dateInterval(of: .weekOfYear, for: records[0].createdAt)?.start else {
-                    return [:]
-                }
-                datas[startDateOfWeek.toString()] = data
-                
-                records.forEach { (record) in
-                    if startDateOfWeek == Calendar.current.dateInterval(of: .weekOfYear, for: record.createdAt)?.start {
-                        datas[startDateOfWeek.toString()]! += data
-                    }
-                    else {
-                        startDateOfWeek = (Calendar.current.dateInterval(of: .weekOfYear, for: record.createdAt)?.start)!
-                        datas[startDateOfWeek.toString()] = data
-                    }
-                }
-            case .month:
-                guard var startDateOfMonth = Calendar.current.dateInterval(of: .month, for: records[0].createdAt)?.start else {
-                    return [:]
-                }
-                datas[startDateOfMonth.toString()] = data
-                
-                records.forEach { (record) in
-                    if startDateOfMonth == Calendar.current.dateInterval(of: .month, for: record.createdAt)?.start {
-                        datas[startDateOfMonth.toString()]! += data
-                    }
-                    else {
-                        startDateOfMonth = (Calendar.current.dateInterval(of: .month, for: record.createdAt)?.start)!
-                        datas[startDateOfMonth.toString()] = data
-                    }
-                }
-            }
-        }
-        
-        return datas
-    }
-    
-    //MARK: setup graph
-    
     func setupGraph(graphView: ScrollableGraphView, max: Double) {
         
         // Setup the first line plot.
-        let linePlot = LinePlot(identifier: "distance")
+        let linePlot = LinePlot(identifier: "plot")
         
         linePlot.lineWidth = 5
         linePlot.lineColor = UIColor.primary
@@ -466,6 +513,8 @@ extension HistoryGraphViewController: ScrollableGraphViewDataSource {
         
     }
 }
+
+//MARK: UIPickerViewDelegate
 
 extension HistoryGraphViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
