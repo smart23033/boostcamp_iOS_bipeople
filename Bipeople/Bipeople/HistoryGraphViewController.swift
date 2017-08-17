@@ -282,7 +282,7 @@ class HistoryGraphViewController: UIViewController {
                     }
                     
                     if type == .averageSpeed {
-                        datas[record.createdAt.toString()]! /= countForAverageSpeed
+                        datas[startDateOfWeek.toString()]! /= countForAverageSpeed
                     }
                 }
             case .month:
@@ -302,7 +302,7 @@ class HistoryGraphViewController: UIViewController {
                     }
                     
                     if type == .averageSpeed {
-                        datas[record.createdAt.toString()]! /= countForAverageSpeed
+                        datas[startDateOfMonth.toString()]! /= countForAverageSpeed
                     }
                 }
             }
