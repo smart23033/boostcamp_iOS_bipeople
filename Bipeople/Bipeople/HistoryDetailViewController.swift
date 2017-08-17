@@ -28,10 +28,10 @@ class HistoryDetailViewController: UIViewController {
     
         titleLabel.title = "\(record?.departure ?? "unknown") - \(record?.arrival ?? "unknown")"
         distanceLabel.text = "\(record?.distance ?? 0) km"
-        ridingTimeLabel.text = "\(record?.ridingTime ?? 0)"
+        ridingTimeLabel.text = record?.ridingTime.stringTime
         restTimeLabel.text = "\(record?.restTime ?? 0)"
-        averageSpeedLabel.text = "\(record?.averageSpeed ?? 0) km/h"
-        maximumSpeedLabel.text = "\(record?.maximumSpeed ?? 0) km/h"
+        averageSpeedLabel.text = "\(record?.averageSpeed ?? 0) m/s"
+        maximumSpeedLabel.text = "\(record?.maximumSpeed ?? 0) m/s"
         caloriesLabel.text = "\(record?.calories ?? 0) kcal"
         createdAt.text = record?.createdAt.toString()
         

@@ -19,7 +19,7 @@ enum CalendarSwitch {
 
 enum GraphType: String {
     case distance = "거리"
-    case ridingTime = "주행시간"
+    case ridingTime = "주행시간(분)"
     case calories = "칼로리"
     case maximumSpeed = "최고속도"
     case averageSpeed = "평균속도"
@@ -52,11 +52,32 @@ class HistoryGraphViewController: UIViewController {
     }
     
     @IBOutlet weak var distanceLabel: AnimatedLabel!
-    @IBOutlet weak var ridingTimeLabel: AnimatedLabel!
     @IBOutlet weak var averageSpeedLabel: AnimatedLabel!
     @IBOutlet weak var caloriesLabel: AnimatedLabel!
     
+    @IBOutlet weak var dayLabel: AnimatedLabel! {
+        didSet {
+            dayLabel.decimalPoints = .zero
+        }
+    }
+    @IBOutlet weak var hourLabel: AnimatedLabel! {
+        didSet {
+            hourLabel.decimalPoints = .zero
+        }
+    }
+    @IBOutlet weak var minuteLabel: AnimatedLabel! {
+        didSet {
+            minuteLabel.decimalPoints = .zero
+        }
+    }
+    @IBOutlet weak var secondLabel: AnimatedLabel! {
+        didSet {
+            secondLabel.decimalPoints = .zero
+        }
+    }
+    
     //MARK: Properties
+    
     var startSwitch = CalendarSwitch.off {
         didSet {
             switch startSwitch {
@@ -175,14 +196,24 @@ class HistoryGraphViewController: UIViewController {
             self.ridingTime! += record.ridingTime
             self.averageSpeed! += record.averageSpeed
             self.calories! += record.calories
+            
         }
         
         self.averageSpeed = self.averageSpeed! / Double(records.count)
         
+        let days = self.ridingTime?.days
+        let hours = self.ridingTime?.hours
+        let minutes = self.ridingTime?.minutes
+        let seconds = self.ridingTime?.seconds
+            
         self.distanceLabel.countFromZero(to: Float(self.distance ?? 0))
-        self.ridingTimeLabel.countFromZero(to: Float(self.ridingTime ?? 0))
         self.averageSpeedLabel.countFromZero(to: Float(self.averageSpeed ?? 0))
         self.caloriesLabel.countFromZero(to: Float(self.calories ?? 0))
+        
+        self.dayLabel.countFromZero(to:Float(days ?? 0))
+        self.hourLabel.countFromZero(to: Float(hours ?? 0))
+        self.minuteLabel.countFromZero(to: Float(minutes ?? 0))
+        self.secondLabel.countFromZero(to: Float(seconds ?? 0))
         
     }
     
@@ -208,7 +239,7 @@ class HistoryGraphViewController: UIViewController {
             case .distance:
                 data = record.distance
             case .ridingTime:
-                data = record.ridingTime
+                data = record.ridingTime.minutesForGraph
             case .calories:
                 data = record.calories
             default: break

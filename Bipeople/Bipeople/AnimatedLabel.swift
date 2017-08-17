@@ -38,7 +38,7 @@ typealias OptionalFormatBlock = (() -> String)
 class AnimatedLabel: UILabel {
     var completion: OptionalCallback?
     var animationDuration: AnimationDuration = .brisk
-    var decimalPoints: DecimalPoints = .two
+    var decimalPoints: DecimalPoints = .one
     var countingMethod: CountingMethod = .easeInOut
     var customFormatBlock: OptionalFormatBlock?
     
