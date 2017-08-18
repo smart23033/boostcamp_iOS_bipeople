@@ -325,6 +325,7 @@ class HistoryGraphViewController: UIViewController {
             message: "\n\n\n\n\n\n\n",
             preferredStyle: .actionSheet)
         
+        
         let pickerView = UIPickerView(frame:
             CGRect(x: 0, y: 50, width: self.view.bounds.width, height: 130))
         
@@ -336,8 +337,15 @@ class HistoryGraphViewController: UIViewController {
         let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil)
         
         alertView.addAction(action)
+        
         present(alertView, animated: true, completion: { () -> Void in
             pickerView.frame.size.width = alertView.view.frame.size.width
+            
+            self.selectedValue = self.pickerData[0].rawValue
+            self.filterLabel.text = GraphType.distance.rawValue
+            self.reloadGraph()
+            self.reloadDataSheet()
+            
         })
     }
     

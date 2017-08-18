@@ -35,7 +35,7 @@ class HistoryDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        guard let recordID = record?._id  else {
+        guard let recordID = record?._id else {
             return
         }
         
