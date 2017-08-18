@@ -26,6 +26,8 @@ class BiPeopleNavigationViewController: UIViewController {
     private var navigationButtons: [String:UIBarButtonItem] = [:]
     
     private var placesResult:[Place] = []
+    private var placesMarkers:[GMSMarker] = []
+    private var areaCircle: GMSCircle?
     
     /// 기록 취소 후 네비게이션 모드 종료 버튼
     @IBOutlet weak var cancelButton: UIBarButtonItem! {
@@ -87,7 +89,7 @@ class BiPeopleNavigationViewController: UIViewController {
     }
     
     /// 구글 장소 자동완성 검색창
-    lazy var searchPlaceController: UISearchController = {
+    lazy private var searchPlaceController: UISearchController = {
         
         // GMS(Google Mobile Service) 장소 자동완성 검색기능 설정
         let resultsViewController = GMSAutocompleteResultsViewController()
@@ -97,19 +99,20 @@ class BiPeopleNavigationViewController: UIViewController {
         innerSearchPlaceController.searchResultsUpdater = resultsViewController
         
         // 장소 검색창을 네비게이션 타이틀 위치에 삽입
-        innerSearchPlaceController.searchBar.sizeToFit()
+        // innerSearchPlaceController.searchBar.sizeToFit()
         
         // Prevent the navigation bar from being hidden when searching...
         innerSearchPlaceController.hidesNavigationBarDuringPresentation = false
+        innerSearchPlaceController.searchBar.placeholder = "장소 검색"
         
         return innerSearchPlaceController
     } ()
     
-    var navigationManager: NavigationManager!
-    var locationManager: CLLocationManager!
-    var zoomLevel: Float = 15.0
+    private var navigationManager: NavigationManager!
+    private var locationManager: CLLocationManager!
+    private var zoomLevel: Float = 15.0
     
-    var isNavigationOn: Bool = false {
+    private var isNavigationOn: Bool = false {
         willSet(newVal) {
             startButton.isHidden = true
             if newVal {
@@ -146,6 +149,9 @@ class BiPeopleNavigationViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        
+        // 공공장소 세부사항 View에서 검색창이 사라지면서 네비게이션 바 아래에 검정줄이 생기는 것을 해결
+        self.navigationController?.navigationBar.isTranslucent = true;
         
         /*******************************************************************************************/
         // 첫 화면에 네비게이션 버튼을 없애고, 장소 검색창이 보이도록 설정
@@ -227,16 +233,26 @@ class BiPeopleNavigationViewController: UIViewController {
     
     @IBAction func didTapPlacesButton(_ sender: Any) {
         
-        showPlaces()
+        guard showPlaces() else {
+            
+            let warningAlert = UIAlertController(
+                title: "아직 공공 데이터의 다운로드가 완료되지 않았습니다",
+                message: "waiting...",
+                preferredStyle: .alert
+            )
+            warningAlert.addAction(UIAlertAction(title: "확인", style: .default))
+    
+            self.present(warningAlert, animated: true)
+            
+            return
+        }
     }
     
-    private func showPlaces() {
-        
-        self.navigationMapView.clear()
+    private func showPlaces() -> Bool {
         
         guard let currentLocation = navigationMapView.myLocation?.coordinate else {
             
-            return
+            return false
         }
         
         placesResult.removeAll()
@@ -247,30 +263,40 @@ class BiPeopleNavigationViewController: UIViewController {
             sortAscending: nil
         )
         
-        print("placesResults: ", placesResult)
+        guard placesResult.count > 0 else {
+            return false
+        }
+        
+        areaCircle?.map = nil
+        for marker in placesMarkers {
+            marker.map = nil
+        }
+        placesMarkers.removeAll()
         
         for place in placesResult {
+            
+            if case .none = place.placeType {
+                continue
+            }
             
             let placeLocation = CLLocationCoordinate2D(latitude: place.lat, longitude: place.lng)
             let marker = GMSMarker(position: placeLocation)
             
+            marker.icon = UIImage(named: place.placeType.rawValue)
             marker.title = place.placeType.rawValue
-            marker.map = navigationMapView
             marker.userData = place
+            marker.map = navigationMapView
             
-            print(place.placeType)
-            if case .none = place.placeType {
-                marker.icon = nil
-            } else {
-                marker.icon = UIImage(named: place.placeType.rawValue)
-            }
+            placesMarkers.append(marker)
         }
         
-        let areaCircle = GMSCircle(position: currentLocation, radius: 1000)
+        areaCircle = GMSCircle(position: currentLocation, radius: 1000)
         
-        areaCircle.strokeColor = UIColor.clear
-        areaCircle.fillColor = UIColor(red: 0, green: 0, blue: 0.35, alpha: 0.4)
-        areaCircle.map = navigationMapView
+        areaCircle?.strokeColor = UIColor.clear
+        areaCircle?.fillColor = UIColor(red: 0, green: 0, blue: 0.35, alpha: 0.4)
+        areaCircle?.map = navigationMapView
+        
+        return true
     }
     
     /// T Map API를 이용해 경로를 가져와서 맵에 그림
@@ -473,20 +499,6 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         
         print("Location update fail with: ", error)
-        
-        let warningAlert = UIAlertController(
-            title: "위치 정보 접근 중 오류가 발생하였습니다\n작업을 중지합니다",
-            message: error.localizedDescription,
-            preferredStyle: .alert
-        )
-        warningAlert.addAction(UIAlertAction(title: "확인", style: .default))
-        
-        self.present(warningAlert, animated: true) {
-            
-            self.isNavigationOn = false
-        }
-        
-        // locationManager.stopUpdatingLocation()
     }
 }
 
@@ -494,21 +506,30 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
 extension BiPeopleNavigationViewController: GMSMapViewDelegate {
     
     func mapView(_ mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView? {
-        let infoWindow = Bundle.main.loadNibNamed("MarkerInfoWindow", owner: self, options: nil)?.first as? MarkerInfoWindow
-        guard let place = marker.userData as? Place else { return nil }
-        infoWindow?.nameLabel.text = place.location
-        infoWindow?.addressLabel.text = place.location
+        
+        guard
+            let infoWindow = Bundle.main.loadNibNamed("MarkerInfoWindow", owner: self, options: nil)?.first as? MarkerInfoWindow,
+            let place = marker.userData as? Place
+        else {
+            return nil
+        }
+        
+        infoWindow.nameLabel.text = place.location
+        infoWindow.addressLabel.text = place.location
         
         return infoWindow
     }
     
     func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
         
-        guard let place = marker.userData as? Place else { return }
+        let storyboard = UIStoryboard(name: "Navigation", bundle: nil)
         
-        guard let placeDetailVC = UIStoryboard(name: "Navigation", bundle: nil).instantiateViewController(withIdentifier: "PlaceDetailViewController") as? PlaceDetailViewController else { return }
-        
-        print(place.placeType)
+        guard
+            let place = marker.userData as? Place,
+            let placeDetailVC = storyboard.instantiateViewController(withIdentifier: "PlaceDetailViewController") as? PlaceDetailViewController
+        else {
+            return
+        }
         
         placeDetailVC.place = place
         placeDetailVC.places = self.placesResult
