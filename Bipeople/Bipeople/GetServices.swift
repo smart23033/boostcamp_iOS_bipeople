@@ -26,7 +26,7 @@ class GetServices {
                         T.self,
                         from: data
                     )
-                    print("decoded:", decoded)
+                    
                     success(decoded)
                 } catch {
                     print("Not working with: ", error)

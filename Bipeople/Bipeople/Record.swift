@@ -33,6 +33,12 @@ class Record: Object {
     @objc dynamic var calories: Double = 0.0
     @objc dynamic var createdAt: Date = Date()
     
+    convenience init(flag: Bool = true) {
+        self.init()
+        
+        self._id = flag ? Record.autoIncrement() : 0
+    }
+    
     convenience init(departure: String, arrival: String, distance: Double, ridingTime: TimeInterval, restTime: TimeInterval, averageSpeed: Double, maximumSpeed: Double, calories: Double) {
         
         self.init()
@@ -56,7 +62,7 @@ class Record: Object {
         if let retNext = realm.objects(Record.self).sorted(byKeyPath: "_id").last?._id {
             return retNext + 1
         } else {
-            return 1
+            return 0
         }
     }
     

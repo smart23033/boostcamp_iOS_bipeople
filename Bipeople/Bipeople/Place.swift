@@ -22,6 +22,7 @@ class Place: Object {
     @objc dynamic var lat : Double = 0.0
     @objc dynamic var lng : Double = 0.0
     @objc dynamic var imageURL : String = ""
+    
     var placeType: PlaceType {
         get { return PlaceType(rawValue: self._placeType) ?? .none }
         set { self._placeType = newValue.rawValue }

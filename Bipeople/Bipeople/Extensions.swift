@@ -34,7 +34,7 @@ extension Date {
         return Calendar.current.isDate(self, equalTo: date, toGranularity: .day)
     }
     
-    func generateDates(startDate :Date?, endDate: Date?, addbyUnit:Calendar.Component) -> [Date]
+    func generateDates(startDate: Date?, endDate: Date?, addbyUnit: Calendar.Component) -> [Date]
     {
         let calendar = Calendar.current
         var datesArray: [Date] =  [Date]()
@@ -47,7 +47,6 @@ extension Date {
             
             newDate = calendar.date(byAdding: addbyUnit, value: 1, to: newDate!)!
             datesArray.append(newDate!)
-            
         }
         
         return datesArray
@@ -73,7 +72,7 @@ extension TimeInterval {
     
     //그래프의 y축에 사용될 분
     var minutesForGraph: Double {
-        return self/60
+        return self / 60
     }
     
     var stringTime: String {

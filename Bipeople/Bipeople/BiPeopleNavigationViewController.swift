@@ -173,7 +173,7 @@ class BiPeopleNavigationViewController: UIViewController {
         locationManager = CLLocationManager()
         locationManager.requestAlwaysAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-        locationManager.distanceFilter = 1     // 이전 위치에서 얼마나 거리 차이가 나면 update location을 실행할지 결정
+        locationManager.distanceFilter = 10     // 이전 위치에서 얼마나 거리차가 나면 위치변경 트리거를 실행할지 결정
         locationManager.startUpdatingLocation()
         locationManager.delegate = self
         
@@ -267,10 +267,20 @@ class BiPeopleNavigationViewController: UIViewController {
             return false
         }
         
-        areaCircle?.map = nil
-        for marker in placesMarkers {
-            marker.map = nil
+        if let circle = areaCircle {
+            
+            DispatchQueue.main.async {
+                circle.map = nil
+            }
         }
+        
+        for marker in placesMarkers {
+            
+            DispatchQueue.main.async {
+                marker.map = nil
+            }
+        }
+        
         placesMarkers.removeAll()
         
         for place in placesResult {
@@ -285,7 +295,10 @@ class BiPeopleNavigationViewController: UIViewController {
             marker.icon = UIImage(named: place.placeType.rawValue)
             marker.title = place.placeType.rawValue
             marker.userData = place
-            marker.map = navigationMapView
+            
+            DispatchQueue.main.async {
+                marker.map = self.navigationMapView
+            }
             
             placesMarkers.append(marker)
         }
@@ -294,7 +307,10 @@ class BiPeopleNavigationViewController: UIViewController {
         
         areaCircle?.strokeColor = UIColor.clear
         areaCircle?.fillColor = UIColor(red: 0, green: 0, blue: 0.35, alpha: 0.4)
-        areaCircle?.map = navigationMapView
+        
+        DispatchQueue.main.async {
+            self.areaCircle?.map = self.navigationMapView
+        }
         
         return true
     }
@@ -341,15 +357,14 @@ class BiPeopleNavigationViewController: UIViewController {
     private func trySaveData() {
         do {
             try self.navigationManager.saveData()
+            self.isNavigationOn = false
             
             let confirmAlert = UIAlertController(
                 title: "주행기록 저장에 성공하였습니다",
                 message: "",
                 preferredStyle: .alert
             )
-            confirmAlert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
-                self.isNavigationOn = false
-            })
+            confirmAlert.addAction(UIAlertAction(title: "확인", style: .default))
             
             self.present(confirmAlert, animated: true)
         } catch {
@@ -392,7 +407,9 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
         // 위치가 업데이트 된 지점으로 맵을 이동
         if navigationMapView.isHidden {
             navigationMapView.isHidden = false
-            navigationMapView.camera = camera
+            DispatchQueue.main.async {
+                self.navigationMapView.camera = camera
+            }
         } else {
             navigationMapView.animate(to: camera)
         }
@@ -604,7 +621,9 @@ extension BiPeopleNavigationViewController: GMSAutocompleteResultsViewController
 
         if navigationMapView.isHidden {
             navigationMapView.isHidden = false
-            navigationMapView.camera = camera
+            DispatchQueue.main.async {
+                self.navigationMapView.camera = camera
+            }
         } else {
             navigationMapView.animate(to: camera)
         }

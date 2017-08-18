@@ -28,8 +28,8 @@ class NavigationManager {
     private static let FORMAT: String       = "json"
     private static let APP_KEY: String       = "5112af59-674c-38fd-89b0-ab54f1297284"
     
-    private static let MINIMUM_RIDING_VELOCITY: Double      = 1.5   /// meters / seconds
-    private static let RIDING_VELOCITY_THRESHOLD: Double    = 14    /// meters / seconds
+    private static let MINIMUM_RIDING_VELOCITY: Double      = 0.5   /// meters / seconds
+    private static let RIDING_VELOCITY_THRESHOLD: Double    = 1000  /// meters / seconds
     
     private var mapViewForNavigation: GMSMapView
     
@@ -186,8 +186,13 @@ class NavigationManager {
             throw error
         }
         
-        record = Record()
+        let realm = try! Realm()
+        realm.beginWrite()
+        
+        record = Record(flag: true)
         traces.removeAll()
+        
+        try! realm.commitWrite()
         
         GMSGeocoder().reverseGeocodeCoordinate(currentLocation) { response, error in
             
@@ -206,7 +211,12 @@ class NavigationManager {
                 return
             }
             
-            record.departure = (address.subLocality ?? "") + " " + (address.thoroughfare ?? "")
+            let realm = try! Realm()
+            realm.beginWrite()
+            
+            record.departure = address.thoroughfare ?? ""
+        
+            try! realm.commitWrite()
         }
         
         GMSGeocoder().reverseGeocodeCoordinate(destination) { response, error in
@@ -226,11 +236,19 @@ class NavigationManager {
                 return
             }
             
-            record.departure = (address.subLocality ?? "") + " " + (address.thoroughfare ?? "")
+            let realm = try! Realm()
+            realm.beginWrite()
+            
+            record.arrival = address.thoroughfare ?? ""
+            
+            try!realm.commitWrite()
         }
     }
     
     func addTrace(location: CLLocation, updatedTime: TimeInterval) throws {
+        
+        let realm = try! Realm()
+        realm.beginWrite()
         
         guard let record = record else {
             
@@ -242,6 +260,7 @@ class NavigationManager {
                 ]
             )
             
+            realm.cancelWrite()
             throw error
         }
         
@@ -249,12 +268,13 @@ class NavigationManager {
             
             record.distance += location.distance(from: CLLocation(latitude: last.latitude, longitude: last.longitude))
             
+            print("스피드: ", String(location.speed))
             switch location.speed {
                 
                 case _ where location.speed < NavigationManager.MINIMUM_RIDING_VELOCITY :
                     
-                    print("Rest Time...")     // FOR DEBUG
                     record.restTime += updatedTime - last.timestamp
+                    print("Rest Time... \(record.restTime),")     // FOR DEBUG
                 
                 case _ where location.speed > NavigationManager.MINIMUM_RIDING_VELOCITY :
                     
@@ -267,9 +287,15 @@ class NavigationManager {
         }
         
         traces.append(Trace(recordID: record._id, coord : location.coordinate, timestamp: updatedTime))
+        try! realm.commitWrite()
     }
     
     func saveData() throws {
+        
+        RealmHelper.add(datas: traces)
+        
+        let realm = try! Realm()
+        realm.beginWrite()
         
         guard let record = record else {
             
@@ -281,6 +307,7 @@ class NavigationManager {
                 ]
             )
             
+            realm.cancelWrite()
             throw error
         }
         
@@ -294,20 +321,23 @@ class NavigationManager {
                 ]
             )
             
+            realm.cancelWrite()
             throw error
         }
         
         if let firstTrace = traces.first, let lastTrace = traces.last {
             
+            print("first: ", String(describing: firstTrace))
+            print("last: ", String(describing: lastTrace))
             record.ridingTime = lastTrace.timestamp - firstTrace.timestamp
             
             let excerciseTime = record.ridingTime - record.restTime
             record.calories = excerciseTime * 0.139
             record.averageSpeed = excerciseTime > 0 ? record.distance / excerciseTime : 0
         }
+        try! realm.commitWrite()
         
         RealmHelper.add(data: record)
-        RealmHelper.add(datas: traces)
     }
 }
 
