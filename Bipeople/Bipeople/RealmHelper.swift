@@ -31,31 +31,37 @@ public class RealmHelper: NSObject {
         }
     }
     
-    class func fetchFromType<T: Object>(of: T) -> Results<T> {
+    class func fetchFromType<T: Object>(of: T.Type) -> Results<T> {
         let results = realm.objects(T.self)
         
         return results
     }
     
-    class func fetchFromType<T: Object>(of: T, with query: NSPredicate) -> Results<T> {
+    class func fetchFromType<T: Object>(of: T.Type, with query: NSPredicate) -> Results<T> {
         let results = realm.objects(T.self).filter(query)
         
         return results
     }
     
-    class func remove<T: Object>(data: T) {
+    class func delete<T: Object>(data: T) {
         
         try! realm.write {
             realm.delete(data)
         }
     }
     
-    class func removeAll() {
+    class func deleteAll() {
         
         try! realm.write {
             realm.deleteAll()
         }
+    }
+    
+    class func deleteTable<T: Object>(of type: T.Type) {
         
+        try! realm.write {
+            realm.delete(fetchFromType(of: T.self   ))
+        }
     }
     
 //    class func objectFromType<T: Object>(of data: T) -> Results<T> {

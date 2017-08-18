@@ -148,7 +148,7 @@ class HistoryGraphViewController: UIViewController {
         
         //값을 가져오는 부분
         let predicate = NSPredicate(format: "createdAt >= %@ AND createdAt <= %@", startDate as NSDate, endDate as NSDate)
-        records = Array(RealmHelper.fetchFromType(of: Record(), with: predicate))
+        records = Array(RealmHelper.fetchFromType(of: Record.self, with: predicate))
         
         records.sort{ $0.createdAt < $1.createdAt }
         

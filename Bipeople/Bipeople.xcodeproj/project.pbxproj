@@ -21,11 +21,9 @@
 		A2A2993D1F3C6CF300E31ED9 /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A2993C1F3C6CF300E31ED9 /* NavigationManager.swift */; };
 		A2F35C111F447CF00016F1AF /* AnimatedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F35C101F447CF00016F1AF /* AnimatedLabel.swift */; };
 		CA581E36F745E69C960E75F5 /* Pods_Bipeople.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA1522085776953070CF67BC /* Pods_Bipeople.framework */; };
-		F11F51D41F45CCCE00429741 /* PlaceInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11F51D11F45CCCE00429741 /* PlaceInfoCell.swift */; };
 		F11F51D81F45CD7800429741 /* PlaceDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11F51D71F45CD7800429741 /* PlaceDetailViewController.swift */; };
-		F11F51DA1F45CDFA00429741 /* PlaceListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11F51D91F45CDFA00429741 /* PlaceListCell.swift */; };
 		F135BE8D1F45B4B100F89A53 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135BE8A1F45B34F00F89A53 /* Place.swift */; };
-		F135BE8E1F45B4B100F89A53 /* PublicFacility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135BE891F45B34E00F89A53 /* PublicFacility.swift */; };
+		F135BE8E1F45B4B100F89A53 /* PublicStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135BE891F45B34E00F89A53 /* PublicStore.swift */; };
 		F135BE8F1F45B4B100F89A53 /* PublicToilet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135BE8B1F45B34F00F89A53 /* PublicToilet.swift */; };
 		F135BE901F45B4B100F89A53 /* PublicWiFi.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135BE8C1F45B34F00F89A53 /* PublicWiFi.swift */; };
 		F13AB3531F3A78AD0038B2CF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */; };
@@ -33,8 +31,6 @@
 		F14C71B51F3ED200005015B1 /* Feature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14C71B41F3ED200005015B1 /* Feature.swift */; };
 		F14C71B71F3F15EF005015B1 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14C71B61F3F15EF005015B1 /* Geometry.swift */; };
 		F14C71B91F3F1627005015B1 /* Properties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14C71B81F3F1627005015B1 /* Properties.swift */; };
-		F15332FF1F45D30C0022756B /* PlaceInfoCell.xib in Sources */ = {isa = PBXBuildFile; fileRef = F11F51D51F45CCEE00429741 /* PlaceInfoCell.xib */; };
-		F15333001F45D30C0022756B /* PlaceListCell.xib in Sources */ = {isa = PBXBuildFile; fileRef = F11F51D61F45CCEE00429741 /* PlaceListCell.xib */; };
 		F176C8381F3D9D70008F39FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30E82D8A1F38224B00536AFB /* Assets.xcassets */; };
 		F176C84A1F3D9DDC008F39FD /* History.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F176C8461F3D9DD9008F39FD /* History.storyboard */; };
 		F176C84B1F3D9DDC008F39FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F176C8481F3D9DD9008F39FD /* LaunchScreen.storyboard */; };
@@ -66,13 +62,9 @@
 		A2A2993C1F3C6CF300E31ED9 /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
 		A2F35C101F447CF00016F1AF /* AnimatedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedLabel.swift; sourceTree = "<group>"; };
 		EA1522085776953070CF67BC /* Pods_Bipeople.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bipeople.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F11F51D11F45CCCE00429741 /* PlaceInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceInfoCell.swift; sourceTree = "<group>"; };
-		F11F51D51F45CCEE00429741 /* PlaceInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaceInfoCell.xib; sourceTree = "<group>"; };
-		F11F51D61F45CCEE00429741 /* PlaceListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaceListCell.xib; sourceTree = "<group>"; };
 		F11F51D71F45CD7800429741 /* PlaceDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDetailViewController.swift; sourceTree = "<group>"; };
-		F11F51D91F45CDFA00429741 /* PlaceListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceListCell.swift; sourceTree = "<group>"; };
 		F120FAC81F45DB7100AF4AB1 /* seoul.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = seoul.gpx; sourceTree = "<group>"; };
-		F135BE891F45B34E00F89A53 /* PublicFacility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicFacility.swift; sourceTree = "<group>"; };
+		F135BE891F45B34E00F89A53 /* PublicStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicStore.swift; sourceTree = "<group>"; };
 		F135BE8A1F45B34F00F89A53 /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
 		F135BE8B1F45B34F00F89A53 /* PublicToilet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicToilet.swift; sourceTree = "<group>"; };
 		F135BE8C1F45B34F00F89A53 /* PublicWiFi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicWiFi.swift; sourceTree = "<group>"; };
@@ -165,8 +157,6 @@
 				F18C67251F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift */,
 				F11F51D71F45CD7800429741 /* PlaceDetailViewController.swift */,
 				A2A2993C1F3C6CF300E31ED9 /* NavigationManager.swift */,
-				F11F51D11F45CCCE00429741 /* PlaceInfoCell.swift */,
-				F11F51D91F45CDFA00429741 /* PlaceListCell.swift */,
 				F19060AE1F3C94DD00DB67B8 /* MarkerInfoWindow.swift */,
 			);
 			name = Navigation;
@@ -206,8 +196,6 @@
 				F176C8461F3D9DD9008F39FD /* History.storyboard */,
 				F176C8401F3D9DD8008F39FD /* Settings.storyboard */,
 				F176C8441F3D9DD9008F39FD /* MarkerInfoWindow.xib */,
-				F11F51D51F45CCEE00429741 /* PlaceInfoCell.xib */,
-				F11F51D61F45CCEE00429741 /* PlaceListCell.xib */,
 				30E82D8A1F38224B00536AFB /* Assets.xcassets */,
 				30E82D8F1F38224B00536AFB /* Info.plist */,
 			);
@@ -233,7 +221,7 @@
 				F14C71B61F3F15EF005015B1 /* Geometry.swift */,
 				F14C71B81F3F1627005015B1 /* Properties.swift */,
 				F135BE8A1F45B34F00F89A53 /* Place.swift */,
-				F135BE891F45B34E00F89A53 /* PublicFacility.swift */,
+				F135BE891F45B34E00F89A53 /* PublicStore.swift */,
 				F135BE8B1F45B34F00F89A53 /* PublicToilet.swift */,
 				F135BE8C1F45B34F00F89A53 /* PublicWiFi.swift */,
 			);
@@ -398,11 +386,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F15332FF1F45D30C0022756B /* PlaceInfoCell.xib in Sources */,
-				F15333001F45D30C0022756B /* PlaceListCell.xib in Sources */,
 				F135BE8D1F45B4B100F89A53 /* Place.swift in Sources */,
-				F11F51DA1F45CDFA00429741 /* PlaceListCell.swift in Sources */,
-				F135BE8E1F45B4B100F89A53 /* PublicFacility.swift in Sources */,
+				F135BE8E1F45B4B100F89A53 /* PublicStore.swift in Sources */,
 				F135BE8F1F45B4B100F89A53 /* PublicToilet.swift in Sources */,
 				F135BE901F45B4B100F89A53 /* PublicWiFi.swift in Sources */,
 				F18C67261F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift in Sources */,
@@ -410,7 +395,6 @@
 				F14C71B71F3F15EF005015B1 /* Geometry.swift in Sources */,
 				F19060AF1F3C94DE00DB67B8 /* MarkerInfoWindow.swift in Sources */,
 				F14C71B31F3ED1C6005015B1 /* GeoJSON.swift in Sources */,
-				F11F51D41F45CCCE00429741 /* PlaceInfoCell.swift in Sources */,
 				A219812F1F39772700D0F5F7 /* HistoryDetailViewController.swift in Sources */,
 				A219812D1F39771E00D0F5F7 /* HistoryTableViewController.swift in Sources */,
 				A2F35C111F447CF00016F1AF /* AnimatedLabel.swift in Sources */,

@@ -7,97 +7,61 @@
 //
 
 import UIKit
+import GoogleMaps
 
 class PlaceDetailViewController: UIViewController {
     
-    @IBOutlet var collectionView: UICollectionView! {
-        didSet {
-            collectionView.dataSource = self
-            collectionView.delegate = self
-            collectionView.isPagingEnabled = true
-            collectionView.register(UINib(nibName: "PlaceListCell", bundle: nil), forCellWithReuseIdentifier: "PlaceListCell")
-            collectionView.register(UINib(nibName: "PlaceInfoCell", bundle: nil), forCellWithReuseIdentifier: "PlaceInfoCell")
-        }
-    }
-    
-    let tapGesture : UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(unwindToMap))
     var place : Place?
     var places = [Place]()
     
+    @IBOutlet weak var placeTypeLabel: UILabel!
+    @IBOutlet weak var placeMapView: GMSMapView!
+    @IBOutlet weak var placesTableView: UITableView!
+    
     override func viewWillAppear(_ animated: Bool) {
-        //self.extendedLayoutIncludesOpaqueBars = true
+        super.viewWillAppear(animated)
         
-    }
-    override func viewDidLoad() {
-        super.viewDidLoad()
+        self.navigationItem.title = place?.location
+        self.placeTypeLabel.text = place?.placeType.rawValue
         
-        // Do any additional setup after loading the view.
+        guard let place = place else {
+            return
+        }
+        
+        let position = CLLocationCoordinate2D(latitude: place.lat, longitude: place.lng)
+        
+        placeMapView.camera = GMSCameraPosition.camera(
+            withLatitude: position.latitude,
+            longitude: position.longitude,
+            zoom: 17
+        )
+        
+        let marker = GMSMarker(position: position)
+        marker.icon = (place.placeType == .none) ? nil : UIImage(named: place.placeType.rawValue)
+        marker.map = placeMapView
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    func unwindToMap() {
+    @objc func unwindToMap() {
         self.navigationController?.popToRootViewController(animated: true)
     }
 }
 
-extension PlaceDetailViewController : UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
+extension PlaceDetailViewController: UITableViewDataSource {
     
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return 2
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.row == 0 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PlaceInfoCell", for: indexPath) as! PlaceInfoCell
-            cell.classifyTextField.text = place?.placeType.rawValue
-            cell.locationTextField.text = place?.location
-            cell.latitudeTextField.text = String(describing: place?.lat)
-            cell.longitudeTextField.text = String(describing: place?.lng)
-            cell.imageURL = URL(string: (place?.imageURL)!)
-            
-            return cell
-        } else {
-            let placeListCell = collectionView.dequeueReusableCell(withReuseIdentifier: "PlaceListCell", for: indexPath) as! PlaceListCell
-            placeListCell.places = self.places
-            placeListCell.place = self.place
-            placeListCell.setup()
-            placeListCell.reloadAndResizeTable()
-            placeListCell.mapViewLayer.addTarget(self,
-                                                 action: #selector(unwindToMap),
-                                                 for: .touchUpInside)
-            //            tapGesture.numberOfTapsRequired = 1
-            //            placeListCell.mapViewLayer.isUserInteractionEnabled = true
-            //            placeListCell.mapViewLayer.addGestureRecognizer(tapGesture)
-            
-            return placeListCell
-        }
-    }
-}
-
-
-extension PlaceDetailViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize{
-        if indexPath.row == 0 {
-            return CGSize(width: self.view.frame.width, height: self.view.frame.height - 64)
-        } else {
-            let tableViewHeight = places.count * 44
-            let cellHeight : CGFloat = CGFloat(tableViewHeight) + 404.0
-            return CGSize(width: self.view.frame.width, height: cellHeight)
-        }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
+        return places.count
     }
     
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let place = places[indexPath.row]
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "PlacesTableCell")
+        
+        cell.textLabel?.text = place.location
+        cell.accessoryView = (place.placeType == .none)
+            ? nil : UIImageView(image: UIImage(named: place.placeType.rawValue))
+        
+        return cell
+    }
 }
-

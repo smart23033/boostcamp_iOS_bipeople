@@ -19,9 +19,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        savePlaces()
         print(Realm.Configuration.defaultConfiguration.fileURL ?? "No path for realm") // FOR DEBUG
         
+        updatePublicPlaceInfoFromNetwork()
         /**
           * Add Google Map API Key
           */
@@ -30,17 +30,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Override point for customization after application launch.
         
-        let tabBarController = window?.rootViewController as! UITabBarController
+        let tabBarController = window!.rootViewController as! UITabBarController
         let navControllers = tabBarController.childViewControllers as! [UINavigationController]
         
         changeTheme(navigationControllers: navControllers)
         
-        records = Array(RealmHelper.fetchFromType(of: Record()))
+        records = Array(RealmHelper.fetchFromType(of: Record.self))
         
         /* 더미데이터 삽입 */
-        // RealmHelper.removeAll()
-        // records.removeAll()
-    
         for i in 0 ..< 5 {
             let record = Record(departure: "departure \(i)",
                 arrival: "arrival \(i)",
@@ -103,75 +100,75 @@ extension AppDelegate {
 
 extension AppDelegate {
     
-    func savePlaces() {
-        GetServices.fetchList(url : "http://openAPI.seoul.go.kr:8088/4944627561736d613130334c75587853/json/SearchPublicToiletPOIService/1/1000/" ,
-            PublicToilet.self,
-            success: { response in
-            let toilets = response.searchPublicToiletPOIService.row
-                .map { toilet -> Place in
-                    let place = Place()
-                    //place.id = Place.incrementID()
-                    place.lat = toilet.y_Wgs84
-                    place.lng = toilet.x_Wgs84
-                    place.placeType = .toilet
-                    place.location = toilet.fName
-                    
-                    return place
+    enum ApiURL: String {
+        case toilet = "http://openAPI.seoul.go.kr:8088/4944627561736d613130334c75587853/json/SearchPublicToiletPOIService/1/1000/"
+        case wifi = "http://openapi.seoul.go.kr:8088/6464794f66736d613131377946497a4d/json/PublicWiFiPlaceInfo/1/1000"
+        case store = "http://openapi.seoul.go.kr:8088/4467715062736d61313031666a6d5867/json/GeoInfoBikeConvenientFacilitiesWGS/1/1000/"
+    }
+    
+    func updatePublicPlaceInfoFromNetwork() {
+        
+        RealmHelper.deleteTable(of: Place.self)
+        
+        GetServices.fetchList(url : ApiURL.toilet.rawValue, PublicToilet.self, success: { response in
+            let toilets = response.searchPublicToiletPOIService.row.map { toilet -> Place in
+                let place = Place()
+                
+                place.lat = toilet.y_Wgs84
+                place.lng = toilet.x_Wgs84
+                place.placeType = .toilet
+                place.location = toilet.fName
+                
+                return place
             }
+            
             let realm = try! Realm()
             try! realm.write {
                 realm.add(toilets)
             }
-        }){ (error) in
-            print("에러")
+        }) { error in
+            print("Error in", #function)    // FOR DEBUG
         }
-        GetServices.fetchList(url : "http://openapi.seoul.go.kr:8088/6464794f66736d613131377946497a4d/json/PublicWiFiPlaceInfo/1/1000",
-            PublicWiFi.self,
-            success: { response in
-            let wifis = response.publicWiFiPlaceInfo.row
-                .map { wifi -> Place in
-                    let place = Place()
-                    //                    place.id = Place.incrementID()
-                    place.lat = wifi.INSTL_Y
-                    place.lng = wifi.INSTL_X
-                    place.placeType = .wifi
-                    place.location = wifi.PLACE_NAME
-                    return place
+        
+        GetServices.fetchList(url : ApiURL.wifi.rawValue, PublicWiFi.self, success: { response in
+            let wifis = response.publicWiFiPlaceInfo.row.map { wifi -> Place in
+                let place = Place()
+                
+                place.lat = wifi.INSTL_Y
+                place.lng = wifi.INSTL_X
+                place.placeType = .wifi
+                place.location = wifi.PLACE_NAME
+                
+                return place
             }
 
             let realm = try! Realm()
             try! realm.write {
                 realm.add(wifis)
             }
-        }){ (error) in
-            print("에러")
+        }) { error in
+            print("Error in", #function)    // FOR DEBUG
         }
         
-        GetServices.fetchList(
-            url : "http://openapi.seoul.go.kr:8088/4467715062736d61313031666a6d5867/json/GeoInfoBikeConvenientFacilitiesWGS/1/1000/" ,
-            PublicFacility.self,
-            success: { response in
-                let facilities = response.geoInfoBikeConvenientFacilitiesWGS.row
-                    .map { facility -> Place in
-                        let place = Place()
-                        //place.id = Place.incrementID()
-                        place.lat = Double(facility.LAT)!
-                        place.lng = Double(facility.LNG)!
-                        place.placeType = .store
-                        place.location = facility.ADDRESS
-                        place.imageURL = facility.FILENAME
-                        
-                        print("!!!!!!!", place.placeType)
-                        
-                        return place
-                }
-                let realm = try! Realm()
-                try! realm.write {
-                    realm.add(facilities)
-                }
+        GetServices.fetchList(url : ApiURL.store.rawValue, PublicStore.self, success: { response in
+            let facilities = response.geoInfoBikeConvenientFacilitiesWGS.row.map { Store -> Place in
+                let place = Place()
                 
-        }){ (error) in
-            print("에러")
+                place.lat = Double(Store.LAT)!
+                place.lng = Double(Store.LNG)!
+                place.placeType = .store
+                place.location = Store.ADDRESS
+                place.imageURL = Store.FILENAME
+                
+                return place
+            }
+            
+            let realm = try! Realm()
+            try! realm.write {
+                realm.add(facilities)
+            }
+        }) { error in
+            print("Error in", #function)    // FOR DEBUG
         }
     }
 }

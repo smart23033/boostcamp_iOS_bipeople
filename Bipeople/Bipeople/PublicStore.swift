@@ -1,5 +1,5 @@
 //
-//  PublicFacility.swift
+//  PublicStore.swift
 //  Bipeople
 //
 //  Created by BLU on 2017. 8. 14..
@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum FacilityType : String {
+enum StoreType : String {
     case downtown_shelf = "시내_보관대"
     case downtown_store = "시내_매장"
     case downtown_rental = "시내_대여소"
@@ -17,7 +17,7 @@ enum FacilityType : String {
     case hanriver_store = "한강_매점"
 }
 
-struct PublicFacility: Codable {
+struct PublicStore: Codable {
     var geoInfoBikeConvenientFacilitiesWGS : GeoInfoBikeConvenientFacilitiesWGS
     private enum CodingKeys : String, CodingKey {
         case geoInfoBikeConvenientFacilitiesWGS = "GeoInfoBikeConvenientFacilitiesWGS"
@@ -30,7 +30,7 @@ struct PublicFacility: Codable {
 struct GeoInfoBikeConvenientFacilitiesWGS : Codable {
     var listTotalCount : Int
     var result : [String : String]
-    var row : [Facility]
+    var row : [Store]
     
     private enum CodingKeys : String, CodingKey {
         case listTotalCount = "list_total_count"
@@ -41,7 +41,7 @@ struct GeoInfoBikeConvenientFacilitiesWGS : Codable {
     init(
         listTotalCount: Int,
         result: [String : String],
-        row:[Facility]
+        row:[Store]
         ) {
         self.listTotalCount = listTotalCount
         self.result = result
@@ -49,7 +49,7 @@ struct GeoInfoBikeConvenientFacilitiesWGS : Codable {
     }
 }
 
-struct Facility : Codable {
+struct Store : Codable {
     var OBJECTID : Int
     var FILENAME : String
     var CLASS : String
