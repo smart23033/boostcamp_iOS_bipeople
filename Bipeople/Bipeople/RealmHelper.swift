@@ -18,16 +18,16 @@ public class RealmHelper: NSObject {
     class func add<T: Object>(data: T) {
         
         try! realm.write {
-            realm.add(data)
+        realm.add(data)
         }
     }
     
     class func add<T: Object>(datas: Array<T>) {
         
-        for data in datas {
-            try! realm.write {
-                realm.add(data)
-            }
+        let realm = try! Realm()
+        
+        try! realm.write {
+            realm.add(datas)
         }
     }
     
@@ -60,7 +60,7 @@ public class RealmHelper: NSObject {
     class func deleteTable<T: Object>(of type: T.Type) {
         
         try! realm.write {
-            realm.delete(fetchFromType(of: T.self   ))
+            realm.delete(fetchFromType(of: T.self))
         }
     }
     

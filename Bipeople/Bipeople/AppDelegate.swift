@@ -37,7 +37,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         records = Array(RealmHelper.fetchFromType(of: Record.self))
         
-        /* 더미데이터 삽입 */
+        /* 더미데이터 삽입 시작*/
+        RealmHelper.deleteTable(of: Record.self)
         for i in 0 ..< 5 {
             let record = Record(departure: "departure \(i)",
                 arrival: "arrival \(i)",
@@ -51,7 +52,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             RealmHelper.add(data: record)
             records.append(record)
         }
-        /* 더미데이터 삽입 */
+        RealmHelper.deleteTable(of: Trace.self)
+        /* 더미데이터 삽입 끝*/
         
         return true
     }
