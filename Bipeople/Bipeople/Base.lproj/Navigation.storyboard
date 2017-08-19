@@ -41,8 +41,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="aC5-W2-0Gn">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                            </activityIndicatorView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pjH-rm-9aE" customClass="GMSMapView">
-                                <rect key="frame" x="-0.5" y="64" width="375" height="602.5"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="602.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="delegate" destination="MC0-9L-o62" id="cWq-3i-oxQ"/>
@@ -74,14 +77,18 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="aC5-W2-0Gn" firstAttribute="top" secondItem="Y3o-EC-2d3" secondAttribute="bottom" id="3pa-lI-Eqe"/>
                             <constraint firstItem="68s-vc-AQZ" firstAttribute="top" secondItem="Y3o-EC-2d3" secondAttribute="bottom" constant="10" id="4Qt-gw-nvh"/>
                             <constraint firstItem="pjH-rm-9aE" firstAttribute="top" secondItem="Y3o-EC-2d3" secondAttribute="bottom" id="4jn-9c-Uzf"/>
                             <constraint firstItem="pjH-rm-9aE" firstAttribute="trailing" secondItem="yJC-rw-kB1" secondAttribute="trailing" id="6lF-Ge-vwe"/>
+                            <constraint firstItem="aC5-W2-0Gn" firstAttribute="leading" secondItem="yJC-rw-kB1" secondAttribute="leading" id="Gnz-mG-G3d"/>
                             <constraint firstItem="pjH-rm-9aE" firstAttribute="bottom" secondItem="XbL-LW-ZKV" secondAttribute="top" id="LGT-E5-AHf"/>
                             <constraint firstItem="68s-vc-AQZ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="yJC-rw-kB1" secondAttribute="leading" constant="20" symbolic="YES" id="POb-16-BDM"/>
                             <constraint firstItem="Nhe-9Y-JBH" firstAttribute="bottom" secondItem="XbL-LW-ZKV" secondAttribute="top" constant="-70" id="QPD-de-EeN"/>
                             <constraint firstItem="pjH-rm-9aE" firstAttribute="leading" secondItem="yJC-rw-kB1" secondAttribute="leading" id="c3n-yC-yPR"/>
                             <constraint firstAttribute="trailing" secondItem="68s-vc-AQZ" secondAttribute="trailing" constant="8" id="fNg-fu-8TZ"/>
+                            <constraint firstItem="aC5-W2-0Gn" firstAttribute="trailing" secondItem="yJC-rw-kB1" secondAttribute="trailing" id="mR1-eI-SoQ"/>
+                            <constraint firstItem="aC5-W2-0Gn" firstAttribute="bottom" secondItem="XbL-LW-ZKV" secondAttribute="top" id="oT8-n2-c9J"/>
                             <constraint firstItem="Nhe-9Y-JBH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="yJC-rw-kB1" secondAttribute="leading" constant="20" symbolic="YES" id="uTH-2B-fzM"/>
                             <constraint firstItem="Nhe-9Y-JBH" firstAttribute="trailing" secondItem="yJC-rw-kB1" secondAttribute="trailing" constant="-8" id="uxV-Pl-alg"/>
                         </constraints>
@@ -104,6 +111,7 @@
                     <connections>
                         <outlet property="cancelButton" destination="PmP-QK-R8S" id="zWS-my-ZKW"/>
                         <outlet property="doneButton" destination="B5E-8w-wya" id="7i8-g3-5ug"/>
+                        <outlet property="loadingIndicatorView" destination="aC5-W2-0Gn" id="SBU-V2-Msa"/>
                         <outlet property="navigationMapView" destination="pjH-rm-9aE" id="rhm-CF-b6J"/>
                         <outlet property="placesButton" destination="68s-vc-AQZ" id="X0C-do-AiC"/>
                         <outlet property="startButton" destination="Nhe-9Y-JBH" id="sg7-si-7RV"/>

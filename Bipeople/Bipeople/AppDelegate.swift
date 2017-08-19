@@ -30,8 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         let tabBarController = window!.rootViewController as! UITabBarController
-        tabBarController.selectedIndex = 1
-        
         let navControllers = tabBarController.childViewControllers as! [UINavigationController]
         
         changeTheme(navigationControllers: navControllers)
