@@ -118,7 +118,8 @@ class HistoryGraphViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        records = appDelegate.records
+        let realm = try! Realm()
+        records = Array(realm.objects(Record.self))
         
         self.calendarView.today = nil
         self.calendarView.isHidden = true
