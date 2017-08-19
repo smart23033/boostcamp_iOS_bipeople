@@ -66,7 +66,7 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
         let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryCell", for: indexPath) as! HistoryCell
         
         cell.titleLabel?.text = "\(records?[indexPath.row].departure ?? "unknown") - \(records?[indexPath.row].arrival ?? "unknown")"
-        cell.distanceLabel?.text = "\(records?[indexPath.row].distance ?? 0) km"
+        cell.distanceLabel?.text = "\(records?[indexPath.row].distance.roundTo(places: 1) ?? 0) km"
         cell.dateLabel?.text = records?[indexPath.row].createdAt.toString()
         
         return cell

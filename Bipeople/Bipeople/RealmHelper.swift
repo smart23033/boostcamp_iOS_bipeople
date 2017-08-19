@@ -31,14 +31,14 @@ public class RealmHelper: NSObject {
         }
     }
     
-    class func fetchFromType<T: Object>(of: T.Type) -> Results<T> {
+    class func fetch<T: Object>(from: T.Type) -> Results<T> {
         let results = realm.objects(T.self)
         
         return results
     }
     
-    class func fetchFromType<T: Object>(of: T.Type, with query: NSPredicate) -> Results<T> {
-        let results = realm.objects(T.self).filter(query)
+    class func fetch<T: Object>(from: T.Type, with predicate: NSPredicate) -> Results<T> {
+        let results = realm.objects(T.self).filter(predicate)
         
         return results
     }
@@ -60,7 +60,7 @@ public class RealmHelper: NSObject {
     class func deleteTable<T: Object>(of type: T.Type) {
         
         try! realm.write {
-            realm.delete(fetchFromType(of: T.self))
+            realm.delete(fetch(from: T.self))
         }
     }
     

@@ -39,23 +39,44 @@ class HistoryDetailViewController: UIViewController {
             return
         }
         
-//        let predicate = NSPredicate(format: "recordID = %@", recordID)
-//        traces = Array(RealmHelper.fetchFromType(of: Trace(), with: predicate))
+        let predicate = NSPredicate(format: "recordID = %d", recordID)
+        traces = Array(RealmHelper.fetch(from: Trace.self, with: predicate))
         
         titleLabel.title = "\(record?.departure ?? "unknown") - \(record?.arrival ?? "unknown")"
-        distanceLabel.text = "\(record?.distance ?? 0) km"
+        distanceLabel.text = "\(record?.distance.roundTo(places: 1) ?? 0) km"
         ridingTimeLabel.text = record?.ridingTime.stringTime
         restTimeLabel.text = "\(record?.restTime ?? 0)"
-        averageSpeedLabel.text = "\(record?.averageSpeed ?? 0) m/s"
-        maximumSpeedLabel.text = "\(record?.maximumSpeed ?? 0) m/s"
-        caloriesLabel.text = "\(record?.calories ?? 0) kcal"
+        averageSpeedLabel.text = "\(record?.averageSpeed.roundTo(places: 1) ?? 0) m/s"
+        maximumSpeedLabel.text = "\(record?.maximumSpeed.roundTo(places: 1) ?? 0) m/s"
+        caloriesLabel.text = "\(record?.calories.roundTo(places: 1) ?? 0) kcal"
         createdAt.text = record?.createdAt.toString()
         
+        drawRoute()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let firstTrace = traces?.first,
+        let lastTrace = traces?.last,
+            let traceCount = traces?.count,
+            let middleTrace = traces?[traceCount/2]
+            else {
+            return
+        }
+        
+        let camera = GMSCameraPosition.camera(
+            withLatitude: middleTrace.latitude,
+            longitude: middleTrace.longitude,
+            zoom: 13
+        )
+        
+        mapView.camera = camera
     }
     
     //MARK: Functions
     
-    func drawRoute(from data: GeoJSON) {
+    func drawRoute() {
         let navigationPath = GMSMutablePath()
         
         traces?.forEach({ (trace) in
@@ -68,6 +89,7 @@ class HistoryDetailViewController: UIViewController {
             return
         }
         
+        route.map = nil
         route.strokeWidth = 5
         route.strokeColor = UIColor.primary
         
