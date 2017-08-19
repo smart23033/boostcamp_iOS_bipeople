@@ -266,23 +266,24 @@ class NavigationManager {
         
         if let last = traces.last {
             
-            record.distance += location.distance(from: CLLocation(latitude: last.latitude, longitude: last.longitude))
+            let lastLocation = CLLocation(latitude: last.latitude, longitude: last.longitude)
+            record.distance += location.distance(from: lastLocation)
             
-            print("스피드: ", String(location.speed))
+            print("Speed: ", String(location.speed))
             switch location.speed {
                 
-                case _ where location.speed < NavigationManager.MINIMUM_RIDING_VELOCITY :
-                    
-                    record.restTime += updatedTime - last.timestamp
-                    print("Rest Time... \(record.restTime),")     // FOR DEBUG
-                
-                case _ where location.speed > NavigationManager.MINIMUM_RIDING_VELOCITY :
-                    
+                case _ where location.speed < 0: fallthrough
+                case _ where location.speed > NavigationManager.MINIMUM_RIDING_VELOCITY:
+
                     print("Speed ​​measurement error due to low GPS reception rate")     // FOR DEBUG
                 
-                default:
-                    
-                    record.maximumSpeed = max(record.maximumSpeed, location.speed)
+            case _ where location.speed < NavigationManager.MINIMUM_RIDING_VELOCITY :
+                
+                record.restTime += updatedTime - last.timestamp
+                print("Rest Time... \(record.restTime),")     // FOR DEBUG
+                fallthrough
+            default:
+                record.maximumSpeed = max(record.maximumSpeed, location.speed)
             }
         }
         
@@ -291,8 +292,6 @@ class NavigationManager {
     }
     
     func saveData() throws {
-        
-        RealmHelper.add(datas: traces)
         
         let realm = try! Realm()
         realm.beginWrite()
@@ -334,10 +333,14 @@ class NavigationManager {
             let excerciseTime = record.ridingTime - record.restTime
             record.calories = excerciseTime * 0.139
             record.averageSpeed = excerciseTime > 0 ? record.distance / excerciseTime : 0
+            
+            record.distance /= 1000.0
         }
-        try! realm.commitWrite()
         
+        try! realm.commitWrite()
+
         RealmHelper.add(data: record)
+        RealmHelper.add(datas: traces)
     }
 }
 

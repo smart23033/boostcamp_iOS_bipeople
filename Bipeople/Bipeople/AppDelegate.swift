@@ -15,8 +15,6 @@ import GooglePlaces
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    var places: [Place] = []
-    var records: [Record] = []
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
@@ -38,8 +36,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         changeTheme(navigationControllers: navControllers)
         
-        records = Array(RealmHelper.fetchFromType(of: Record.self))
-        
         /* 더미데이터 삽입 시작*/
         RealmHelper.deleteTable(of: Record.self)
         for i in 0 ..< 5 {
@@ -53,7 +49,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 calories: Double(arc4random_uniform(1000)) / Double(10))
             
             RealmHelper.add(data: record)
-            records.append(record)
         }
         RealmHelper.deleteTable(of: Trace.self)
         /* 더미데이터 삽입 끝*/
