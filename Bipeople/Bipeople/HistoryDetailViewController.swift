@@ -39,23 +39,24 @@ class HistoryDetailViewController: UIViewController {
             return
         }
         
-//        let predicate = NSPredicate(format: "recordID = %@", recordID)
-//        traces = Array(RealmHelper.fetchFromType(of: Trace(), with: predicate))
+        let predicate = NSPredicate(format: "recordID = %d", recordID)
+        traces = Array(RealmHelper.fetch(from: Trace.self, with: predicate))
         
         titleLabel.title = "\(record?.departure ?? "unknown") - \(record?.arrival ?? "unknown")"
-        distanceLabel.text = "\(record?.distance ?? 0) km"
+        distanceLabel.text = "\(record?.distance.roundTo(places: 1) ?? 0) km"
         ridingTimeLabel.text = record?.ridingTime.stringTime
         restTimeLabel.text = "\(record?.restTime ?? 0)"
-        averageSpeedLabel.text = "\(record?.averageSpeed ?? 0) m/s"
-        maximumSpeedLabel.text = "\(record?.maximumSpeed ?? 0) m/s"
-        caloriesLabel.text = "\(record?.calories ?? 0) kcal"
+        averageSpeedLabel.text = "\(record?.averageSpeed.roundTo(places: 1) ?? 0) m/s"
+        maximumSpeedLabel.text = "\(record?.maximumSpeed.roundTo(places: 1) ?? 0) m/s"
+        caloriesLabel.text = "\(record?.calories.roundTo(places: 1) ?? 0) kcal"
         createdAt.text = record?.createdAt.toString()
         
+        drawRoute()
     }
     
     //MARK: Functions
     
-    func drawRoute(from data: GeoJSON) {
+    func drawRoute() {
         let navigationPath = GMSMutablePath()
         
         traces?.forEach({ (trace) in
@@ -64,16 +65,43 @@ class HistoryDetailViewController: UIViewController {
         
         navigationRoute = GMSPolyline(path: navigationPath)
         
-        guard let route = navigationRoute else {
-            return
+        guard let route = navigationRoute,
+            let firstTrace = traces?.first,
+            let traceCount = traces?.count,
+            let middleTrace = traces?[traceCount/2],
+            let lastTrace = traces?.last else {
+                return
         }
         
+        route.map = nil
         route.strokeWidth = 5
         route.strokeColor = UIColor.primary
         
         DispatchQueue.main.async {
             route.map = self.mapView
         }
+        
+        mapView.camera = GMSCameraPosition.camera(
+            withLatitude: middleTrace.latitude,
+            longitude: middleTrace.longitude,
+            zoom: 13
+        )
+        
+        let departureMarker = GMSMarker(position: CLLocationCoordinate2D(latitude: firstTrace.latitude, longitude: firstTrace.longitude))
+        let departureIconView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        let departureIcon = UIImage(named: "departure")
+        departureIconView.image = departureIcon
+        departureMarker.iconView = departureIconView
+        departureMarker.map = mapView
+        
+        let arrivalMarker = GMSMarker(position: CLLocationCoordinate2D(latitude: lastTrace.latitude, longitude: lastTrace.longitude))
+        let arrivalIconView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        let arrivalIcon = UIImage(named: "arrival")
+        arrivalIconView.image = arrivalIcon
+        arrivalMarker.iconView = arrivalIconView
+        arrivalMarker.map = mapView
+        
     }
     
 }
+

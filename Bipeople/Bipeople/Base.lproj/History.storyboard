@@ -99,7 +99,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8cM-zC-Fsa">
-                                <rect key="frame" x="92" y="124" width="191" height="29"/>
+                                <rect key="frame" x="92" y="84" width="191" height="29"/>
                                 <segments>
                                     <segment title="daily"/>
                                     <segment title="weekly"/>
@@ -110,7 +110,7 @@
                                 </connections>
                             </segmentedControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mjy-SM-4kU" userLabel="Container">
-                                <rect key="frame" x="16" y="186" width="343" height="333.5"/>
+                                <rect key="frame" x="16" y="146" width="343" height="333.5"/>
                                 <subviews>
                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Filter" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="baD-OY-PGM" userLabel="Filter">
                                         <rect key="frame" x="298.5" y="0.0" width="34.5" height="18"/>
@@ -159,7 +159,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h7T-SQ-fSD" customClass="CardView" customModule="Bipeople" customModuleProvider="target">
-                                <rect key="frame" x="16" y="535.5" width="343" height="133.5"/>
+                                <rect key="frame" x="16" y="495.5" width="343" height="133.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="X4R-i8-r9O">
                                         <rect key="frame" x="8" y="14" width="103" height="106.5"/>
@@ -211,52 +211,40 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="bottom" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="0gx-MS-0gV" userLabel="RidingTime">
-                                                <rect key="frame" x="139" y="29" width="84" height="19.5"/>
+                                                <rect key="frame" x="159.5" y="29" width="63.5" height="19.5"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P5q-9v-qjC" userLabel="Day Label" customClass="AnimatedLabel" customModule="Bipeople" customModuleProvider="target">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T7T-xG-ICk" userLabel="Hour Label" customClass="AnimatedLabel" customModule="Bipeople" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="1.5" width="9.5" height="18"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="d" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="txk-B6-42J" userLabel="d">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="h" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="okh-TK-mGP" userLabel="h">
                                                         <rect key="frame" x="10.5" y="1.5" width="9" height="18"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T7T-xG-ICk" userLabel="Hour Label" customClass="AnimatedLabel" customModule="Bipeople" customModuleProvider="target">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ngb-rh-gwV" userLabel="Minute Label" customClass="AnimatedLabel" customModule="Bipeople" customModuleProvider="target">
                                                         <rect key="frame" x="20.5" y="1.5" width="9.5" height="18"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="h" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="okh-TK-mGP" userLabel="h">
-                                                        <rect key="frame" x="31" y="1.5" width="9" height="18"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ngb-rh-gwV" userLabel="Minute Label" customClass="AnimatedLabel" customModule="Bipeople" customModuleProvider="target">
-                                                        <rect key="frame" x="41" y="1.5" width="9.5" height="18"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="m" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SnD-bS-OnZ" userLabel="m">
-                                                        <rect key="frame" x="51.5" y="1.5" width="13" height="18"/>
+                                                        <rect key="frame" x="31" y="1.5" width="13" height="18"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YiW-jf-XBh" userLabel="Second Label" customClass="AnimatedLabel" customModule="Bipeople" customModuleProvider="target">
-                                                        <rect key="frame" x="65.5" y="1.5" width="9.5" height="18"/>
+                                                        <rect key="frame" x="45" y="1.5" width="9.5" height="18"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="s" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OOX-2D-4Hm" userLabel="s">
-                                                        <rect key="frame" x="76" y="1.5" width="8" height="18"/>
+                                                        <rect key="frame" x="55.5" y="1.5" width="8" height="18"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -313,7 +301,7 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="FsU-sR-QDa">
-                                <rect key="frame" x="41.5" y="160" width="292" height="18"/>
+                                <rect key="frame" x="41.5" y="120" width="292" height="18"/>
                                 <subviews>
                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2017-08-09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mdX-n4-4LX" userLabel="Start Label">
                                         <rect key="frame" x="0.0" y="0.0" width="84" height="18"/>
@@ -363,7 +351,6 @@
                         <outlet property="calendarView" destination="NNG-aQ-p1g" id="X5u-tt-n3X"/>
                         <outlet property="caloriesLabel" destination="xN6-6b-JjU" id="3BM-tm-Qix"/>
                         <outlet property="containerView" destination="mjy-SM-4kU" id="1ty-4U-x9U"/>
-                        <outlet property="dayLabel" destination="P5q-9v-qjC" id="QWG-4r-S56"/>
                         <outlet property="distanceLabel" destination="XBm-Qs-26z" id="hJ0-IQ-8vY"/>
                         <outlet property="endLabel" destination="6x5-Lp-7sU" id="tWp-qC-5Jl"/>
                         <outlet property="filterLabel" destination="baD-OY-PGM" id="suM-h0-zdX"/>
