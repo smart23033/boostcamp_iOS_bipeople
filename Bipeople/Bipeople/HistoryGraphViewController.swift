@@ -54,11 +54,6 @@ class HistoryGraphViewController: UIViewController {
     @IBOutlet weak var averageSpeedLabel: AnimatedLabel!
     @IBOutlet weak var caloriesLabel: AnimatedLabel!
     
-    @IBOutlet weak var dayLabel: AnimatedLabel! {
-        didSet {
-            dayLabel.decimalPoints = .zero
-        }
-    }
     @IBOutlet weak var hourLabel: AnimatedLabel! {
         didSet {
             hourLabel.decimalPoints = .zero
@@ -203,7 +198,7 @@ class HistoryGraphViewController: UIViewController {
         
         self.averageSpeed = self.averageSpeed! / Double(records.count)
         
-        let days = self.ridingTime?.days
+//        let days = self.ridingTime?.days
         let hours = self.ridingTime?.hours
         let minutes = self.ridingTime?.minutes
         let seconds = self.ridingTime?.seconds
@@ -212,7 +207,6 @@ class HistoryGraphViewController: UIViewController {
         self.averageSpeedLabel.countFromZero(to: Float(self.averageSpeed ?? 0))
         self.caloriesLabel.countFromZero(to: Float(self.calories ?? 0))
         
-        self.dayLabel.countFromZero(to:Float(days ?? 0))
         self.hourLabel.countFromZero(to: Float(hours ?? 0))
         self.minuteLabel.countFromZero(to: Float(minutes ?? 0))
         self.secondLabel.countFromZero(to: Float(seconds ?? 0))
