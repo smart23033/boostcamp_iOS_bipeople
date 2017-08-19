@@ -15,7 +15,6 @@ class HistoryTableViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     var records: [Record]?
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     //MARK: Life Cycle
     
@@ -25,8 +24,6 @@ class HistoryTableViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        print(Realm.Configuration.defaultConfiguration.fileURL!)
-        //records = records?.sorted
         
         let realm = try! Realm()
         records = realm.objects(Record.self).sorted{ $0.createdAt < $1.createdAt }

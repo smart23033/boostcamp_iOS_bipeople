@@ -9,6 +9,7 @@
 import UIKit
 import RealmSwift
 import GoogleMaps
+import MarqueeLabel
 
 class HistoryDetailViewController: UIViewController {
     
@@ -29,6 +30,7 @@ class HistoryDetailViewController: UIViewController {
     var record: Record?
     var traces: [Trace]?
     var navigationRoute: GMSPolyline?
+    var marqueeTitle : MarqueeLabel?
     
     //MARK: Life Cycle
     
@@ -39,10 +41,14 @@ class HistoryDetailViewController: UIViewController {
             return
         }
         
+        marqueeTitle = MarqueeLabel()
+        
         let predicate = NSPredicate(format: "recordID = %d", recordID)
         traces = Array(RealmHelper.fetch(from: Trace.self, with: predicate))
         
-        titleLabel.title = "\(record?.departure ?? "unknown") - \(record?.arrival ?? "unknown")"
+        marqueeTitle?.text = "\(record?.departure ?? "unknown") - \(record?.arrival ?? "unknown")"
+        marqueeTitle?.textColor = UIColor.white
+        titleLabel.titleView = marqueeTitle
         distanceLabel.text = "\(record?.distance.roundTo(places: 1) ?? 0) km"
         ridingTimeLabel.text = record?.ridingTime.stringTime
         restTimeLabel.text = "\(record?.restTime ?? 0)"
@@ -73,6 +79,7 @@ class HistoryDetailViewController: UIViewController {
                 return
         }
         
+        //경로 생성
         route.map = nil
         route.strokeWidth = 5
         route.strokeColor = UIColor.primary
@@ -87,6 +94,7 @@ class HistoryDetailViewController: UIViewController {
             zoom: 13
         )
         
+        //출발 마커 생성
         let departureMarker = GMSMarker(position: CLLocationCoordinate2D(latitude: firstTrace.latitude, longitude: firstTrace.longitude))
         let departureIconView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         let departureIcon = UIImage(named: "departure")
@@ -94,6 +102,7 @@ class HistoryDetailViewController: UIViewController {
         departureMarker.iconView = departureIconView
         departureMarker.map = mapView
         
+        //도착 마커 생성
         let arrivalMarker = GMSMarker(position: CLLocationCoordinate2D(latitude: lastTrace.latitude, longitude: lastTrace.longitude))
         let arrivalIconView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         let arrivalIcon = UIImage(named: "arrival")
