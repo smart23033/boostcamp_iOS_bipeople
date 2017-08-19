@@ -34,58 +34,96 @@ class NavigationManager {
     private var mapViewForNavigation: GMSMapView
     
     private var navigationPath: GMSMutablePath?
+    private var navigationRoute: GMSPolyline?
     private var destinationMarker: GMSMarker?
 
     private var record: Record?
     private var traces: [Trace] = []
+    
+    /// 현재 위치가 도착지인지를 반환
+    var isArrived: Bool {
+
+        guard
+            let destination = destinationMarker?.position,
+            let currentLocation = mapViewForNavigation.myLocation
+        else {
+            return false
+        }
+        
+        let arrivalLocation = CLLocation(latitude: destination.latitude, longitude: destination.longitude)
+        
+        return currentLocation.distance(from: arrivalLocation) < 50
+    }
+    
+    /// 현재 위치가 네비게이션 경로에서 벗어나 있는지를 반환
+    var isAwayFromRoute: Bool {
+
+        guard
+            let currentCoord = mapViewForNavigation.myLocation?.coordinate,
+            let navigationPath = navigationPath
+        else {
+            return false
+        }
+        
+        return !GMSGeometryIsLocationOnPathTolerance(currentCoord, navigationPath, true, 50.0)
+    }
     
     init(mapView: GMSMapView) {
         mapViewForNavigation = mapView  
     }
     
     /// 싱글톤 패턴이 사용 된, 도착지 마커를 맵 위에 설정
-    func setMarker(place: GMSPlace) {
+    func setDestination(at place: GMSPlace) {
         
         if destinationMarker == nil {
-            destinationMarker = GMSMarker()
-            destinationMarker?.icon = GMSMarker.markerImage(with: UIColor.primary)
+            let marker = GMSMarker()
+            marker.icon = GMSMarker.markerImage(with: UIColor.primary)
+            
+            destinationMarker = marker
         }
-        
-        mapViewForNavigation.clear()
         
         guard let marker = destinationMarker else {
             return
         }
         
+        marker.map = nil     // Clear previous marker from map
+        
         marker.position = place.coordinate
         marker.title = place.name
         marker.snippet = place.formattedAddress ?? LiteralString.unknown.rawValue
+    }
+    
+    func showMarkers() {
         
         DispatchQueue.main.async {
-            marker.map = self.mapViewForNavigation
+            self.destinationMarker?.map = self.mapViewForNavigation
         }
     }
     
     /// TODO: T Map GeoJSON API를 통해 경로를 가져온다
-    func getGeoJSONFromTMap(toward place: GMSPlace, failure: @escaping (Error) -> Void, success: @escaping (Data) throws -> Void) {
+    func getGeoJSONFromTMap(failure: @escaping (Error) -> Void, success: @escaping (Data) throws -> Void) {
         
         guard
-            let currentPosX = mapViewForNavigation.myLocation?.coordinate.longitude,
-            let currentPosY = mapViewForNavigation.myLocation?.coordinate.latitude
+            let currentCoord = mapViewForNavigation.myLocation?.coordinate
         else {
             print("현재 위치를 아직 찾지 못했습니다")     // FOR DEBUG
             failure(TmapAPIError.invalidCurrentLocation)
             return
         }
         
-        print("currentPosX: ", currentPosX)     // FOR DEBUG
-        print("currentPosY: ", currentPosY)     // FOR DEBUG
+        print("currentPosX: ", currentCoord.longitude)     // FOR DEBUG
+        print("currentPosY: ", currentCoord.latitude)     // FOR DEBUG
         
-        let destinationX = place.coordinate.longitude
-        let destinationY = place.coordinate.latitude
+        guard
+            let destination = destinationMarker?.position
+        else {
+            print("먼저 도착지를 설정해 주세요")     // FOR DEBUG
+            failure(TmapAPIError.invalidDestination)
+            return
+        }
         
-        print("destinationX: ", destinationX)   // FOR DEBUG
-        print("destinationY: ", destinationY)   // FOR DEBUG
+        print("destinationX: ", destination.longitude)   // FOR DEBUG
+        print("destinationY: ", destination.latitude)    // FOR DEBUG
         
         var urlString: String = NavigationManager.TMAP_API_URL
         let urlParams: [String:String] = [
@@ -98,10 +136,10 @@ class NavigationManager {
         print(urlString)            // FOR DEBUG
         
         let requestBody: [String:Any] = [
-            "startX": currentPosX,  // 현재 위치 경도
-            "startY": currentPosY,  // 현재 위치 위도
-            "endX": destinationX,   // 목적지 경도
-            "endY": destinationY,   // 목적지 위도
+            "startX": currentCoord.longitude,  // 현재 위치 경도
+            "startY": currentCoord.latitude,  // 현재 위치 위도
+            "endX": destination.longitude,   // 목적지 경도
+            "endY": destination.latitude,   // 목적지 위도
             "reqCoordType": "WGS84GEO",
             "startName": "출발",
             "endName": "도착",
@@ -158,12 +196,14 @@ class NavigationManager {
             }
         }
         
-        let route = GMSPolyline(path: navigationPath)
-        route.strokeWidth = 5
-        route.strokeColor = UIColor.primary
+        navigationRoute?.map = nil     // Clear previous route from map
+        
+        navigationRoute = GMSPolyline(path: navigationPath)
+        navigationRoute?.strokeWidth = 5
+        navigationRoute?.strokeColor = UIColor.primary
         
         DispatchQueue.main.async {
-            route.map = self.mapViewForNavigation
+            self.navigationRoute?.map = self.mapViewForNavigation
         }
     }
     
