@@ -64,11 +64,13 @@ extension TimeInterval {
         return Int((self/60).truncatingRemainder(dividingBy: 60))
     }
     var hours: Int {
-        return Int((self/3600).truncatingRemainder(dividingBy: 24))
+        return Int(self/3600)
+//        일별 표기 원하면 아래꺼 리턴하라
+//        return Int((self/3600).truncatingRemainder(dividingBy: 24))
     }
-    var days: Int {
-        return Int(self/86400)
-    }
+//    var days: Int {
+//        return Int(self/86400)
+//    }
     
     //그래프의 y축에 사용될 분
     var minutesForGraph: Double {
@@ -76,9 +78,9 @@ extension TimeInterval {
     }
     
     var stringTime: String {
-        guard self.days == 0 else {
-            return "\(self.days)d \(self.hours)h \(self.minutes)m \(self.seconds)s"
-        }
+//        guard self.days == 0 else {
+//            return "\(self.days)d \(self.hours)h \(self.minutes)m \(self.seconds)s"
+//        }
         guard self.hours == 0 else {
             return "\(self.hours)h \(self.minutes)m \(self.seconds)s"
         }

@@ -54,26 +54,6 @@ class HistoryDetailViewController: UIViewController {
         drawRoute()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        guard let firstTrace = traces?.first,
-        let lastTrace = traces?.last,
-            let traceCount = traces?.count,
-            let middleTrace = traces?[traceCount/2]
-            else {
-            return
-        }
-        
-        let camera = GMSCameraPosition.camera(
-            withLatitude: middleTrace.latitude,
-            longitude: middleTrace.longitude,
-            zoom: 13
-        )
-        
-        mapView.camera = camera
-    }
-    
     //MARK: Functions
     
     func drawRoute() {
@@ -85,8 +65,12 @@ class HistoryDetailViewController: UIViewController {
         
         navigationRoute = GMSPolyline(path: navigationPath)
         
-        guard let route = navigationRoute else {
-            return
+        guard let route = navigationRoute,
+            let firstTrace = traces?.first,
+            let traceCount = traces?.count,
+            let middleTrace = traces?[traceCount/2],
+            let lastTrace = traces?.last else {
+                return
         }
         
         route.map = nil
@@ -96,6 +80,28 @@ class HistoryDetailViewController: UIViewController {
         DispatchQueue.main.async {
             route.map = self.mapView
         }
+        
+        mapView.camera = GMSCameraPosition.camera(
+            withLatitude: middleTrace.latitude,
+            longitude: middleTrace.longitude,
+            zoom: 13
+        )
+        
+        let departureMarker = GMSMarker(position: CLLocationCoordinate2D(latitude: firstTrace.latitude, longitude: firstTrace.longitude))
+        let departureIconView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        let departureIcon = UIImage(named: "departure")
+        departureIconView.image = departureIcon
+        departureMarker.iconView = departureIconView
+        departureMarker.map = mapView
+        
+        let arrivalMarker = GMSMarker(position: CLLocationCoordinate2D(latitude: lastTrace.latitude, longitude: lastTrace.longitude))
+        let arrivalIconView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        let arrivalIcon = UIImage(named: "arrival")
+        arrivalIconView.image = arrivalIcon
+        arrivalMarker.iconView = arrivalIconView
+        arrivalMarker.map = mapView
+        
     }
     
 }
+
