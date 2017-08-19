@@ -13,9 +13,11 @@ import GoogleMaps
 import GooglePlaces
 import GooglePlacePicker
 import GeoQueries
+import MarqueeLabel
 
 enum LiteralString: String {
     case tracking = "Tracking..."
+    case apptitle = "BiPeople"
     case unknown = "Unknown"
 }
 
@@ -30,6 +32,19 @@ class BiPeopleNavigationViewController: UIViewController {
     private var areaCircle: GMSCircle?
     
     private var currentLocation: CLLocation?
+    
+    private var marqueeTitle : MarqueeLabel = {
+        
+        let label = MarqueeLabel()
+        
+        label.type = .continuous
+        label.speed = .duration(10)
+        label.fadeLength = 20.0
+        label.leadingBuffer = 30.0
+        label.textColor = UIColor.white
+        
+        return label
+    } ()
     
     /// 기록 취소 후 네비게이션 모드 종료 버튼
     @IBOutlet weak var cancelButton: UIBarButtonItem! {
@@ -109,6 +124,7 @@ class BiPeopleNavigationViewController: UIViewController {
         // Prevent the navigation bar from being hidden when searching...
         innerSearchPlaceController.hidesNavigationBarDuringPresentation = false
         innerSearchPlaceController.searchBar.placeholder = "장소 검색"
+        innerSearchPlaceController.searchBar.tintColor = UIColor.primary
         
         return innerSearchPlaceController
     } ()
@@ -124,8 +140,9 @@ class BiPeopleNavigationViewController: UIViewController {
                 do {
                     try self.navigationManager.initDatas()
                     
-                    self.navigationItem.titleView = nil
-                    self.navigationItem.title = LiteralString.tracking.rawValue
+                    marqueeTitle.text = LiteralString.tracking.rawValue
+                    
+                    self.navigationItem.titleView = marqueeTitle
                     self.navigationItem.leftBarButtonItem = navigationButtons["cancel"]
                     self.navigationItem.rightBarButtonItem = navigationButtons["done"]
                 } catch {
@@ -158,6 +175,7 @@ class BiPeopleNavigationViewController: UIViewController {
         /*******************************************************************************************/
         // 공공장소 세부사항 View에서 검색창이 사라지면서 네비게이션 바 아래에 검정줄이 생기는 것을 해결
         self.navigationController?.navigationBar.isTranslucent = true;
+        UIBarButtonItem.appearance(whenContainedInInstancesOf:[UISearchBar.self]).tintColor = UIColor.white
         
         
         /*******************************************************************************************/
@@ -360,8 +378,6 @@ class BiPeopleNavigationViewController: UIViewController {
             
             self.loadingIndicatorView.stopAnimating()
             self.navigationMapView.isHidden = false
-            
-            self.startButton.isHidden = false
         }
     }
     
@@ -467,7 +483,7 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
                 
                 guard error == nil else {
                     print("Reverse Geocode from current coordinate failed with error: ", error!)    // FOR DEBUG
-                    self.navigationItem.title = LiteralString.tracking.rawValue
+                    self.marqueeTitle.text = LiteralString.tracking.rawValue
                     
                     return
                 }
@@ -476,12 +492,12 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
                     let address = response?.firstResult()
                 else {
                     print("Reverse Geocode result is empty")    // FOR DEBUG
-                    self.navigationItem.title = LiteralString.tracking.rawValue
+                    self.marqueeTitle.text = LiteralString.unknown.rawValue
                     
                     return
                 }
                 
-                self.navigationItem.title = (address.subLocality ?? "") + " " + (address.thoroughfare ?? "")
+                self.marqueeTitle.text = address.thoroughfare ?? LiteralString.unknown.rawValue
             }
             
             // 4. 목적지 도착을 확인 후, 도착한 경우 기록 저장 및 안내 종료

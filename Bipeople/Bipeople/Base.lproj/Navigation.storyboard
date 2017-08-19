@@ -97,12 +97,12 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <navigationItem key="navigationItem" title="TITLE" id="cHY-bb-SJt">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="PmP-QK-R8S">
+                        <barButtonItem key="leftBarButtonItem" title="취소" id="PmP-QK-R8S">
                             <connections>
                                 <action selector="didTapCancelButton:" destination="MC0-9L-o62" id="TtD-ip-Sny"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Done" id="B5E-8w-wya">
+                        <barButtonItem key="rightBarButtonItem" title="저장" id="B5E-8w-wya">
                             <connections>
                                 <action selector="didTapDoneButton:" destination="MC0-9L-o62" id="v4g-py-F87"/>
                             </connections>
