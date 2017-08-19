@@ -369,7 +369,7 @@ class BiPeopleNavigationViewController: UIViewController {
                 self.startButton.isHidden = true
             }
         }) { data in
-            print("data: ", String(data:data, encoding: .utf8) ?? "nil")    // FOR DEBUG
+            // print("data: ", String(data:data, encoding: .utf8) ?? "nil")    // FOR DEBUG
             
             let geoJSON = try JSONDecoder().decode(
                 GeoJSON.self,
@@ -451,6 +451,8 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
             print("Location is nil")
             return
         }
+        
+        // print("고도: ", updatedLocation.altitude)
         
         print("Updated Location: ", updatedLocation)    // FOR DEBUG
         

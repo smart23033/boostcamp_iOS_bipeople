@@ -187,20 +187,20 @@ class NavigationManager {
                 return
             }
             
+            let placeName = $0.properties?.name ?? ""
+            let description = $0.properties?.description ?? ""
+            
             if case let .single(coord) = coordinates {
                 
                 let coordinate = CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0])
-                let placeName = $0.properties?.name ?? ""
-                let description = $0.properties?.description ?? ""
-                
-                print(coordinate)    // FOR DEBUG
+                // print(coordinate)    // FOR DEBUG
                 path.add(coordinate)
-                routeWaypoints.append(Waypoint(coord: coordinate, placeName: placeName , description: description))
+                routeWaypoints.append(Waypoint(coord: coordinate, placeName: placeName, description: description))
             } else if case let .array(coords) = coordinates {
                 coords.forEach { coord in
                     
                     let coordinate = CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0])
-                    print(coordinate)    // FOR DEBUG
+                    // print(coordinate)    // FOR DEBUG
                     path.add(coordinate)
                 }
             }
@@ -370,7 +370,8 @@ class NavigationManager {
             }
         }
         
-        traces.append(Trace(recordID: record._id, coord : location.coordinate, timestamp: updatedTime))
+        let trace = Trace(recordID: record._id, location : location, timestamp: updatedTime)
+        traces.append(trace)
         try! realm.commitWrite()
     }
     
