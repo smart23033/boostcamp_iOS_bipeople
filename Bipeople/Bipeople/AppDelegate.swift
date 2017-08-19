@@ -15,7 +15,8 @@ import GooglePlaces
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    var records = [Record]()
+    var places: [Place] = []
+    var records: [Record] = []
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
@@ -31,6 +32,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         let tabBarController = window!.rootViewController as! UITabBarController
+        tabBarController.selectedIndex = 1
+        
         let navControllers = tabBarController.childViewControllers as! [UINavigationController]
         
         changeTheme(navigationControllers: navControllers)

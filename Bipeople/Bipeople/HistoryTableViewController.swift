@@ -21,15 +21,16 @@ class HistoryTableViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        records = appDelegate.records
-    
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 //        print(Realm.Configuration.defaultConfiguration.fileURL!)
-        records?.sort{ $0.createdAt < $1.createdAt }
+        //records = records?.sorted
+        
+        let realm = try! Realm()
+        records = realm.objects(Record.self).sorted{ $0.createdAt < $1.createdAt }
+        
         tableView.reloadData()
     }
     
