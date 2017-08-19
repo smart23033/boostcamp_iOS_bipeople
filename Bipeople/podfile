@@ -16,5 +16,6 @@ target 'Bipeople' do
   # SJSJ
   pod ‘FSCalendar’
   pod 'ScrollableGraphView'
+  pod 'MarqueeLabel/Swift'
 
 end

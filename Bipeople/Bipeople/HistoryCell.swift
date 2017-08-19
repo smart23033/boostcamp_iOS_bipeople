@@ -7,10 +7,18 @@
 //
 
 import UIKit
+import MarqueeLabel
 
 class HistoryCell: UITableViewCell {
     
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var titleLabel: MarqueeLabel! {
+        didSet {
+            titleLabel.type = .continuous
+            titleLabel.speed = .duration(10)
+            titleLabel.fadeLength = 20.0
+            titleLabel.leadingBuffer = 30.0
+        }
+    }
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
     
