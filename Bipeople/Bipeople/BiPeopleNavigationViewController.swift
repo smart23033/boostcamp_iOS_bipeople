@@ -33,19 +33,6 @@ class BiPeopleNavigationViewController: UIViewController {
     
     private var currentLocation: CLLocation?
     
-    private var marqueeTitle : MarqueeLabel = {
-        
-        let label = MarqueeLabel()
-        
-        label.type = .continuous
-        label.speed = .duration(10)
-        label.fadeLength = 20.0
-        label.leadingBuffer = 30.0
-        label.textColor = UIColor.white
-        
-        return label
-    } ()
-    
     /// 기록 취소 후 네비게이션 모드 종료 버튼
     @IBOutlet weak var cancelButton: UIBarButtonItem! {
         willSet(newVal) {
@@ -129,6 +116,21 @@ class BiPeopleNavigationViewController: UIViewController {
         return innerSearchPlaceController
     } ()
     
+    lazy private var marqueeTitle : MarqueeLabel = {
+        
+        let label = MarqueeLabel()
+        
+        label.frame = self.view.frame
+        label.textAlignment = .center
+        label.type = .continuous
+        label.speed = .duration(10)
+        label.adjustsFontSizeToFitWidth = true
+        label.adjustsFontForContentSizeCategory = true
+        label.textColor = UIColor.white
+        
+        return label
+    } ()
+    
     private var navigationManager: NavigationManager!
     private var locationManager: CLLocationManager!
     private var zoomLevel: Float = 15.0
@@ -177,7 +179,6 @@ class BiPeopleNavigationViewController: UIViewController {
         self.navigationController?.navigationBar.isTranslucent = true;
         UIBarButtonItem.appearance(whenContainedInInstancesOf:[UISearchBar.self]).tintColor = UIColor.white
         
-        
         /*******************************************************************************************/
         // 첫 화면에 네비게이션 버튼을 없애고, 장소 검색창이 보이도록 설정
         navigationButtons = [
@@ -197,6 +198,8 @@ class BiPeopleNavigationViewController: UIViewController {
         /*******************************************************************************************/
         // CLLocationManager 초기화
         locationManager = CLLocationManager()
+        locationManager.allowsBackgroundLocationUpdates = true
+        locationManager.showsBackgroundLocationIndicator = true
         locationManager.requestAlwaysAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         locationManager.distanceFilter = 10     // 이전 위치에서 얼마나 거리차가 나면 위치변경 트리거를 실행할지 결정
@@ -366,18 +369,20 @@ class BiPeopleNavigationViewController: UIViewController {
                 self.startButton.isHidden = true
             }
         }) { data in
-            print("data: ", String(data:data, encoding: .utf8) ?? "nil")    // FOR DEBUG
+            // print("data: ", String(data:data, encoding: .utf8) ?? "nil")    // FOR DEBUG
             
             let geoJSON = try JSONDecoder().decode(
                 GeoJSON.self,
                 from: data
             )
             
-            self.navigationManager.drawRoute(from: geoJSON)
+            self.navigationManager.setRouteAndWaypoints(from: geoJSON)
+            self.navigationManager.drawRoute()
             self.navigationManager.showMarkers()
             
             self.loadingIndicatorView.stopAnimating()
             self.navigationMapView.isHidden = false
+            self.startButton.isHidden = self.isNavigationOn
         }
     }
     
@@ -446,6 +451,8 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
             print("Location is nil")
             return
         }
+        
+        // print("고도: ", updatedLocation.altitude)
         
         print("Updated Location: ", updatedLocation)    // FOR DEBUG
         

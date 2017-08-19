@@ -20,14 +20,16 @@ class Trace: Object {
     @objc dynamic var recordID: Int = 0
     @objc dynamic var latitude: CLLocationDegrees = 0.0
     @objc dynamic var longitude: CLLocationDegrees = 0.0
+    @objc dynamic var altitude: CLLocationDegrees = 0.0
     @objc dynamic var timestamp: TimeInterval = 0.0
     
-    convenience init(recordID: Int, coord: CLLocationCoordinate2D, timestamp: TimeInterval) {
+    convenience init(recordID: Int, location: CLLocation, timestamp: TimeInterval) {
         self.init()
         
         self.recordID = recordID
-        self.latitude = coord.latitude
-        self.longitude = coord.longitude
+        self.latitude = location.coordinate.latitude
+        self.longitude = location.coordinate.longitude
+        self.altitude = location.altitude
         self.timestamp = timestamp
     }
 }

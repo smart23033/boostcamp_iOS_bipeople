@@ -21,6 +21,13 @@ enum TmapAPIError: Error {
     case unknown
 }
 
+struct Waypoint {
+    
+    var coord: CLLocationCoordinate2D
+    var placeName: String
+    var description: String
+}
+
 class NavigationManager {
     
     private static let TMAP_API_URL: String = "https://apis.skplanetx.com/tmap/routes/pedestrian"
@@ -35,6 +42,9 @@ class NavigationManager {
     
     private var navigationPath: GMSMutablePath?
     private var navigationRoute: GMSPolyline?
+    
+    private var routeWaypoints: [Waypoint] = []
+    private var waypointsMarker: [GMSMarker] = []
     private var destinationMarker: GMSMarker?
 
     private var record: Record?
@@ -93,13 +103,6 @@ class NavigationManager {
         marker.snippet = place.formattedAddress ?? LiteralString.unknown.rawValue
     }
     
-    func showMarkers() {
-        
-        DispatchQueue.main.async {
-            self.destinationMarker?.map = self.mapViewForNavigation
-        }
-    }
-    
     /// TODO: T Map GeoJSON API를 통해 경로를 가져온다
     func getGeoJSONFromTMap(failure: @escaping (Error) -> Void, success: @escaping (Data) throws -> Void) {
         
@@ -153,24 +156,25 @@ class NavigationManager {
         ]
         
         // T Map에 현재 위치와, 목적지 경도/위도를 전달하여 경로를 요청
-        Alamofire.request(urlString, method: .post, parameters: requestBody, encoding: URLEncoding.httpBody, headers: headers)
-            .responseJSON { response in
+        Alamofire.request(urlString, method: .post, parameters: requestBody, encoding: URLEncoding.httpBody, headers: headers).responseJSON { response in
 
-                guard let data = response.data else {
-                    failure(TmapAPIError.invalidResponse)
-                    return
-                }
+            guard let data = response.data else {
+                failure(TmapAPIError.invalidResponse)
+                return
+            }
 
-                do {
-                    try success(data)
-                } catch {
-                    failure(error)
-                }
+            do {
+                try success(data)
+            } catch {
+                failure(error)
+            }
         }
     }
     
-    func drawRoute(from data: GeoJSON) {
+    /// T Map으로 부터 받아온 데이터로 부터 경로와 경유지를 추출
+    func setRouteAndWaypoints(from data: GeoJSON) {
         
+        routeWaypoints = []
         navigationPath = GMSMutablePath()
         guard let path = navigationPath else {
             return
@@ -183,18 +187,28 @@ class NavigationManager {
                 return
             }
             
+            let placeName = $0.properties?.name ?? ""
+            let description = $0.properties?.description ?? ""
+            
             if case let .single(coord) = coordinates {
                 
-                print(coord)    // FOR DEBUG
-                path.add(CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0]))
+                let coordinate = CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0])
+                // print(coordinate)    // FOR DEBUG
+                path.add(coordinate)
+                routeWaypoints.append(Waypoint(coord: coordinate, placeName: placeName, description: description))
             } else if case let .array(coords) = coordinates {
                 coords.forEach { coord in
                     
-                    print(coord)    // FOR DEBUG
-                    path.add(CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0]))
+                    let coordinate = CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0])
+                    // print(coordinate)    // FOR DEBUG
+                    path.add(coordinate)
                 }
             }
         }
+    }
+    
+    /// T Map으로 부터 받아온 경로를 맵에 그림
+    func drawRoute() {
         
         navigationRoute?.map = nil     // Clear previous route from map
         
@@ -204,6 +218,35 @@ class NavigationManager {
         
         DispatchQueue.main.async {
             self.navigationRoute?.map = self.mapViewForNavigation
+        }
+    }
+    
+    /// 경유지와 도착지에 마커를 맵에 뿌림
+    func showMarkers() {
+        
+        // Clear previous marker from map
+        for marker in waypointsMarker {
+            marker.map = nil
+        }
+        
+        waypointsMarker.removeAll()
+        for waypoint in routeWaypoints {
+            let marker = GMSMarker()
+            
+            marker.icon = GMSMarker.markerImage(with: UIColor.primary)
+            marker.position = waypoint.coord
+            marker.title = waypoint.placeName
+            marker.snippet = waypoint.description
+            
+            waypointsMarker.append(marker)
+        }
+        
+        DispatchQueue.main.async {
+            self.destinationMarker?.map = self.mapViewForNavigation
+            
+            for marker in self.waypointsMarker {
+                marker.map = self.mapViewForNavigation
+            }
         }
     }
     
@@ -327,7 +370,8 @@ class NavigationManager {
             }
         }
         
-        traces.append(Trace(recordID: record._id, coord : location.coordinate, timestamp: updatedTime))
+        let trace = Trace(recordID: record._id, location : location, timestamp: updatedTime)
+        traces.append(trace)
         try! realm.commitWrite()
     }
     
