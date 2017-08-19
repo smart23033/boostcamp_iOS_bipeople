@@ -16,7 +16,7 @@ class HistoryCell: UITableViewCell {
             titleLabel.type = .continuous
             titleLabel.speed = .duration(10)
             titleLabel.fadeLength = 20.0
-            titleLabel.leadingBuffer = 30.0
+            titleLabel.trailingBuffer = 30.0
         }
     }
     @IBOutlet weak var dateLabel: UILabel!
