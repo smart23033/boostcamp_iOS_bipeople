@@ -14,18 +14,21 @@ import GooglePlaces
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    static let GOOGLE_API_KEY = "AIzaSyDHNdS74dfE2fMYP4CLMJ9wfipk4XZB7dw"
+    
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         print(Realm.Configuration.defaultConfiguration.fileURL ?? "No path for realm") // FOR DEBUG
         
+        // RealmHelper.deleteAll() // FOR DEBUG
         updatePublicPlaceInfoFromNetwork()
         /**
           * Add Google Map API Key
           */
-        GMSServices.provideAPIKey("AIzaSyDHNdS74dfE2fMYP4CLMJ9wfipk4XZB7dw")
-        GMSPlacesClient.provideAPIKey("AIzaSyDHNdS74dfE2fMYP4CLMJ9wfipk4XZB7dw")
+        GMSServices.provideAPIKey(AppDelegate.GOOGLE_API_KEY)
+        GMSPlacesClient.provideAPIKey(AppDelegate.GOOGLE_API_KEY)
         
         // Override point for customization after application launch.
         
@@ -34,7 +37,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         changeTheme(navigationControllers: navControllers)
         
-        /* 더미데이터 삽입 시작*/
+        /*
+         * FOR DEBUG
+         * 더미데이터 삽입 시작
+         */
 //        RealmHelper.deleteTable(of: Record.self)
 //        for i in 0 ..< 5 {
 //            let record = Record(departure: "departure \(i)",
