@@ -7,14 +7,19 @@
 
 ## 사용예정 API(유용한 튜토리얼을 발견하면 링크를 추가해주세요)
  - UIKit
- - [Google Map API For iOS](https://developers.google.com/maps/documentation/ios-sdk/?hl=ko)
+ - [GoogleMaps](https://developers.google.com/maps/documentation/ios-sdk/?hl=ko)
+ - [GooglePlaces](https://developers.google.com/places/ios-api/?hl=ko)
+ - [GooglePlacePicker](https://developers.google.com/places/ios-api/placepicker?hl=ko)
+ - CoreLocation
  - [T Map geoJSON](https://developers.skplanetx.com/apidoc/kor/geofencing/regions/geojson/)
  - [Realm](https://hanjungv.github.io/2017-02-08-2_Swift_RealmTodo1/)
+ - [RealmGeoQueries](https://github.com/mhergon/RealmGeoQueries)
  - [Alamofire](https://outofbedlam.github.io/swift/2016/02/04/Alamofire/)
- - CoreLocation
+ - [FSCalendar](https://github.com/WenchaoD/FSCalendar)
+ - [ScrollableGraphView](https://github.com/philackm/ScrollableGraphView)
+ - [MarqueeLabel](https://github.com/cbpowell/MarqueeLabel)
  - ARKit
  - SiriKit
- - Firebase
 
 ## TODO List
  * Gamja
