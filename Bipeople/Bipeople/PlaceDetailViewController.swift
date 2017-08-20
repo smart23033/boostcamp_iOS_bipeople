@@ -2,8 +2,8 @@
 //  PlaceDetailViewController.swift
 //  Bipeople
 //
-//  Created by BLU on 2017. 8. 15..
-//  Copyright © 2017년 futr_blu. All rights reserved.
+//  Created by YeongSik Lee on 2017. 8. 15..
+//  Copyright © 2017년 BluePotato. All rights reserved.
 //
 
 import UIKit
@@ -11,8 +11,8 @@ import GoogleMaps
 
 class PlaceDetailViewController: UIViewController {
     
-    var place : Place?
-    var places = [Place]()
+    var place : PublicPlace?
+    var places = [PublicPlace]()
     
     @IBOutlet weak var placeTypeLabel: UILabel!
     @IBOutlet weak var placeMapView: GMSMapView!

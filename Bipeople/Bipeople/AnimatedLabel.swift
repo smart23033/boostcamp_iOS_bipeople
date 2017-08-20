@@ -1,4 +1,11 @@
-import Foundation
+//
+//  AnimatedLabel.swift
+//  Bipeople
+//
+//  Created by 김성준 on 2017. 8. 18..
+//  Copyright © 2017년 BluePotato. All rights reserved.
+//
+
 import UIKit
 
 enum CountingMethod {

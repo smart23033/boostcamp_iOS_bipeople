@@ -1,11 +1,10 @@
 //
-//  PublicResponse.swift
+//  PublicToilet.swift
 //  Bipeople
 //
-//  Created by BLU on 2017. 8. 9..
-//  Copyright © 2017년 futr_blu. All rights reserved.
+//  Created by 조준영 on 2017. 8. 9..
+//  Copyright © 2017년 BluePotato. All rights reserved.
 //
-
 
 struct PublicToilet: Codable {
     

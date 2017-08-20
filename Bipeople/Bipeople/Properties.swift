@@ -1,10 +1,9 @@
-
 //
 //  Properties.swift
 //  Bipeople
 //
-//  Created by CONNECT on 2017. 8. 12..
-//  Copyright © 2017년 futr_blu. All rights reserved.
+//  Created by YeongSik Lee on 2017. 8. 12..
+//  Copyright © 2017년 BluePotato. All rights reserved.
 //
 
 import Foundation

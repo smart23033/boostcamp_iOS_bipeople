@@ -3,7 +3,7 @@
 //  Bipeople
 //
 //  Created by 김성준 on 2017. 8. 10..
-//  Copyright © 2017년 futr_blu. All rights reserved.
+//  Copyright © 2017년 BluePotato. All rights reserved.
 //
 
 //    데이터 포멧 1
@@ -55,7 +55,7 @@ class Record: Object {
         self.createdAt = generateRandomDate(daysBack: 50)
     }
     
-    //Incrementa ID
+    /// Return Maximum(_id) + 1
     static func autoIncrement() -> Int {
         
         let realm = try! Realm()
@@ -66,7 +66,7 @@ class Record: Object {
         }
     }
     
-    //랜덤날짜 생성
+    /// 랜덤날짜 생성
     func generateRandomDate(daysBack: Int)-> Date {
         let day = arc4random_uniform(UInt32(daysBack)+1)
         let hour = arc4random_uniform(23)

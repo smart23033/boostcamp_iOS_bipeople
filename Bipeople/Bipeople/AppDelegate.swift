@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  Bipeople
 //
-//  Created by BLU on 2017. 8. 7..
-//  Copyright © 2017년 futr_blu. All rights reserved.
+//  Created by BluePotato on 2017. 8. 7..
+//  Copyright © 2017년 BluePotato. All rights reserved.
 //
 
 import UIKit
@@ -112,11 +112,13 @@ extension AppDelegate {
     
     func updatePublicPlaceInfoFromNetwork() {
         
-        RealmHelper.deleteTable(of: Place.self)
+        RealmHelper.deleteTable(of: PublicPlace.self)
         
-        GetServices.fetchList(url : ApiURL.toilet.rawValue, PublicToilet.self, success: { response in
-            let toilets = response.searchPublicToiletPOIService.row.map { toilet -> Place in
-                let place = Place()
+        PublicPlace.fetchList(url : ApiURL.toilet.rawValue, PublicToilet.self, success: { response in
+            
+            let toilet = response.searchPublicToiletPOIService.row.map { toilet -> PublicPlace in
+                
+                let place = PublicPlace()
                 
                 place.lat = toilet.y_Wgs84
                 place.lng = toilet.x_Wgs84
@@ -128,15 +130,17 @@ extension AppDelegate {
             
             let realm = try! Realm()
             try! realm.write {
-                realm.add(toilets)
+                realm.add(toilet)
             }
         }) { error in
             print("Error in", #function)    // FOR DEBUG
         }
         
-        GetServices.fetchList(url : ApiURL.wifi.rawValue, PublicWiFi.self, success: { response in
-            let wifis = response.publicWiFiPlaceInfo.row.map { wifi -> Place in
-                let place = Place()
+        PublicPlace.fetchList(url : ApiURL.wifi.rawValue, PublicWiFi.self, success: { response in
+            
+            let wifi = response.publicWiFiPlaceInfo.row.map { wifi -> PublicPlace in
+            
+                let place = PublicPlace()
                 
                 place.lat = wifi.INSTL_Y
                 place.lng = wifi.INSTL_X
@@ -148,28 +152,30 @@ extension AppDelegate {
 
             let realm = try! Realm()
             try! realm.write {
-                realm.add(wifis)
+                realm.add(wifi)
             }
         }) { error in
             print("Error in", #function)    // FOR DEBUG
         }
         
-        GetServices.fetchList(url : ApiURL.store.rawValue, PublicStore.self, success: { response in
-            let facilities = response.geoInfoBikeConvenientFacilitiesWGS.row.map { Store -> Place in
-                let place = Place()
+        PublicPlace.fetchList(url : ApiURL.store.rawValue, PublicStore.self, success: { response in
+            
+            let store = response.geoInfoBikeConvenientFacilitiesWGS.row.map { store -> PublicPlace in
                 
-                place.lat = Double(Store.LAT)!
-                place.lng = Double(Store.LNG)!
+                let place = PublicPlace()
+                
+                place.lat = Double(store.LAT)!
+                place.lng = Double(store.LNG)!
                 place.placeType = .store
-                place.location = Store.ADDRESS
-                place.imageURL = Store.FILENAME
+                place.location = store.ADDRESS
+                place.imageURL = store.FILENAME
                 
                 return place
             }
             
             let realm = try! Realm()
             try! realm.write {
-                realm.add(facilities)
+                realm.add(store)
             }
         }) { error in
             print("Error in", #function)    // FOR DEBUG

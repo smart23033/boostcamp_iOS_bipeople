@@ -2,11 +2,10 @@
 //  RealmHelper.swift
 //  RealmHelper
 //
-//  Created by BLU on 2017. 8. 7..
-//  Copyright © 2017년 futr_blu. All rights reserved.
+//  Created by 조준영 on 2017. 8. 7..
+//  Copyright © 2017년 BluePotato. All rights reserved.
 //
 
-import Foundation
 import RealmSwift
 
 public class RealmHelper: NSObject {
@@ -63,35 +62,5 @@ public class RealmHelper: NSObject {
             realm.delete(fetch(from: T.self))
         }
     }
-    
-//    class func objectFromType<T: Object>(of data: T) -> Results<T> {
-//
-//        return realm.objects(T.self)
-//    }
-    
-//    class func objectFromType<T: Object>(of data: T, from query: NSPredicate) -> T? {
-//        guard let object = realm.objects(T.self).filter("id = 1").first else {
-//            return nil
-//        }
-//
-//        return object
-//    }
-    
-//    class func updateObject<T: Object>(data: T, query: NSPredicate) {
-//
-//        var object = realm.objects(T.self).filter("id = 1").first
-//        object = data
-//
-//        try! realm.write {
-//            realm.add(data, update: true)
-//        }
-//    }
-    
-//    class func updateData<T: Object>(data: T, query: NSPredicate) {
-//        
-//        try! realm.write {
-//            realm.add(updateTask)
-//        }
-//    }
     
 }
