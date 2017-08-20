@@ -10,11 +10,11 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Item-->
+        <!--네비게이션-->
         <scene sceneID="RXW-Xd-4Qp">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="87z-fg-L60" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="2Bs-XG-aqc"/>
+                    <tabBarItem key="tabBarItem" title="네비게이션" image="navigation" selectedImage="selectedNavigation" id="2Bs-XG-aqc"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="2jk-BX-eaE">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -225,4 +225,8 @@
             <point key="canvasLocation" x="2372" y="814.54272863568224"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="navigation" width="50" height="50"/>
+        <image name="selectedNavigation" width="50" height="50"/>
+    </resources>
 </document>

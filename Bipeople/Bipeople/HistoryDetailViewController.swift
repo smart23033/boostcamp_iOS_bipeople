@@ -13,8 +13,6 @@ import MarqueeLabel
 
 class HistoryDetailViewController: UIViewController {
     
-    static let MAX_COLOR_VALUE = 255.0
-    
     //MARK: Outlets
     
     @IBOutlet weak var titleLabel: UINavigationItem!
@@ -37,9 +35,11 @@ class HistoryDetailViewController: UIViewController {
     let navigationPath = GMSMutablePath()
     var colorsAtCoordinate = [UIColor]()
     
-    var redValue: CGFloat = 0.0
-    var greenValue: CGFloat = 0.0
-    var maxAltitude = 0.0
+    var redValue = Double()
+    var greenValue = Double()
+    var maxAltitude = Double()
+    var maxSpeed = Double()
+    var minSpeed = Double()
     
     //MARK: Life Cycle
     
@@ -74,31 +74,46 @@ class HistoryDetailViewController: UIViewController {
     func drawRoute() {
         mapView.clear()
         
+        //패스 설정 및 최대 고도 구함
         traces?.forEach({ (trace) in
             navigationPath.add(CLLocationCoordinate2D(latitude: trace.latitude, longitude: trace.longitude))
             
             if trace.altitude > maxAltitude {
                 maxAltitude = trace.altitude
             }
+        })
+        
+        // red = (현재고도/최대고도), green = 1.0 - red
+        traces?.forEach({ (trace) in
             
-            redValue = CGFloat(trace.altitude / maxAltitude * HistoryDetailViewController.MAX_COLOR_VALUE)
-            greenValue = CGFloat(HistoryDetailViewController.MAX_COLOR_VALUE) - redValue
+            if maxAltitude == 0 {
+                redValue = 0.0
+            }
+            else {
+                redValue = (trace.altitude / maxAltitude)
+            }
             
-            colorsAtCoordinate.append(UIColor(red: redValue, green: greenValue, blue: 0, alpha: 1.0))
+            greenValue = 1.0 - redValue
             
+            colorsAtCoordinate.append(UIColor(red: CGFloat(redValue), green: CGFloat(greenValue), blue: 0, alpha: 1.0))
         })
         
         navigationRoute = GMSPolyline(path: navigationPath)
         
         var currentColor = UIColor()
+        var spans = [GMSStyleSpan]()
+        var isFirstIndex = true
         
         colorsAtCoordinate.forEach { (color) in
             
-            guard color != colorsAtCoordinate.first else {
-                
+            guard !isFirstIndex else {
+                currentColor = color
+                isFirstIndex = !isFirstIndex
+                return
             }
             
-            
+            spans.append(GMSStyleSpan(style: GMSStrokeStyle.gradient(from: currentColor, to: color)))
+    
             currentColor = color
         }
         
@@ -108,7 +123,8 @@ class HistoryDetailViewController: UIViewController {
         }
         
         route.strokeWidth = 5
-        route.strokeColor = UIColor.primary
+//        route.strokeColor = UIColor.primary
+        route.spans = spans
         
         DispatchQueue.main.async {
             route.map = self.mapView
