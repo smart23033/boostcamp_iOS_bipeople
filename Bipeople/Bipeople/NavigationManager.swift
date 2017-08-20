@@ -1,9 +1,9 @@
 //
-//  swift
+//  NavigationManager.swift
 //  Bipeople
 //
-//  Created by CONNECT on 2017. 8. 10..
-//  Copyright © 2017년 futr_blu. All rights reserved.
+//  Created by YeongSik Lee on 2017. 8. 10..
+//  Copyright © 2017년 BluePotato. All rights reserved.
 //
 
 import Foundation
@@ -328,7 +328,7 @@ class NavigationManager {
         }
     }
     
-    func addTrace(location: CLLocation, updatedTime: TimeInterval) throws {
+    func addTrace(location: CLLocation) throws {
         
         let realm = try! Realm()
         realm.beginWrite()
@@ -362,7 +362,7 @@ class NavigationManager {
                 
             case _ where location.speed < NavigationManager.MINIMUM_RIDING_VELOCITY :
                 
-                record.restTime += updatedTime - last.timestamp
+                record.restTime += last.timestamp.timeIntervalSince(location.timestamp)
                 print("Rest Time... \(record.restTime),")     // FOR DEBUG
                 fallthrough
             default:
@@ -370,7 +370,7 @@ class NavigationManager {
             }
         }
         
-        let trace = Trace(recordID: record._id, location : location, timestamp: updatedTime)
+        let trace = Trace(recordID: record._id, location : location)
         traces.append(trace)
         try! realm.commitWrite()
     }
@@ -412,7 +412,7 @@ class NavigationManager {
             
             print("first: ", String(describing: firstTrace))
             print("last: ", String(describing: lastTrace))
-            record.ridingTime = lastTrace.timestamp - firstTrace.timestamp
+            record.ridingTime = lastTrace.timestamp.timeIntervalSince(firstTrace.timestamp)
             
             let excerciseTime = record.ridingTime - record.restTime
             record.calories = excerciseTime * 0.139
