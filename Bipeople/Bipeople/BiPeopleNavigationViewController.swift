@@ -2,8 +2,8 @@
 //  BiPeopleNavigationViewController.swift
 //  Bipeople
 //
-//  Created by CONNECT on 2017. 8. 9..
-//  Copyright © 2017년 sikurity. All rights reserved.
+//  Created by YeongSik Lee on 2017. 8. 9..
+//  Copyright © 2017년 BluePotato. All rights reserved.
 //
 
 import UIKit
@@ -27,7 +27,7 @@ class BiPeopleNavigationViewController: UIViewController {
     /// @IBOutlet weak ~Button들이 메모리 해제 되는 것을 막기 위해 저장
     private var navigationButtons: [String:UIBarButtonItem] = [:]
     
-    private var placesResult:[Place] = []
+    private var placesResult:[PublicPlace] = []
     private var placesMarkers:[GMSMarker] = []
     private var areaCircle: GMSCircle?
     
@@ -287,7 +287,7 @@ class BiPeopleNavigationViewController: UIViewController {
         
         placesResult.removeAll()
         placesResult = try! Realm().findNearby(
-            type: Place.self,
+            type: PublicPlace.self,
             origin: currentLocation,
             radius: 1000,               // In meters
             sortAscending: nil
@@ -473,12 +473,8 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
             
             // 1. 위치 변화 정보 저장
             do {
-                try navigationManager.addTrace(
-                    location: updatedLocation,
-                    updatedTime: Date().timeIntervalSince1970
-                )
+                try navigationManager.addTrace(location: updatedLocation)
             } catch {
-                
                 print("Save trace data failed with error: ", error)
             }
             
@@ -598,7 +594,7 @@ extension BiPeopleNavigationViewController: GMSMapViewDelegate {
         
         guard
             let infoWindow = Bundle.main.loadNibNamed("MarkerInfoWindow", owner: self, options: nil)?.first as? MarkerInfoWindow,
-            let place = marker.userData as? Place
+            let place = marker.userData as? PublicPlace
         else {
             return nil
         }
@@ -614,7 +610,7 @@ extension BiPeopleNavigationViewController: GMSMapViewDelegate {
         let storyboard = UIStoryboard(name: "Navigation", bundle: nil)
         
         guard
-            let place = marker.userData as? Place,
+            let place = marker.userData as? PublicPlace,
             let placeDetailVC = storyboard.instantiateViewController(withIdentifier: "PlaceDetailViewController") as? PlaceDetailViewController
         else {
             return
