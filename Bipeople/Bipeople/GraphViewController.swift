@@ -1,5 +1,5 @@
 //
-//  HistoryGraphViewController.swift
+//  GraphViewController.swift
 //  Bipeople
 //
 //  Created by 김성준 on 2017. 8. 8..
@@ -30,7 +30,7 @@ enum Segments: Int {
     case month
 }
 
-class HistoryGraphViewController: UIViewController {
+class GraphViewController: UIViewController {
     
     //MARK: Outlets
     
@@ -92,9 +92,7 @@ class HistoryGraphViewController: UIViewController {
             }
         }
     }
-    
-    
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+
     var records: [Record] = []
     
     private var graphView: ScrollableGraphView?
@@ -394,7 +392,7 @@ class HistoryGraphViewController: UIViewController {
 
 //MARK: FSCalendarDelegate
 
-extension HistoryGraphViewController: FSCalendarDelegate {
+extension GraphViewController: FSCalendarDelegate {
     
     func calendar(_ calendar: FSCalendar, boundingRectWillChange bounds: CGRect, animated: Bool) {
         // Do other updates here
@@ -442,7 +440,7 @@ extension HistoryGraphViewController: FSCalendarDelegate {
 
 //MARK: ScrollableGraphViewDataSource
 
-extension HistoryGraphViewController: ScrollableGraphViewDataSource {
+extension GraphViewController: ScrollableGraphViewDataSource {
     
     
     func value(forPlot plot: Plot, atIndex pointIndex: Int) -> Double {
@@ -519,7 +517,7 @@ extension HistoryGraphViewController: ScrollableGraphViewDataSource {
 
 //MARK: UIPickerViewDelegate
 
-extension HistoryGraphViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+extension GraphViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
