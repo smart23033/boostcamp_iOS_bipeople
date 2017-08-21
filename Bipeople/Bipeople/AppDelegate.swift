@@ -37,10 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         changeTheme(navigationControllers: navControllers)
         
-        /*
-         * FOR DEBUG
-         * 더미데이터 삽입 시작
-         */
+        /* FOR DEBUG: 더미데이터 삽입 시작 */
 //        RealmHelper.deleteTable(of: Record.self)
 //        for i in 0 ..< 5 {
 //            let record = Record(departure: "departure \(i)",
@@ -55,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            RealmHelper.add(data: record)
 //        }
 //        RealmHelper.deleteTable(of: Trace.self)
-        /* 더미데이터 삽입 끝*/
+        /* FOR DEBUG: 더미데이터 삽입 끝 */
         
         return true
     }

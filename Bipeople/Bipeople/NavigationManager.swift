@@ -11,6 +11,7 @@ import GoogleMaps
 import GooglePlaces
 import Alamofire
 import RealmSwift
+import AVFoundation
 
 enum TmapAPIError: Error {
     case invalidCurrentLocation
@@ -35,23 +36,33 @@ class NavigationManager {
     private static let FORMAT: String       = "json"
     private static let APP_KEY: String       = "5112af59-674c-38fd-89b0-ab54f1297284"
     
-    private static let MINIMUM_RIDING_VELOCITY: Double      = 0.5   /// meters / seconds
-    private static let RIDING_VELOCITY_THRESHOLD: Double    = 1000  /// meters / seconds
+    private static let MINIMUM_RIDING_VELOCITY: Double      = 0.5   /// unit: m/sec
+    private static let RIDING_VELOCITY_THRESHOLD: Double    = 16    /// unit: m/sec
     
-    private var mapViewForNavigation: GMSMapView
+    private static let PATH_RANGE_TOLERANCE: Double         = 50    /// unit: m
     
     private var navigationPath: GMSMutablePath?
     private var navigationRoute: GMSPolyline?
     
     private var routeWaypoints: [Waypoint] = []
     private var waypointsMarker: [GMSMarker] = []
+    
     private var destinationMarker: GMSMarker?
 
     private var record: Record?
     private var traces: [Trace] = []
     
+    private let synthesizer: AVSpeechSynthesizer = .init()
+    private var lastGuidedIndex: Int = -1
+    
+    private var mapViewForNavigation: GMSMapView                    /// Need to initialize
+    
+    init(mapView: GMSMapView) {
+        mapViewForNavigation = mapView
+    }
+    
     /// 현재 위치가 도착지인지를 반환
-    var isArrived: Bool {
+    public var isArrived: Bool {
 
         guard
             let destination = destinationMarker?.position,
@@ -62,11 +73,11 @@ class NavigationManager {
         
         let arrivalLocation = CLLocation(latitude: destination.latitude, longitude: destination.longitude)
         
-        return currentLocation.distance(from: arrivalLocation) < 50
+        return currentLocation.distance(from: arrivalLocation) < NavigationManager.PATH_RANGE_TOLERANCE
     }
     
     /// 현재 위치가 네비게이션 경로에서 벗어나 있는지를 반환
-    var isAwayFromRoute: Bool {
+    public var isAwayFromRoute: Bool {
 
         guard
             let currentCoord = mapViewForNavigation.myLocation?.coordinate,
@@ -75,15 +86,67 @@ class NavigationManager {
             return false
         }
         
-        return !GMSGeometryIsLocationOnPathTolerance(currentCoord, navigationPath, true, 50.0)
+        return !GMSGeometryIsLocationOnPathTolerance(currentCoord, navigationPath, true, NavigationManager.PATH_RANGE_TOLERANCE)
     }
     
-    init(mapView: GMSMapView) {
-        mapViewForNavigation = mapView  
+    /// 중간 경유지를 통과중이라면 해당 경유지 인덱스를 반환, 통과 중이지 않은 경우 -1반환
+    public var isInWayPoint: Int {
+        
+        guard
+            let currentLocation = mapViewForNavigation.myLocation
+        else {
+            return -1
+        }
+        
+        for (index, waypoint) in routeWaypoints.reversed().enumerated() {
+            
+            let waypointLocation = CLLocation(
+                latitude: waypoint.coord.latitude,
+                longitude: waypoint.coord.longitude
+            )
+            
+            if currentLocation.distance(from: waypointLocation) < NavigationManager.PATH_RANGE_TOLERANCE {
+                return routeWaypoints.count - index - 1
+            }
+        }
+        
+        return -1
+    }
+    
+    public func voiceGuidance(index: Int) {
+
+        guard
+            index == Int.max || index == Int.min ||
+            ((0 <= index && index < routeWaypoints.count) && index > lastGuidedIndex)
+        else {
+            print("index: \(index), lastGuidedIndex: \(lastGuidedIndex)")
+            return
+        }
+    
+        var speechString: String = ""
+        switch index {
+            case Int.max:
+                print("도착")
+                speechString = "안내를 종료합니다"
+            case Int.min:
+                print("경로이탈")
+                speechString = "경로를 재설정 합니다"
+            default:
+                print(routeWaypoints[index].description)
+                speechString = routeWaypoints[index].description
+        }
+        
+        let utterance = AVSpeechUtterance(string: speechString)
+        utterance.voice = AVSpeechSynthesisVoice(language: "ko-KR")
+        utterance.rate = 0.4
+        
+        SpeechHelper.shared.say(utterance)
+        
+        lastGuidedIndex = index
     }
     
     /// 싱글톤 패턴이 사용 된, 도착지 마커를 맵 위에 설정
-    func setDestination(at place: GMSPlace) {
+    public func setDestination(at place: GMSPlace) {
         
         if destinationMarker == nil {
             let marker = GMSMarker()
@@ -104,7 +167,7 @@ class NavigationManager {
     }
     
     /// TODO: T Map GeoJSON API를 통해 경로를 가져온다
-    func getGeoJSONFromTMap(failure: @escaping (Error) -> Void, success: @escaping (Data) throws -> Void) {
+    public func getGeoJSONFromTMap(failure: @escaping (Error) -> Void, success: @escaping (Data) throws -> Void) {
         
         guard
             let currentCoord = mapViewForNavigation.myLocation?.coordinate
@@ -135,7 +198,19 @@ class NavigationManager {
             "appKey" : NavigationManager.APP_KEY
         ]
         
-        urlString.append(urlParams.reduce("?") { $0 + $1.0 + "=" + String(describing: $1.1) + "&" })
+        urlString.append(urlParams.reduce("?") { (url: String, param: (key: String, value: String)) -> String in
+            
+            var url: String = url
+            var param: (key: String, value: String) = param
+            
+            param.key.append("=")
+            param.key.append(param.value)
+            param.key.append("&")
+            
+            url.append(param.key)
+            
+            return url
+        })
         print(urlString)            // FOR DEBUG
         
         let requestBody: [String:Any] = [
@@ -172,9 +247,11 @@ class NavigationManager {
     }
     
     /// T Map으로 부터 받아온 데이터로 부터 경로와 경유지를 추출
-    func setRouteAndWaypoints(from data: GeoJSON) {
+    public func setRouteAndWaypoints(from data: GeoJSON) {
         
         routeWaypoints = []
+        lastGuidedIndex = -1    // 마지막에 음성안내 된 인덱스 -1로 초기화
+        
         navigationPath = GMSMutablePath()
         guard let path = navigationPath else {
             return
@@ -208,7 +285,7 @@ class NavigationManager {
     }
     
     /// T Map으로 부터 받아온 경로를 맵에 그림
-    func drawRoute() {
+    public func drawRoute() {
         
         navigationRoute?.map = nil     // Clear previous route from map
         
@@ -222,7 +299,7 @@ class NavigationManager {
     }
     
     /// 경유지와 도착지에 마커를 맵에 뿌림
-    func showMarkers() {
+    public func showMarkers() {
         
         // Clear previous marker from map
         for marker in waypointsMarker {
@@ -250,7 +327,7 @@ class NavigationManager {
         }
     }
     
-    func initDatas() throws {
+    public func initDatas() throws {
         
         guard
             let currentLocation = mapViewForNavigation.myLocation?.coordinate,
@@ -294,6 +371,8 @@ class NavigationManager {
                 return
             }
             
+            print("!!!", address)
+            
             let realm = try! Realm()
             realm.beginWrite()
             
@@ -328,7 +407,7 @@ class NavigationManager {
         }
     }
     
-    func addTrace(location: CLLocation) throws {
+    public func addTrace(location: CLLocation) throws {
         
         let realm = try! Realm()
         realm.beginWrite()
@@ -356,13 +435,13 @@ class NavigationManager {
             switch location.speed {
                 
                 case _ where location.speed < 0: fallthrough
-                case _ where location.speed > NavigationManager.MINIMUM_RIDING_VELOCITY:
+                case _ where location.speed > NavigationManager.RIDING_VELOCITY_THRESHOLD:
 
                     print("Speed ​​measurement error due to low GPS reception rate")     // FOR DEBUG
                 
             case _ where location.speed < NavigationManager.MINIMUM_RIDING_VELOCITY :
                 
-                record.restTime += last.timestamp.timeIntervalSince(location.timestamp)
+                record.restTime += location.timestamp.timeIntervalSince(last.timestamp)
                 print("Rest Time... \(record.restTime),")     // FOR DEBUG
                 fallthrough
             default:
@@ -375,7 +454,7 @@ class NavigationManager {
         try! realm.commitWrite()
     }
     
-    func saveData() throws {
+    public func saveData() throws {
         
         let realm = try! Realm()
         realm.beginWrite()

@@ -27,6 +27,7 @@
 		F135BE8F1F45B4B100F89A53 /* PublicToilet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135BE8B1F45B34F00F89A53 /* PublicToilet.swift */; };
 		F135BE901F45B4B100F89A53 /* PublicWiFi.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135BE8C1F45B34F00F89A53 /* PublicWiFi.swift */; };
 		F13AB3531F3A78AD0038B2CF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */; };
+		F144B8CA1F4A9CB00010AE31 /* SpeechHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F144B8C91F4A9CB00010AE31 /* SpeechHelper.swift */; };
 		F14C71B31F3ED1C6005015B1 /* GeoJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14C71B21F3ED1C6005015B1 /* GeoJSON.swift */; };
 		F14C71B51F3ED200005015B1 /* Feature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14C71B41F3ED200005015B1 /* Feature.swift */; };
 		F14C71B71F3F15EF005015B1 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14C71B61F3F15EF005015B1 /* Geometry.swift */; };
@@ -69,6 +70,7 @@
 		F135BE8B1F45B34F00F89A53 /* PublicToilet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicToilet.swift; sourceTree = "<group>"; };
 		F135BE8C1F45B34F00F89A53 /* PublicWiFi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicWiFi.swift; sourceTree = "<group>"; };
 		F13AB3521F3A78AD0038B2CF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		F144B8C91F4A9CB00010AE31 /* SpeechHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechHelper.swift; sourceTree = "<group>"; };
 		F14C71B21F3ED1C6005015B1 /* GeoJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoJSON.swift; sourceTree = "<group>"; };
 		F14C71B41F3ED200005015B1 /* Feature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feature.swift; sourceTree = "<group>"; };
 		F14C71B61F3F15EF005015B1 /* Geometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				A2F35C101F447CF00016F1AF /* AnimatedLabel.swift */,
 				A219812A1F39730C00D0F5F7 /* CardView.swift */,
 				302016221F3C23FA0073A493 /* RealmHelper.swift */,
+				F144B8C91F4A9CB00010AE31 /* SpeechHelper.swift */,
 				A258388B1F39A11A00BECEA3 /* Extensions.swift */,
 				A2A2993B1F3C45DF00E31ED9 /* Model */,
 				30E82D971F38227500536AFB /* Navigation */,
@@ -404,6 +407,7 @@
 				F11F51D81F45CD7800429741 /* PlaceDetailViewController.swift in Sources */,
 				30E82D841F38224B00536AFB /* AppDelegate.swift in Sources */,
 				A258388C1F39A11A00BECEA3 /* Extensions.swift in Sources */,
+				F144B8CA1F4A9CB00010AE31 /* SpeechHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
