@@ -34,19 +34,26 @@ extension Date {
         return Calendar.current.isDate(self, equalTo: date, toGranularity: .day)
     }
     
-    func generateDates(startDate: Date?, endDate: Date?, addbyUnit: Calendar.Component) -> [Date]
+    /// 날짜 생성
+    func generateDates(startDate: Date, endDate: Date, addByUnit: Calendar.Component) -> [Date]
     {
-        let calendar = Calendar.current
         var datesArray: [Date] =  [Date]()
         var newDate = startDate
         
+        let calendar = Calendar.current
         while true {
-            if newDate?.isInSameDay(date: endDate!) == true {
+            
+            if newDate.isInSameDay(date: endDate) {
                 break
             }
             
-            newDate = calendar.date(byAdding: addbyUnit, value: 1, to: newDate!)!
-            datesArray.append(newDate!)
+            if let nextDate = calendar.date(byAdding: addByUnit, value: 1, to: newDate) {
+                
+                newDate = nextDate
+                datesArray.append(newDate)
+            } else {
+                break
+            }
         }
         
         return datesArray

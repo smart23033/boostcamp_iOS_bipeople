@@ -37,10 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         changeTheme(navigationControllers: navControllers)
         
-        /*
-         * FOR DEBUG
-         * 더미데이터 삽입 시작
-         */
+        /* FOR DEBUG: 더미데이터 삽입 시작 */
 //        RealmHelper.deleteTable(of: Record.self)
 //        for i in 0 ..< 5 {
 //            let record = Record(departure: "departure \(i)",
@@ -55,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            RealmHelper.add(data: record)
 //        }
 //        RealmHelper.deleteTable(of: Trace.self)
-        /* 더미데이터 삽입 끝*/
+        /* FOR DEBUG: 더미데이터 삽입 끝 */
         
         return true
     }
@@ -104,17 +101,11 @@ extension AppDelegate {
 
 extension AppDelegate {
     
-    enum ApiURL: String {
-        case toilet = "http://openAPI.seoul.go.kr:8088/4944627561736d613130334c75587853/json/SearchPublicToiletPOIService/1/1000/"
-        case wifi = "http://openapi.seoul.go.kr:8088/6464794f66736d613131377946497a4d/json/PublicWiFiPlaceInfo/1/1000"
-        case store = "http://openapi.seoul.go.kr:8088/4467715062736d61313031666a6d5867/json/GeoInfoBikeConvenientFacilitiesWGS/1/1000/"
-    }
-    
     func updatePublicPlaceInfoFromNetwork() {
         
         RealmHelper.deleteTable(of: PublicPlace.self)
         
-        PublicPlace.fetchList(url : ApiURL.toilet.rawValue, PublicToilet.self, success: { response in
+        PublicPlace.fetchList(apiURL: .toiletURL, PublicToilet.self, success: { response in
             
             let toilet = response.searchPublicToiletPOIService.row.map { toilet -> PublicPlace in
                 
@@ -136,7 +127,7 @@ extension AppDelegate {
             print("Error in", #function)    // FOR DEBUG
         }
         
-        PublicPlace.fetchList(url : ApiURL.wifi.rawValue, PublicWiFi.self, success: { response in
+        PublicPlace.fetchList(apiURL : .wifiURL, PublicWiFi.self, success: { response in
             
             let wifi = response.publicWiFiPlaceInfo.row.map { wifi -> PublicPlace in
             
@@ -158,14 +149,14 @@ extension AppDelegate {
             print("Error in", #function)    // FOR DEBUG
         }
         
-        PublicPlace.fetchList(url : ApiURL.store.rawValue, PublicStore.self, success: { response in
+        PublicPlace.fetchList(apiURL : .storeURL, PublicStore.self, success: { response in
             
             let store = response.geoInfoBikeConvenientFacilitiesWGS.row.map { store -> PublicPlace in
                 
                 let place = PublicPlace()
                 
-                place.lat = Double(store.LAT)!
-                place.lng = Double(store.LNG)!
+                place.lat = Double(store.LAT) ?? 0.0
+                place.lng = Double(store.LNG) ?? 0.0
                 place.placeType = .store
                 place.location = store.ADDRESS
                 place.imageURL = store.FILENAME

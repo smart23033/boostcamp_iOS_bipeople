@@ -204,6 +204,7 @@ class BiPeopleNavigationViewController: UIViewController {
         locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         locationManager.distanceFilter = 10     // 이전 위치에서 얼마나 거리차가 나면 위치변경 트리거를 실행할지 결정
         locationManager.startUpdatingLocation()
+        locationManager.startUpdatingHeading()
         locationManager.delegate = self
         
         
@@ -467,7 +468,8 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
         // 2. 맵의 중심을 현재 위치로
         // 3. 현재 위치를 NavigationBar Title로(Async)
         // 4. 목적지 도착을 확인 후, 도착한 경우 기록 저장 및 안내 종료
-        // 5. 현재 위치를 이용 해 경로에서 50m 밖을 벗어났는 지를 확인
+        // 5. 중간 경유지를 지나가는 경우 음성 안내
+        // 6. 현재 위치를 이용 해 경로에서 50m 밖을 벗어났는 지를 확인
         //    벗어난 경우 현 위치에서 목적지 까지 새로운 경로를 구해 안내(Async)
         if isNavigationOn {
             
@@ -505,18 +507,25 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
             
             // 4. 목적지 도착을 확인 후, 도착한 경우 기록 저장 및 안내 종료
             if navigationManager.isArrived {
-                // TODO: SiriKit을 이용해 목적지 도착 알림
+                navigationManager.voiceGuidance(index: Int.max)
                 
                 self.isNavigationOn = false
                 self.trySaveData()
             }
-            
-            // 5. 현재 위치를 이용 해 경로에서 50m 밖을 벗어났는 지를 확인
-            //    벗어난 경우 현 위치에서 목적지 까지 새로운 경로를 구해 안내(Async)
-            if navigationManager.isAwayFromRoute {
-                // TODO: SiriKit을 이용해 경로 이탈 경고
+            else {
                 
-                getRouteAndDrawForDestination()
+                // 5. 중간 경유지를 지나가는 경우 음성 안내
+                let waypointIndex = navigationManager.isInWayPoint
+                if waypointIndex >= 0 {
+                    navigationManager.voiceGuidance(index: waypointIndex)
+                }
+                // 6. 현재 위치를 이용 해 경로에서 50m 밖을 벗어났는 지를 확인
+                //    벗어난 경우 현 위치에서 목적지 까지 새로운 경로를 구해 안내(Async)
+                else if navigationManager.isAwayFromRoute {
+                    
+                    navigationManager.voiceGuidance(index: Int.min)
+                    getRouteAndDrawForDestination()
+                }
             }
         }
     }

@@ -16,6 +16,12 @@ enum PlaceType: String {
     case none
 }
 
+enum ApiURL: String {
+    case toiletURL = "http://openAPI.seoul.go.kr:8088/4944627561736d613130334c75587853/json/SearchPublicToiletPOIService/1/1000/"
+    case wifiURL = "http://openapi.seoul.go.kr:8088/6464794f66736d613131377946497a4d/json/PublicWiFiPlaceInfo/1/1000"
+    case storeURL = "http://openapi.seoul.go.kr:8088/4467715062736d61313031666a6d5867/json/GeoInfoBikeConvenientFacilitiesWGS/1/1000/"
+}
+
 class PublicPlace: Object {
     
     @objc dynamic var id : String = UUID().uuidString
@@ -38,11 +44,11 @@ class PublicPlace: Object {
         return ["placeType"]
     }
     
-    static func fetchList<T: Codable>( url:String, _ type: T.Type,
+    static func fetchList<T: Codable>( apiURL: ApiURL, _ type: T.Type,
                                        success: @escaping (T) -> Void,
                                        failure: @escaping (Error) -> Void) {
         
-        guard let url = URL(string: url) else { return }
+        guard let url = URL(string: apiURL.rawValue) else { return }
         
         Alamofire.request(url).responseJSON { response in
             
