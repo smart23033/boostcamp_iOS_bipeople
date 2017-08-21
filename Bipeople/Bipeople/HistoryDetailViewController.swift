@@ -32,6 +32,15 @@ class HistoryDetailViewController: UIViewController {
     var navigationRoute: GMSPolyline?
     var marqueeTitle : MarqueeLabel?
     
+    let navigationPath = GMSMutablePath()
+    var colorsAtCoordinate = [UIColor]()
+    
+    var redValue = Double()
+    var greenValue = Double()
+    var maxAltitude = Double()
+    var maxSpeed = Double()
+    var minSpeed = Double()
+    
     //MARK: Life Cycle
     
     override func viewDidLoad() {
@@ -51,7 +60,7 @@ class HistoryDetailViewController: UIViewController {
         titleLabel.titleView = marqueeTitle
         distanceLabel.text = "\(record?.distance.roundTo(places: 1) ?? 0) km"
         ridingTimeLabel.text = record?.ridingTime.stringTime
-        restTimeLabel.text = "\(record?.restTime ?? 0)"
+        restTimeLabel.text = record?.restTime.stringTime
         averageSpeedLabel.text = "\(record?.averageSpeed.roundTo(places: 1) ?? 0) m/s"
         maximumSpeedLabel.text = "\(record?.maximumSpeed.roundTo(places: 1) ?? 0) m/s"
         caloriesLabel.text = "\(record?.calories.roundTo(places: 1) ?? 0) kcal"
@@ -63,29 +72,71 @@ class HistoryDetailViewController: UIViewController {
     //MARK: Functions
     
     func drawRoute() {
-        let navigationPath = GMSMutablePath()
+        mapView.clear()
         
+        //패스 설정 및 최대 고도 구함
         traces?.forEach({ (trace) in
             navigationPath.add(CLLocationCoordinate2D(latitude: trace.latitude, longitude: trace.longitude))
+            
+            if trace.altitude > maxAltitude {
+                maxAltitude = trace.altitude
+            }
+        })
+        
+        // red = (현재고도/최대고도), green = 1.0 - red
+        traces?.forEach({ (trace) in
+            
+            if maxAltitude == 0 {
+                redValue = 0.0
+            }
+            else {
+                redValue = (trace.altitude / maxAltitude)
+            }
+            
+            greenValue = 1.0 - redValue
+            
+            colorsAtCoordinate.append(UIColor(red: CGFloat(redValue), green: CGFloat(greenValue), blue: 0, alpha: 1.0))
         })
         
         navigationRoute = GMSPolyline(path: navigationPath)
         
-        guard let route = navigationRoute,
-            let firstTrace = traces?.first,
+        var currentColor = UIColor()
+        var spans = [GMSStyleSpan]()
+        var isFirstIndex = true
+        
+        colorsAtCoordinate.forEach { (color) in
+            
+            guard !isFirstIndex else {
+                currentColor = color
+                isFirstIndex = !isFirstIndex
+                return
+            }
+            
+            spans.append(GMSStyleSpan(style: GMSStrokeStyle.gradient(from: currentColor, to: color)))
+    
+            currentColor = color
+        }
+        
+        //경로 생성
+        guard let route = navigationRoute else {
+            return
+        }
+        
+        route.strokeWidth = 5
+//        route.strokeColor = UIColor.primary
+        route.spans = spans
+        
+        DispatchQueue.main.async {
+            route.map = self.mapView
+        }
+        
+        //카메라 설정
+        guard let firstTrace = traces?.first,
             let traceCount = traces?.count,
             let middleTrace = traces?[traceCount/2],
             let lastTrace = traces?.last else {
                 return
-        }
-        
-        //경로 생성
-        route.map = nil
-        route.strokeWidth = 5
-        route.strokeColor = UIColor.primary
-        
-        DispatchQueue.main.async {
-            route.map = self.mapView
+                
         }
         
         mapView.camera = GMSCameraPosition.camera(

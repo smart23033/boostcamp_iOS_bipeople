@@ -131,6 +131,7 @@ extension Double {
 
 extension UIColor {
     static let primary = UIColor(hex: 0x1cb0b8)
+    static let contrast = UIColor(hex: 0xB8241C)
     
     /// Create a UIColor from RGB
     convenience init(red: Int, green: Int, blue: Int, a: CGFloat = 1.0) {
