@@ -22,6 +22,7 @@ class Trace: Object {
     @objc dynamic var longitude: CLLocationDegrees = -1
     @objc dynamic var altitude: CLLocationDegrees = -1
     @objc dynamic var speed: CLLocationDegrees = -1
+    @objc dynamic var accuracy: CLLocationDegrees = 0
     @objc dynamic var timestamp: Date = Date()
     
     convenience init(recordID: Int, location: CLLocation) {
@@ -32,6 +33,7 @@ class Trace: Object {
         self.longitude  = location.coordinate.longitude
         self.altitude   = location.altitude
         self.speed      = location.speed
+        self.accuracy   = location.horizontalAccuracy
         self.timestamp  = location.timestamp
     }
 }

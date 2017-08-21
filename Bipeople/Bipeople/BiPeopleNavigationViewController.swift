@@ -75,8 +75,10 @@ class BiPeopleNavigationViewController: UIViewController {
             placesButton.layer.shadowRadius = 2
             placesButton.layer.shadowOpacity = 0.8
             placesButton.layer.shadowOffset = CGSize.zero
-            placesButton.setTitle("주변", for: .normal)
+            placesButton.setTitle("off", for: .normal)
             placesButton.setTitleColor(UIColor.white, for: .normal)
+            placesButton.setTitle("on", for: .selected)
+            placesButton.setTitleColor(UIColor.white, for: .selected)
             placesButton.backgroundColor = UIColor.primary
             placesButton.autoresizingMask = []
         }
@@ -134,6 +136,7 @@ class BiPeopleNavigationViewController: UIViewController {
     private var navigationManager: NavigationManager!
     private var locationManager: CLLocationManager!
     private var zoomLevel: Float = 15.0
+    private let areaRadius: Double = 500.0  // In meters
     
     private var isNavigationOn: Bool = false {
         willSet(newVal) {
@@ -220,11 +223,10 @@ class BiPeopleNavigationViewController: UIViewController {
             message: nil,
             preferredStyle: .alert
         )
+        confirmAlert.addAction(UIAlertAction(title: "취소", style: .cancel))
         confirmAlert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
-            
             self.isNavigationOn = true
         })
-        confirmAlert.addAction(UIAlertAction(title: "취소", style: .default))
         
         self.present(confirmAlert, animated: true)
     }
@@ -237,11 +239,10 @@ class BiPeopleNavigationViewController: UIViewController {
             message: "현재 까지의 기록은 저장되지 않고 종료됩니다",
             preferredStyle: .alert
         )
+        confirmAlert.addAction(UIAlertAction(title: "취소", style: .cancel))
         confirmAlert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
-            
             self.isNavigationOn = false
         })
-        confirmAlert.addAction(UIAlertAction(title: "취소", style: .default))
         
         self.present(confirmAlert, animated: true)
     }
@@ -253,50 +254,44 @@ class BiPeopleNavigationViewController: UIViewController {
             message: "현재 까지의 기록을 저장하고 종료합니다",
             preferredStyle: .alert
         )
+        confirmAlert.addAction(UIAlertAction(title: "취소", style: .cancel))
         confirmAlert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
             self.isNavigationOn = false
             self.trySaveData()
         })
-        confirmAlert.addAction(UIAlertAction(title: "취소", style: .default))
         
         self.present(confirmAlert, animated: true)
     }
     
     @IBAction func didTapPlacesButton(_ sender: Any) {
         
-        guard showPlaces() else {
-            
+        let placesCount = try! Realm().objects(PublicPlace.self).count
+        guard placesCount > 0 else {
             let warningAlert = UIAlertController(
-                title: "아직 공공 데이터의 다운로드가 완료되지 않았습니다",
-                message: "waiting...",
+                title: "아직 공공데이터를 받아오지 못하였습니다",
+                message: "다시 시도하시겠습니까?(2초 후 자동으로 사라집니다)",
                 preferredStyle: .alert
             )
-            warningAlert.addAction(UIAlertAction(title: "확인", style: .default))
-    
+            warningAlert.addAction(UIAlertAction(title: "취소", style: .cancel))
+            warningAlert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
+                self.didTapPlacesButton(sender)
+            })
+            
             self.present(warningAlert, animated: true)
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+                warningAlert.dismiss(animated: true, completion: nil)
+            }
             
             return
         }
+        
+        placesButton.isSelected = !placesButton.isSelected
+        if placesButton.isSelected == false {
+            clearPlaces()
+        }
     }
     
-    private func showPlaces() -> Bool {
-        
-        guard let currentLocation = navigationMapView.myLocation?.coordinate else {
-            
-            return false
-        }
-        
-        placesResult.removeAll()
-        placesResult = try! Realm().findNearby(
-            type: PublicPlace.self,
-            origin: currentLocation,
-            radius: 1000,               // In meters
-            sortAscending: nil
-        )
-        
-        guard placesResult.count > 0 else {
-            return false
-        }
+    private func clearPlaces() {
         
         if let circle = areaCircle {
             
@@ -311,9 +306,42 @@ class BiPeopleNavigationViewController: UIViewController {
                 marker.map = nil
             }
         }
+    }
+    
+    private func showPlaces() throws {
+        
+        guard let currentLocation = navigationMapView.myLocation?.coordinate else {
+            
+            let error = NSError(
+                domain: Bundle.main.bundleIdentifier ?? "nil",
+                code: -1,
+                userInfo: [
+                    NSLocalizedDescriptionKey : "현재 위치를 찾을 수 없습니다"
+                ]
+            )
+            
+            throw error
+        }
+        
+        clearPlaces()
+        
+        areaCircle = GMSCircle(position: currentLocation, radius: areaRadius)
+        areaCircle?.strokeColor = UIColor.clear
+        areaCircle?.fillColor = UIColor(red: 0, green: 0, blue: 0.35, alpha: 0.4)
+        
+        DispatchQueue.main.async {
+            self.areaCircle?.map = self.navigationMapView
+        }
+        
+        placesResult.removeAll()
+        placesResult = try! Realm().findNearby(
+            type: PublicPlace.self,
+            origin: currentLocation,
+            radius: areaRadius,
+            sortAscending: nil
+        )
         
         placesMarkers.removeAll()
-        
         for place in placesResult {
             
             if case .none = place.placeType {
@@ -333,17 +361,6 @@ class BiPeopleNavigationViewController: UIViewController {
             
             placesMarkers.append(marker)
         }
-        
-        areaCircle = GMSCircle(position: currentLocation, radius: 1000)
-        
-        areaCircle?.strokeColor = UIColor.clear
-        areaCircle?.fillColor = UIColor(red: 0, green: 0, blue: 0.35, alpha: 0.4)
-        
-        DispatchQueue.main.async {
-            self.areaCircle?.map = self.navigationMapView
-        }
-        
-        return true
     }
     
     private func getRouteAndDrawForDestination() {
@@ -405,27 +422,28 @@ class BiPeopleNavigationViewController: UIViewController {
                 message: error.localizedDescription,
                 preferredStyle: .alert
             )
+            warningAlert.addAction(UIAlertAction(title: "취소", style: .cancel) { _ in
+                self.isNavigationOn = false
+            })
             warningAlert.addAction(UIAlertAction(title: "재시도", style: .default) { _ in
                 self.trySaveData()     // 주의 - 재귀함수
-            })
-            warningAlert.addAction(UIAlertAction(title: "취소", style: .default) { _ in
-                self.isNavigationOn = false
             })
             
             self.present(warningAlert, animated: true)
         }
     }
     
-    func moveMap(coordinate: CLLocationCoordinate2D?) {
+    func moveMap(coordinate: CLLocationCoordinate2D?, bearing: CLLocationDirection = -1) {
         
-        guard let coordinate = coordinate else {
+        guard let coord = coordinate else {
             return
         }
         
         let camera = GMSCameraPosition.camera(
-            withLatitude: coordinate.latitude,
-            longitude: coordinate.longitude,
-            zoom: zoomLevel
+            withTarget: coord,
+            zoom: zoomLevel,
+            bearing: bearing,
+            viewingAngle: -1
         )
         
         if navigationMapView.isHidden {
@@ -453,9 +471,7 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
             return
         }
         
-        // print("고도: ", updatedLocation.altitude)
-        
-        print("Updated Location: ", updatedLocation)    // FOR DEBUG
+        // print("Updated Location: ", updatedLocation)    // FOR DEBUG
         
         if currentLocation == nil {
         
@@ -463,9 +479,36 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
             moveMap(coordinate: currentLocation?.coordinate)
         }
         
+        // 현재 위치 주변 공공장소 보여주기
+        if placesButton.isSelected {
+            
+            do {
+                try showPlaces()
+            } catch {
+                
+                placesButton.isSelected = false
+                clearPlaces()
+                
+                let warningAlert = UIAlertController(
+                    title: error.localizedDescription,
+                    message: "다시 시도하시겠습니까?(5초 후 자동으로 사라집니다)",
+                    preferredStyle: .alert
+                )
+                warningAlert.addAction(UIAlertAction(title: "취소", style: .cancel))
+                warningAlert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
+                    self.placesButton.isSelected = true
+                })
+                
+                self.present(warningAlert, animated: true)
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+                    warningAlert.dismiss(animated: true, completion: nil)
+                }
+            }
+        }
+        
         // 네비게이션 모드가 켜져있는 경우
-        // 1. 위치 변화 정보 저장
-        // 2. 맵의 중심을 현재 위치로
+        // 1. 맵의 중심을 현재 위치로
+        // 2. 위치 변화 정보 저장
         // 3. 현재 위치를 NavigationBar Title로(Async)
         // 4. 목적지 도착을 확인 후, 도착한 경우 기록 저장 및 안내 종료
         // 5. 중간 경유지를 지나가는 경우 음성 안내
@@ -473,15 +516,16 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
         //    벗어난 경우 현 위치에서 목적지 까지 새로운 경로를 구해 안내(Async)
         if isNavigationOn {
             
-            // 1. 위치 변화 정보 저장
+            // 1. 맵의 중심을 현재 위치로
+            let bearing = navigationManager.calculateBearing(to: updatedLocation)
+            moveMap(coordinate: updatedLocation.coordinate, bearing: bearing)
+            
+            // 2. 위치 변화 정보 저장
             do {
                 try navigationManager.addTrace(location: updatedLocation)
             } catch {
                 print("Save trace data failed with error: ", error)
             }
-            
-            // 2. 맵의 중심을 현재 위치로
-            moveMap(coordinate: updatedLocation.coordinate)
             
             // 3. 현재 위치를 NavigationBar Title로(Async)
             GMSGeocoder().reverseGeocodeCoordinate(updatedLocation.coordinate) { response, error in
@@ -523,21 +567,21 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
                 //    벗어난 경우 현 위치에서 목적지 까지 새로운 경로를 구해 안내(Async)
                 else if navigationManager.isAwayFromRoute {
                     
+                    let warningAlert = UIAlertController(
+                        title: "경로 이탈",
+                        message: "경로를 재설정 합니다(3초 후 자동으로 사라집니다)",
+                        preferredStyle: .alert
+                    )
+                    self.present(warningAlert, animated: true)
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
+                        warningAlert.dismiss(animated: true, completion: nil)
+                    }
+                    
                     navigationManager.voiceGuidance(index: Int.min)
                     getRouteAndDrawForDestination()
                 }
             }
         }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        
-        // 네비게이션 모드이면서, 맵이 보이는 상태일 때
-        guard isNavigationOn, !navigationMapView.isHidden else {
-            return
-        }
-        
-        navigationMapView.animate(toBearing: newHeading.trueHeading)
     }
     
     /// FOR DEBUG: Handle authorization for the location manager...
@@ -556,7 +600,7 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
             // 확인을 누르면 환경설정 탭으로, 종료를 누르면 앱을 종료
             let warningAlert = UIAlertController(
                 title: "Bipeople을 사용하기 위해서는 위치 정보 권한이 필요합니다",
-                message: "확인을 눌러 환경설정에 위치 권한을 승인해주세요",
+                message: "사용을 위해 확인을 눌러 환경설정으로 이동한 후 위치 권한을 승인해주세요",
                 preferredStyle: .alert
             )
             
@@ -569,8 +613,8 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
                     return
                 }
     
-                UIApplication.shared.open(settingsUrl) {
-                    print("Settings open ", $0 ? "success" : "failed")
+                UIApplication.shared.open(settingsUrl) { result in
+                    print("Settings open ", (result ? "success" : "failed"))
                 }
             })
             
@@ -633,6 +677,10 @@ extension BiPeopleNavigationViewController: GMSMapViewDelegate {
     
     /// 맵에서 위치가 선택(터치)된 경우
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        
+        guard isNavigationOn == false else {
+            return
+        }
         
         let VIEWPORT_DELTA = 0.001 // 선택된 지점 주변 반경(맵에서 보여줄)
         

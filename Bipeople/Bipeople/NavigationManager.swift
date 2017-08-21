@@ -145,6 +145,30 @@ class NavigationManager {
         lastGuidedIndex = index
     }
     
+    private func degreesToRadians(degrees: Double) -> Double { return degrees * .pi / 180.0 }
+    private func radiansToDegrees(radians: Double) -> Double { return radians * 180.0 / .pi }
+    
+    public func calculateBearing(to : CLLocation) -> CLLocationDirection {
+        
+        guard let from = traces.last else {
+            return -1
+        }
+        
+        let lat1 = degreesToRadians(degrees: from.latitude)
+        let lon1 = degreesToRadians(degrees: from.longitude)
+        
+        let lat2 = degreesToRadians(degrees: to.coordinate.latitude)
+        let lon2 = degreesToRadians(degrees: to.coordinate.longitude)
+        
+        let dLon = lon2 - lon1
+        
+        let y = sin(dLon) * cos(lat2)
+        let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon)
+        let radiansBearing = atan2(y, x)
+        
+        return radiansToDegrees(radians: radiansBearing)
+    }
+    
     /// 싱글톤 패턴이 사용 된, 도착지 마커를 맵 위에 설정
     public func setDestination(at place: GMSPlace) {
         
