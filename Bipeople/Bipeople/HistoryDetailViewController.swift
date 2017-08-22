@@ -11,6 +11,11 @@ import RealmSwift
 import GoogleMaps
 import MarqueeLabel
 
+enum PolyLineType: String {
+    case altitude = "고도"
+    case speed = "속도"
+}
+
 class HistoryDetailViewController: UIViewController {
     
     //MARK: Outlets
@@ -24,6 +29,11 @@ class HistoryDetailViewController: UIViewController {
     @IBOutlet weak var caloriesLabel: UILabel!
     @IBOutlet weak var createdAt: UILabel!
     @IBOutlet weak var mapView: GMSMapView!
+    @IBOutlet weak var filterLabel: UILabel! {
+        didSet {
+            filterLabel.text = selectedValue.rawValue
+        }
+    }
     
     //MARK: Properties
     
@@ -32,14 +42,13 @@ class HistoryDetailViewController: UIViewController {
     var navigationRoute: GMSPolyline?
     var marqueeTitle : MarqueeLabel?
     
-    let navigationPath = GMSMutablePath()
-    var colorsAtCoordinate = [UIColor]()
-    
     var redValue = Double()
     var greenValue = Double()
     var maxAltitude = Double()
     var maxSpeed = Double()
-    var minSpeed = Double()
+    
+    var pickerData: [PolyLineType] = [.altitude,.speed]
+    var selectedValue: PolyLineType = .altitude
     
     //MARK: Life Cycle
     
@@ -66,31 +75,87 @@ class HistoryDetailViewController: UIViewController {
         caloriesLabel.text = "\(record?.calories.roundTo(places: 1) ?? 0) kcal"
         createdAt.text = record?.createdAt.toString()
         
-        drawRoute()
+        drawRoute(type: PolyLineType.altitude)
+        
     }
+    
+    //MARK: Actions
+    
+    @IBAction func didTapFilterLabel(_ sender: UITapGestureRecognizer) {
+        
+        let alertView = UIAlertController(
+            title: "Select item from list",
+            message: "\n\n\n\n\n\n\n",
+            preferredStyle: .actionSheet)
+        
+        
+        let pickerView = UIPickerView(frame:
+            CGRect(x: 0, y: 50, width: self.view.bounds.width, height: 130))
+        
+        pickerView.dataSource = self
+        pickerView.delegate = self
+        
+        alertView.view.addSubview(pickerView)
+        
+        let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil)
+        
+        alertView.addAction(action)
+        
+        present(alertView, animated: true, completion: { () -> Void in
+            pickerView.frame.size.width = alertView.view.frame.size.width
+
+            self.selectedValue = self.pickerData[pickerView.selectedRow(inComponent: 0)]
+            self.filterLabel.text = self.selectedValue.rawValue
+            
+        })
+        
+    }
+    
     
     //MARK: Functions
     
-    func drawRoute() {
+    func drawRoute(type: PolyLineType) {
         mapView.clear()
         
+        var colorsAtCoordinate = [UIColor]()
+        let navigationPath = GMSMutablePath()
+  
         //패스 설정 및 최대 고도 구함
         traces?.forEach({ (trace) in
             navigationPath.add(CLLocationCoordinate2D(latitude: trace.latitude, longitude: trace.longitude))
             
-            if trace.altitude > maxAltitude {
-                maxAltitude = trace.altitude
+            switch type {
+                
+            case .speed:
+                if trace.speed > maxSpeed {
+                    maxSpeed = trace.speed
+                }
+            case .altitude:
+                if trace.altitude > maxAltitude {
+                    maxAltitude = trace.altitude
+                }
             }
+            
         })
         
         // red = (현재고도/최대고도), green = 1.0 - red
         traces?.forEach({ (trace) in
             
-            if maxAltitude == 0 {
-                redValue = 0.0
-            }
-            else {
-                redValue = (trace.altitude / maxAltitude)
+            switch type {
+            case .speed:
+                if maxSpeed == 0 {
+                    redValue = 0.0
+                }
+                else {
+                    redValue = (trace.speed / maxSpeed)
+                }
+            case .altitude:
+                if maxAltitude == 0 {
+                    redValue = 0.0
+                }
+                else {
+                    redValue = (trace.altitude / maxAltitude)
+                }
             }
             
             greenValue = 1.0 - redValue
@@ -113,7 +178,7 @@ class HistoryDetailViewController: UIViewController {
             }
             
             spans.append(GMSStyleSpan(style: GMSStrokeStyle.gradient(from: currentColor, to: color)))
-    
+            
             currentColor = color
         }
         
@@ -123,7 +188,7 @@ class HistoryDetailViewController: UIViewController {
         }
         
         route.strokeWidth = 5
-//        route.strokeColor = UIColor.primary
+        //        route.strokeColor = UIColor.primary
         route.spans = spans
         
         DispatchQueue.main.async {
@@ -165,3 +230,31 @@ class HistoryDetailViewController: UIViewController {
     
 }
 
+//MARK: UIPickerViewDelegate
+
+extension HistoryDetailViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return pickerData.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return pickerData[row].rawValue
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    {
+        selectedValue = pickerData[pickerView.selectedRow(inComponent: 0)]
+        filterLabel.text = selectedValue.rawValue
+        
+        self.drawRoute(type: selectedValue)
+        
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 35
+    }
+}
