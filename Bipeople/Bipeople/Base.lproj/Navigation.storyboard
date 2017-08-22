@@ -100,6 +100,12 @@
                         </userDefinedRuntimeAttributes>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="RZD-ML-QuD" appends="YES" id="2iF-HR-LWy"/>
+                            <outletCollection property="gestureRecognizers" destination="OW5-za-98v" appends="YES" id="1Uv-Cl-EoO"/>
+                            <outletCollection property="gestureRecognizers" destination="JJg-Oi-rmi" appends="YES" id="LQk-AZ-MqK"/>
+                            <outletCollection property="gestureRecognizers" destination="P1P-qx-GY3" appends="YES" id="aFa-An-4cr"/>
+                            <outletCollection property="gestureRecognizers" destination="oK7-Ki-6Qn" appends="YES" id="ZK8-lV-djf"/>
+                            <outletCollection property="gestureRecognizers" destination="gn0-Nt-719" appends="YES" id="87L-f2-1gz"/>
+                            <outletCollection property="gestureRecognizers" destination="zBA-KE-G3F" appends="YES" id="aj1-Vq-3xM"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" title="TITLE" id="cHY-bb-SJt">
@@ -130,6 +136,42 @@
                         <outlet property="delegate" destination="MC0-9L-o62" id="JhK-cj-x2C"/>
                     </connections>
                 </tapGestureRecognizer>
+                <pinchGestureRecognizer id="OW5-za-98v">
+                    <connections>
+                        <action selector="didPinchView:" destination="MC0-9L-o62" id="csN-rb-aUH"/>
+                        <outlet property="delegate" destination="MC0-9L-o62" id="K1b-S1-Q2q"/>
+                    </connections>
+                </pinchGestureRecognizer>
+                <rotationGestureRecognizer id="JJg-Oi-rmi">
+                    <connections>
+                        <action selector="didRotateView:" destination="MC0-9L-o62" id="uVo-Rl-4WT"/>
+                        <outlet property="delegate" destination="MC0-9L-o62" id="XCO-eW-2Tc"/>
+                    </connections>
+                </rotationGestureRecognizer>
+                <swipeGestureRecognizer direction="right" id="P1P-qx-GY3">
+                    <connections>
+                        <action selector="didSwipeView:" destination="MC0-9L-o62" id="b8z-QW-aKc"/>
+                        <outlet property="delegate" destination="MC0-9L-o62" id="vqK-hs-3qF"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="oK7-Ki-6Qn">
+                    <connections>
+                        <action selector="didPanView:" destination="MC0-9L-o62" id="3O4-Gg-sdH"/>
+                        <outlet property="delegate" destination="MC0-9L-o62" id="Lxz-kj-VJV"/>
+                    </connections>
+                </panGestureRecognizer>
+                <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="gn0-Nt-719">
+                    <connections>
+                        <action selector="didEdgePanView:" destination="MC0-9L-o62" id="yHu-dv-Qig"/>
+                        <outlet property="delegate" destination="MC0-9L-o62" id="bcE-Bc-jKB"/>
+                    </connections>
+                </screenEdgePanGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="zBA-KE-G3F">
+                    <connections>
+                        <action selector="didLongPressView:" destination="MC0-9L-o62" id="Z5m-Vj-pGx"/>
+                        <outlet property="delegate" destination="MC0-9L-o62" id="dOc-EO-LLR"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1564" y="815"/>
         </scene>

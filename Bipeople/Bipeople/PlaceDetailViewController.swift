@@ -11,20 +11,29 @@ import GoogleMaps
 
 class PlaceDetailViewController: UIViewController {
     
-    var place : PublicPlace?
-    var places: [PublicPlace]?
+    var selectedPlace : PublicPlace?
+    var nearPlaces: [PublicPlace] = []
+    var isNavigationOn: Bool = false
     
     @IBOutlet weak var placeAddressLabel: UILabel!
     @IBOutlet weak var placeMapView: GMSMapView!
     @IBOutlet weak var placesTableView: UITableView!
     
+    lazy var findRouteButton: UIBarButtonItem = .init(title: "바로가기", style: .done, target: self, action: nil)
+    
+    func findRouteAndDrawForPlace() {
+        
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationItem.title = place?.title
-        self.placeAddressLabel.text = place?.address
+        self.navigationItem.rightBarButtonItem = isNavigationOn ? nil : findRouteButton
         
-        guard let place = place else {
+        self.navigationItem.title = selectedPlace?.title
+        self.placeAddressLabel.text = selectedPlace?.address
+        
+        guard let place = selectedPlace else {
             return
         }
         
@@ -50,16 +59,13 @@ extension PlaceDetailViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return places?.count ?? 0
+        return nearPlaces.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "PlacesTableCell")
-        
-        guard let place = places?[indexPath.row] else {
-            return cell
-        }
+        let place = nearPlaces[indexPath.row]
         
         cell.textLabel?.text = place.title
         cell.accessoryView = UIImageView(image: UIImage(named: place.placeType.description))

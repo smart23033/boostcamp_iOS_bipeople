@@ -168,8 +168,6 @@ extension GMSMapView {
         let dLat = abs(bound.northEast.latitude - bound.southWest.latitude)
         let dLng = abs(bound.northEast.longitude - bound.southWest.longitude)
         
-        print("\(dLat), \(dLng)")
-        
         let span = MKCoordinateSpan(
             latitudeDelta: min(dLat, 0.05),
             longitudeDelta: min(dLng, 0.05)
