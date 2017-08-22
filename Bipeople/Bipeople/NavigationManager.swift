@@ -360,8 +360,8 @@ class NavigationManager {
             let placeLocation = CLLocationCoordinate2D(latitude: place.lat, longitude: place.lng)
             let marker = GMSMarker(position: placeLocation)
             
-            marker.icon = UIImage(named: place.placeType.rawValue)
-            marker.title = place.placeType.rawValue
+            marker.icon = UIImage(named: place.placeType.description)
+            marker.title = place.placeType.description
             marker.userData = place
             
             DispatchQueue.main.async {

@@ -37,7 +37,7 @@ class PlaceDetailViewController: UIViewController {
         )
         
         let marker = GMSMarker(position: position)
-        marker.icon = (place.placeType == .none) ? nil : UIImage(named: place.placeType.rawValue)
+        marker.icon = UIImage(named: place.placeType.description)
         marker.map = placeMapView
     }
     
@@ -62,8 +62,7 @@ extension PlaceDetailViewController: UITableViewDataSource {
         }
         
         cell.textLabel?.text = place.title
-        cell.accessoryView = (place.placeType == .none)
-            ? nil : UIImageView(image: UIImage(named: place.placeType.rawValue))
+        cell.accessoryView = UIImageView(image: UIImage(named: place.placeType.description))
         
         return cell
     }

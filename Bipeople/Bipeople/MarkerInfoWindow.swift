@@ -7,10 +7,9 @@
 //
 
 import UIKit
-import Foundation
 
 class MarkerInfoWindow: UIView {
     
     @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var addressLabel: UILabel!
+    
 }
