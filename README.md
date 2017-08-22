@@ -28,8 +28,7 @@
   - [x] 지도에서 장소 검색
   - [x] 도착지를 설정하면 경로 지도에 띄우기
   - [x] 주행이 시작되면 끝 날때 까지 위치 정보를 Realm을 이용해 저장
-  - [ ] 주행 중간에 물리 정보를 화면에 표시
-  - [ ] (도전과제) 중간 지점에 도달하면 다음 위치와 방향을 SiriKit으로 읽어주기
+  - [x] 중간 지점에 도달하면 다음 위치와 방향을 음성으로 안내
 
 ## 참고할만한 글
  * [BikeDistrict](http://www.sphinfo.com/for_your_healthy_bikeriding_bikedistrict)
