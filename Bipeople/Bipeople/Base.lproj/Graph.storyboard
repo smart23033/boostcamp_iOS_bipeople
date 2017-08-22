@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8cM-zC-Fsa">
-                                <rect key="frame" x="100" y="84" width="175" height="29"/>
+                                <rect key="frame" x="100" y="124" width="175" height="29"/>
                                 <segments>
                                     <segment title="일별"/>
                                     <segment title="주별"/>
@@ -34,7 +34,7 @@
                                 </connections>
                             </segmentedControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mjy-SM-4kU" userLabel="Container">
-                                <rect key="frame" x="16" y="146" width="343" height="333.5"/>
+                                <rect key="frame" x="16" y="186" width="343" height="333.5"/>
                                 <subviews>
                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Filter" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="baD-OY-PGM" userLabel="Filter">
                                         <rect key="frame" x="298.5" y="0.0" width="34.5" height="18"/>
@@ -83,7 +83,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h7T-SQ-fSD" customClass="CardView" customModule="Bipeople" customModuleProvider="target">
-                                <rect key="frame" x="16" y="495.5" width="343" height="133.5"/>
+                                <rect key="frame" x="16" y="535.5" width="343" height="133.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="X4R-i8-r9O">
                                         <rect key="frame" x="8" y="14" width="103" height="106.5"/>
@@ -225,7 +225,7 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="FsU-sR-QDa">
-                                <rect key="frame" x="41.5" y="120" width="292" height="18"/>
+                                <rect key="frame" x="41.5" y="160" width="292" height="18"/>
                                 <subviews>
                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2017-08-09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mdX-n4-4LX" userLabel="Start Label">
                                         <rect key="frame" x="0.0" y="0.0" width="84" height="18"/>

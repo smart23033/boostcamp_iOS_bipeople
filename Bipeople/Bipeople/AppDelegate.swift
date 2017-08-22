@@ -159,7 +159,7 @@ extension AppDelegate {
                 
                 place.lat = Double(store.LAT) ?? 0.0
                 place.lng = Double(store.LNG) ?? 0.0
-                place.placeType = PlaceType(rawValue: store.CLASS.rawValue) ?? .none
+                place.placeType = PlaceType(store.CLASS.rawValue)
                 place.title = store.CLASS.rawValue
                 place.address = store.ADDRESS
                 

@@ -21,7 +21,9 @@ class PlaceDetailViewController: UIViewController {
     
     lazy var findRouteButton: UIBarButtonItem = .init(title: "바로가기", style: .done, target: self, action: nil)
     
-    func findRouteAndDraw
+    func findRouteAndDrawForPlace() {
+        
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -44,7 +46,7 @@ class PlaceDetailViewController: UIViewController {
         )
         
         let marker = GMSMarker(position: position)
-        marker.icon = (place.placeType == .none) ? nil : UIImage(named: place.placeType.rawValue)
+        marker.icon = UIImage(named: place.placeType.description)
         marker.map = placeMapView
     }
     
@@ -66,8 +68,7 @@ extension PlaceDetailViewController: UITableViewDataSource {
         let place = nearPlaces[indexPath.row]
         
         cell.textLabel?.text = place.title
-        cell.accessoryView = (place.placeType == .none)
-            ? nil : UIImageView(image: UIImage(named: place.placeType.rawValue))
+        cell.accessoryView = UIImageView(image: UIImage(named: place.placeType.description))
         
         return cell
     }
