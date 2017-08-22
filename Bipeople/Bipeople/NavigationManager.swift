@@ -53,15 +53,15 @@ class NavigationManager {
     private var traces: [Trace] = []                    /// 주행 기록의 위치 정보
     
     private var placesResult:[PublicPlace] = []         /// 현재 위치의 주변 공공장소를 보관
-    private var placesMarkers:[GMSMarker] = []          /// 현재 위치의 주변 공공장소를 지도에 표시해줄 마커
+    private var placesMarkers:[String:GMSMarker] = [:]          /// 현재 위치의 주변 공공장소를 지도에 표시해줄 마커
     
     private let synthesizer: AVSpeechSynthesizer = .init()
     private var lastGuidedIndex: Int = -1
     
-    private var mapViewForNavigation: GMSMapView        /// 네비게이션에 사용될 MapView
+    private var navigationMapView: GMSMapView        /// 네비게이션에 사용될 MapView
     
     init(mapView: GMSMapView) {
-        mapViewForNavigation = mapView
+        navigationMapView = mapView
     }
     
     /// 현재 위치가 도착지인지를 반환
@@ -69,7 +69,7 @@ class NavigationManager {
 
         guard
             let destination = destinationMarker?.position,
-            let currentLocation = mapViewForNavigation.myLocation
+            let currentLocation = navigationMapView.myLocation
         else {
             return false
         }
@@ -83,7 +83,7 @@ class NavigationManager {
     public var isAwayFromRoute: Bool {
 
         guard
-            let currentCoord = mapViewForNavigation.myLocation?.coordinate,
+            let currentCoord = navigationMapView.myLocation?.coordinate,
             let navigationPath = navigationPath
         else {
             return false
@@ -96,7 +96,7 @@ class NavigationManager {
     public var isInWayPoint: Int {
         
         guard
-            let currentLocation = mapViewForNavigation.myLocation
+            let currentLocation = navigationMapView.myLocation
         else {
             return -1
         }
@@ -204,7 +204,7 @@ class NavigationManager {
     public func getGeoJSONFromTMap(failure: @escaping (Error) -> Void, success: @escaping (Data) throws -> Void) {
         
         guard
-            let currentCoord = mapViewForNavigation.myLocation?.coordinate
+            let currentCoord = navigationMapView.myLocation?.coordinate
         else {
             print("현재 위치를 아직 찾지 못했습니다")     // FOR DEBUG
             failure(TmapAPIError.invalidCurrentLocation)
@@ -328,47 +328,68 @@ class NavigationManager {
         navigationRoute?.strokeColor = UIColor.primary
         
         DispatchQueue.main.async {
-            self.navigationRoute?.map = self.mapViewForNavigation
+            self.navigationRoute?.map = self.navigationMapView
         }
     }
     
     /// 맵에 공공장소를 표시하였던 것을 지움
-    public func clearPlaces() {
+    public func clearAllPlaces() {
         
-        for marker in placesMarkers {
+        let markers = placesMarkers.values
+        DispatchQueue.main.async {
+            for marker in markers {
+                marker.map = nil
+            }
+        }
+        
+        placesMarkers.removeAll()
+    }
+    
+    /// 맵에 공공장소를 표시하거나 갱신 함
+    public func showPlaces(in bound: GMSCoordinateBounds) {
+        
+        let geoBox = navigationMapView.geoBox    // 현재 맵에서 보이는 사각 뷰의 좌하단, 우상단 좌표(위도, 경도)
+        
+        // Realm GeoQuery를 통해 맵에 보이는 부분에 해당하는 공공 장소들을 갖고 옴
+        placesResult = Array(try! Realm().findInBox(type: PublicPlace.self, box: geoBox))
+        
+        // 현재 뿌려져 있는 마커들 중 보이지 않게 된 마커들을 맵에서 지움
+        for (id, marker) in placesMarkers {
             
-            DispatchQueue.main.async {
-                if self.mapViewForNavigation.selectedMarker != marker {
+            if bound.contains(marker.position) == false {
+                
+                DispatchQueue.main.async {
                     marker.map = nil
+                }
+                
+                if let index = placesMarkers.index(forKey: id) {
+                    placesMarkers.remove(at: index)
                 }
             }
         }
-    }
-    
-    public func showPlaces() {
         
-        let geoBox = mapViewForNavigation.geoBox
-        placesResult = Array(try! Realm().findInBox(type: PublicPlace.self, box: geoBox))
-        
-        placesMarkers.removeAll()
+        //  이미 보이는 마커를 제외한 새 마커들을 맵에 그려줌
         for place in placesResult {
             
-            if case .none = place.placeType {
-                continue
+            if placesMarkers[place.id] == nil {
+                
+                if case .none = place.placeType {
+                    continue
+                }
+                
+                let placeLocation = CLLocationCoordinate2D(latitude: place.lat, longitude: place.lng)
+                let marker = GMSMarker(position: placeLocation)
+                
+                marker.icon = UIImage(named: place.placeType.rawValue)
+                marker.title = place.placeType.rawValue
+                marker.userData = place
+                
+                DispatchQueue.main.async {
+                    marker.map = self.navigationMapView
+                }
+                
+                placesMarkers[place.id] = marker
             }
-            
-            let placeLocation = CLLocationCoordinate2D(latitude: place.lat, longitude: place.lng)
-            let marker = GMSMarker(position: placeLocation)
-            
-            marker.icon = UIImage(named: place.placeType.rawValue)
-            marker.title = place.placeType.rawValue
-            marker.userData = place
-            
-            DispatchQueue.main.async {
-                marker.map = self.mapViewForNavigation
-            }
-            
-            placesMarkers.append(marker)
         }
     }
     
@@ -393,10 +414,10 @@ class NavigationManager {
         }
         
         DispatchQueue.main.async {
-            self.destinationMarker?.map = self.mapViewForNavigation
+            self.destinationMarker?.map = self.navigationMapView
             
             for marker in self.waypointsMarker {
-                marker.map = self.mapViewForNavigation
+                marker.map = self.navigationMapView
             }
         }
     }
@@ -405,7 +426,7 @@ class NavigationManager {
     public func initDatas() throws {
         
         guard
-            let currentLocation = mapViewForNavigation.myLocation?.coordinate,
+            let currentLocation = navigationMapView.myLocation?.coordinate,
             let destination = destinationMarker?.position
         else {
             record = nil

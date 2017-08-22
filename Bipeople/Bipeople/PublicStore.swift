@@ -7,7 +7,7 @@
 //
 
 enum StoreType : String, Codable {
-    case downtown_shelf     = "시내_보관대"
+    case downtown_parking   = "시내_보관대"
     case downtown_store     = "시내_매장"
     case downtown_rental    = "시내_대여소"
     case downtown_restroom  = "시내_화장실"

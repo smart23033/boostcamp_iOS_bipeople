@@ -78,10 +78,10 @@ class BiPeopleNavigationViewController: UIViewController {
     /// 네비게이션에 사용 될 MapView
     @IBOutlet weak var navigationMapView: GMSMapView! {
         didSet {
-            navigationMapView.settings.myLocationButton = true
-            navigationMapView.settings.compassButton = true
             navigationMapView.settings.scrollGestures = true
             navigationMapView.settings.zoomGestures = true
+            navigationMapView.settings.consumesGesturesInView = false;
+            navigationMapView.settings.myLocationButton = true
             navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             navigationMapView.isMyLocationEnabled = true
 
@@ -143,7 +143,7 @@ class BiPeopleNavigationViewController: UIViewController {
     /// @IBOutlet weak ~Button들이 메모리 해제 되는 것을 막기 위해 저장
     private var navigationButtons: [String:UIBarButtonItem] = [:]
     
-    private var currentLocation: CLLocation?    /// 앱 첫 실행 시, 맵을 현재 위치로 이동시키기 위한 변수
+    private var currentLocation: CLLocation?    /// 첫 앱 실행 시 현재 위치로 이동시키기 위한 변수
     
     private var navigationManager: NavigationManager!   /// 네비게이션 모드 책임
     private var locationManager: CLLocationManager!     /// 위치정보 책임
@@ -189,7 +189,11 @@ class BiPeopleNavigationViewController: UIViewController {
         }
     }
     
-    private var selectedMarker: GMSMarker?  /// 마커가 선택 된 경우, 맵을 선택한 경우 마커 선택이 해제되도록
+    /// 마커가 선택 된 경우, 맵을 선택한 경우 마커 선택이 해제되도록
+    private var selectedMarker: GMSMarker?
+
+    /// 네비게이션 모드에서 터치 시, 5초 가량 현재위치 화면고정 해제
+    private var timeUnlocked: TimeInterval = Date().timeIntervalSince1970
     
     override func viewDidLoad() {
         
@@ -232,6 +236,7 @@ class BiPeopleNavigationViewController: UIViewController {
         navigationManager = NavigationManager(mapView: navigationMapView)
     }
     
+    /// 네비게이션 모드를 시작하고 주행 정보를 기록하는 버튼
     @IBAction func didTapStartButton(_ sender: Any) {
         
         let confirmAlert = UIAlertController(
@@ -249,7 +254,7 @@ class BiPeopleNavigationViewController: UIViewController {
         self.present(confirmAlert, animated: true)
     }
     
-    
+    /// 현재 까지의 주행기록을 취소하는 버튼
     @IBAction func didTapCancelButton(_ sender: Any) {
         
         let confirmAlert = UIAlertController(
@@ -267,6 +272,7 @@ class BiPeopleNavigationViewController: UIViewController {
         self.present(confirmAlert, animated: true)
     }
     
+    /// 현재 까지의 주행기록을 저장하는 버튼
     @IBAction func didTapDoneButton(_ sender: Any) {
         
         let confirmAlert = UIAlertController(
@@ -285,39 +291,73 @@ class BiPeopleNavigationViewController: UIViewController {
         self.present(confirmAlert, animated: true)
     }
     
+    /// 보이는 화면에 공공장소를 토글하는 버튼
     @IBAction func didTapPlacesButton(_ sender: Any) {
         
         placesButton.isSelected = !placesButton.isSelected
-        let placesCount = try! Realm().objects(PublicPlace.self).count
-        guard placesCount > 0 else {
-            let warningAlert = UIAlertController(
-                title: "아직 공공데이터를 받아오지 못하였습니다",
-                message: "다시 시도하시겠습니까?(2초 후 자동으로 사라집니다)",
-                preferredStyle: .alert
-            )
-            warningAlert.addAction(UIAlertAction(title: "취소", style: .cancel))
-            warningAlert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
-                self.didTapPlacesButton(sender)
-            })
+        
+        if placesButton.isSelected {
             
-            self.present(warningAlert, animated: true)
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-                warningAlert.dismiss(animated: true, completion: nil)
+            let placesCount = try! Realm().objects(PublicPlace.self).count
+            guard placesCount > 0 else {        // 아직 데이터를 받아 오지 못한 경우
+                placesButton.isSelected = false
+                
+                let warningAlert = UIAlertController(
+                    title: "아직 공공데이터를 받아오지 못하였습니다",
+                    message: "다시 시도하시겠습니까?(2초 후 자동으로 사라집니다)",
+                    preferredStyle: .alert
+                )
+                warningAlert.addAction(UIAlertAction(title: "취소", style: .cancel))
+                warningAlert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
+                    self.didTapPlacesButton(sender)
+                })
+                
+                self.present(warningAlert, animated: true)
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+                    warningAlert.dismiss(animated: true, completion: nil)
+                }
+                
+                return
             }
             
-            return
-        }
-        
-        navigationManager.clearPlaces()
-        if placesButton.isSelected {
-            navigationManager.showPlaces()
+            let bound = GMSCoordinateBounds(region: navigationMapView.projection.visibleRegion())
+            navigationManager.showPlaces(in: bound)
+        } else {
+            navigationManager.clearAllPlaces()
         }
     }
     
+    /// t초 가량 화면 고정을 해제
+    private func unpinScreen(for second: Double) {
+        timeUnlocked = Date().timeIntervalSince1970 + second
+    }
     
     @IBAction func didTapView(_ sender: Any) {
-        
-        print("HI")
+        unpinScreen(for: 5)
+    }
+    
+    @IBAction func didPinchView(_ sender: Any) {
+        unpinScreen(for: 5)
+    }
+    
+    @IBAction func didRotateView(_ sender: Any) {
+        unpinScreen(for: 5)
+    }
+    
+    @IBAction func didSwipeView(_ sender: Any) {
+        unpinScreen(for: 5)
+    }
+    
+    @IBAction func didPanView(_ sender: Any) {
+        unpinScreen(for: 5)
+    }
+    
+    @IBAction func didEdgePanView(_ sender: Any) {
+        unpinScreen(for: 5)
+    }
+    
+    @IBAction func didLongPressView(_ sender: Any) {
+        unpinScreen(for: 5)
     }
     
     /// 현재위치에서 목적지까지의 경로를 갖고와 맵에 표시
@@ -450,8 +490,10 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
         if isNavigationOn {
             
             // 1. 맵의 중심을 현재 위치로
-            let bearing = navigationManager.calculateBearing(to: updatedLocation)
-            moveMap(coordinate: updatedLocation.coordinate, bearing: bearing)
+            if timeUnlocked < Date().timeIntervalSince1970 {
+                let bearing = navigationManager.calculateBearing(to: updatedLocation)
+                moveMap(coordinate: updatedLocation.coordinate, bearing: bearing)
+            }
             
             // 2. 위치 변화 정보 저장
             do {
@@ -620,55 +662,37 @@ extension BiPeopleNavigationViewController: GMSMapViewDelegate {
             return
         }
         
-        placeDetailVC.place = place
-        placeDetailVC.places = self.navigationManager.publicPlaces
+        placeDetailVC.isNavigationOn = isNavigationOn
+        placeDetailVC.selectedPlace = place
+        
+        // TODO: 필터링
+        placeDetailVC.nearPlaces = self.navigationManager.publicPlaces
         
         self.navigationController?.pushViewController(placeDetailVC, animated: true)
     }
     
-//    func mapView(_ mapView: GMSMapView, willMove gesture: Bool) {
-//
-//        print(#function)    // FOR DEBUG
-//
-//        // 현재 위치 주변 공공장소 보여주기
-//        navigationManager.clearPlaces()
-//        if placesButton.isSelected {
-//            navigationManager.showPlaces()
-//        }
-//    }
-//
-//    func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
-//
-//        print(#function)    // FOR DEBUG
-//
-//        // 현재 위치 주변 공공장소 보여주기
-//        navigationManager.clearPlaces()
-//        if placesButton.isSelected {
-//            navigationManager.showPlaces()
-//        }
-//    }
-    
     func mapView(_ mapView: GMSMapView, idleAt position: GMSCameraPosition) {
         
-        print(#function)    // FOR DEBUG
+        let bound = GMSCoordinateBounds(region: navigationMapView.projection.visibleRegion())
         
         // 현재 위치 주변 공공장소 보여주기
-        navigationManager.clearPlaces()
         if placesButton.isSelected {
-            navigationManager.showPlaces()
+            navigationManager.showPlaces(in: bound)
+        } else {
+            navigationManager.clearAllPlaces()
         }
-    }
-    
-    func didTapMyLocationButton(for mapView: GMSMapView) -> Bool {
-        print(#function)    // FOR DEBUG
         
-        return false
+        guard let marker = selectedMarker else {
+            return
+        }
+        
+        if bound.contains(marker.position) == false {
+            selectedMarker = nil
+        }
     }
     
     /// 맵에서 위치가 선택(터치)된 경우
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
-        
-        print(#function)    // FOR DEBUG
         
         guard isNavigationOn == false, selectedMarker == nil else {
             selectedMarker = nil

@@ -12,7 +12,7 @@ import Alamofire
 enum PlaceType: String {
     case toilet
 	case wifi
-    case downtown_shelf
+    case downtown_parking
     case downtown_store
     case downtown_rental
     case downtown_restroom
