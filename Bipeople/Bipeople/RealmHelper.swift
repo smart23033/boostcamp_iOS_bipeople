@@ -23,8 +23,6 @@ public class RealmHelper: NSObject {
     
     class func add<T: Object>(datas: Array<T>) {
         
-        let realm = try! Realm()
-        
         try! realm.write {
             realm.add(datas)
         }

@@ -595,17 +595,16 @@ extension BiPeopleNavigationViewController: GMSMapViewDelegate {
     }
     
     func mapView(_ mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView? {
-        
+
         guard
             let infoWindow = Bundle.main.loadNibNamed("MarkerInfoWindow", owner: self, options: nil)?.first as? MarkerInfoWindow,
             let place = marker.userData as? PublicPlace
         else {
             return nil
         }
-        
+
         infoWindow.nameLabel.text = place.title
-        infoWindow.addressLabel.text = place.address
-        
+ 
         return infoWindow
     }
     

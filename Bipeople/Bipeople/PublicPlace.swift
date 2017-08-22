@@ -9,25 +9,40 @@
 import RealmSwift
 import Alamofire
 
-enum PlaceType: String {
+enum PlaceType {
     case toilet
 	case wifi
-    case downtown_shelf
-    case downtown_store
-    case downtown_rental
-    case downtown_restroom
-    case downtown_bridge
-    case downtown_pump
-    case hanriver_shelf
-    case hanriver_store
-    case hanriver_rental
-    case hanriver_drink
-    case hanriver_floor
-    case hanriver_bridge
-    case hanriver_elevator
-    case hanriver_access    
-    
+    case store(StoreType)
     case none
+    
+    var description: String {
+        switch self {
+        case .toilet:
+            return "toilet"
+        case .wifi:
+            return "wifi"
+        case let .store(type):
+            return type.rawValue
+        default:
+            return ""
+        }
+    }
+    
+    init(_ description: String) {
+        
+        if let result = StoreType(rawValue: description) {
+            self = .store(result)
+        } else {
+            switch description {
+            case "toilet":
+                self = .toilet
+            case "wifi":
+                self = .wifi
+            default:
+                self = .none
+            }
+        }
+    }
 }
 
 enum ApiURL: String {
@@ -45,9 +60,10 @@ class PublicPlace: Object {
     @objc dynamic var lng : Double = 0.0
     
     @objc private dynamic var _placeType: String = ""
+    
     public var placeType: PlaceType {
-        get { return PlaceType(rawValue: self._placeType) ?? .none }
-        set { self._placeType = newValue.rawValue }
+        get { return PlaceType(self._placeType) }
+        set { self._placeType = newValue.description }
     }
     
     override static func primaryKey() -> String? {
