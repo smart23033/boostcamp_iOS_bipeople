@@ -36,26 +36,29 @@ class NavigationManager {
     private static let FORMAT: String       = "json"
     private static let APP_KEY: String       = "5112af59-674c-38fd-89b0-ab54f1297284"
     
-    private static let MINIMUM_RIDING_VELOCITY: Double      = 0.5   /// unit: m/sec
-    private static let RIDING_VELOCITY_THRESHOLD: Double    = 16    /// unit: m/sec
+    private static let PATH_RANGE_TOLERANCE: Double         = 50    /// 단위 미터(m)
+    private static let MINIMUM_RIDING_VELOCITY: Double      = 0.5   /// 단위 m/sec
+    private static let RIDING_VELOCITY_THRESHOLD: Double    = 16    /// 단위 m/sec
+    private static let PUBLIC_PLACE_SEARCH_RADIUS: Double   = 500.0 /// 단위는 미터(m)
     
-    private static let PATH_RANGE_TOLERANCE: Double         = 50    /// unit: m
+    private var navigationRoute: GMSPolyline?           /// 맵에 표시될 경로
+    private var navigationPath: GMSMutablePath?         /// 맵에 표시될 경로의 꼭지점들
     
-    private var navigationPath: GMSMutablePath?
-    private var navigationRoute: GMSPolyline?
+    private var routeWaypoints: [Waypoint] = []         /// 경유지들의 정보
+    private var waypointsMarker: [GMSMarker] = []       /// 경유지에 표시될 마커
     
-    private var routeWaypoints: [Waypoint] = []
-    private var waypointsMarker: [GMSMarker] = []
-    
-    private var destinationMarker: GMSMarker?
+    private var destinationMarker: GMSMarker?           /// 목적지에 표시될 마커
 
-    private var record: Record?
-    private var traces: [Trace] = []
+    private var record: Record?                         /// 주행 기록
+    private var traces: [Trace] = []                    /// 주행 기록의 위치 정보
+    
+    private var placesResult:[PublicPlace] = []         /// 현재 위치의 주변 공공장소를 보관
+    private var placesMarkers:[GMSMarker] = []          /// 현재 위치의 주변 공공장소를 지도에 표시해줄 마커
     
     private let synthesizer: AVSpeechSynthesizer = .init()
     private var lastGuidedIndex: Int = -1
     
-    private var mapViewForNavigation: GMSMapView                    /// Need to initialize
+    private var mapViewForNavigation: GMSMapView        /// 네비게이션에 사용될 MapView
     
     init(mapView: GMSMapView) {
         mapViewForNavigation = mapView
@@ -113,6 +116,12 @@ class NavigationManager {
         return -1
     }
     
+    ///
+    public var publicPlaces: [PublicPlace] {
+        return placesResult
+    }
+    
+    /// 음성 안내
     public func voiceGuidance(index: Int) {
 
         guard
@@ -126,11 +135,11 @@ class NavigationManager {
         var speechString: String = ""
         switch index {
             case Int.max:
-                print("도착")
+                print("종료")
                 speechString = "안내를 종료합니다"
             case Int.min:
-                print("경로이탈")
-                speechString = "경로를 재설정 합니다"
+                print("안내시작/경로이탈")
+                speechString = "경로를 설정 합니다"
             default:
                 print(routeWaypoints[index].description)
                 speechString = routeWaypoints[index].description
@@ -143,6 +152,31 @@ class NavigationManager {
         SpeechHelper.shared.say(utterance)
         
         lastGuidedIndex = index
+    }
+    
+    private func degreesToRadians(degrees: Double) -> Double { return degrees * .pi / 180.0 }
+    private func radiansToDegrees(radians: Double) -> Double { return radians * 180.0 / .pi }
+    
+    /// 마지막 위치와 비교하여 진행 방향을 계산해 반환
+    public func calculateBearing(to : CLLocation) -> CLLocationDirection {
+        
+        guard let from = traces.last else {
+            return -1
+        }
+        
+        let lat1 = degreesToRadians(degrees: from.latitude)
+        let lon1 = degreesToRadians(degrees: from.longitude)
+        
+        let lat2 = degreesToRadians(degrees: to.coordinate.latitude)
+        let lon2 = degreesToRadians(degrees: to.coordinate.longitude)
+        
+        let dLon = lon2 - lon1
+        
+        let y = sin(dLon) * cos(lat2)
+        let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon)
+        let radiansBearing = atan2(y, x)
+        
+        return radiansToDegrees(radians: radiansBearing)
     }
     
     /// 싱글톤 패턴이 사용 된, 도착지 마커를 맵 위에 설정
@@ -166,7 +200,7 @@ class NavigationManager {
         marker.snippet = place.formattedAddress ?? LiteralString.unknown.rawValue
     }
     
-    /// TODO: T Map GeoJSON API를 통해 경로를 가져온다
+    /// T Map GeoJSON API로 현재 위치에서 목적지 까지의 경로를 가져온다
     public func getGeoJSONFromTMap(failure: @escaping (Error) -> Void, success: @escaping (Data) throws -> Void) {
         
         guard
@@ -298,6 +332,46 @@ class NavigationManager {
         }
     }
     
+    /// 맵에 공공장소를 표시하였던 것을 지움
+    public func clearPlaces() {
+        
+        for marker in placesMarkers {
+            
+            DispatchQueue.main.async {
+                if self.mapViewForNavigation.selectedMarker != marker {
+                    marker.map = nil
+                }
+            }
+        }
+    }
+    
+    public func showPlaces() {
+        
+        let geoBox = mapViewForNavigation.geoBox
+        placesResult = Array(try! Realm().findInBox(type: PublicPlace.self, box: geoBox))
+        
+        placesMarkers.removeAll()
+        for place in placesResult {
+            
+            if case .none = place.placeType {
+                continue
+            }
+            
+            let placeLocation = CLLocationCoordinate2D(latitude: place.lat, longitude: place.lng)
+            let marker = GMSMarker(position: placeLocation)
+            
+            marker.icon = UIImage(named: place.placeType.rawValue)
+            marker.title = place.placeType.rawValue
+            marker.userData = place
+            
+            DispatchQueue.main.async {
+                marker.map = self.mapViewForNavigation
+            }
+            
+            placesMarkers.append(marker)
+        }
+    }
+    
     /// 경유지와 도착지에 마커를 맵에 뿌림
     public func showMarkers() {
         
@@ -327,6 +401,7 @@ class NavigationManager {
         }
     }
     
+    /// 경로 데이터를 초기화
     public func initDatas() throws {
         
         guard
@@ -346,13 +421,11 @@ class NavigationManager {
             throw error
         }
         
-        let realm = try! Realm()
-        realm.beginWrite()
-        
-        record = Record(flag: true)
-        traces.removeAll()
-        
-        try! realm.commitWrite()
+        try! Realm().write {
+            
+            record = Record(flag: true)
+            traces.removeAll()
+        }
         
         GMSGeocoder().reverseGeocodeCoordinate(currentLocation) { response, error in
             
@@ -371,14 +444,9 @@ class NavigationManager {
                 return
             }
             
-            print("!!!", address)
-            
-            let realm = try! Realm()
-            realm.beginWrite()
-            
-            record.departure = address.thoroughfare ?? ""
-        
-            try! realm.commitWrite()
+            try! Realm().write {
+                record.departure = address.thoroughfare ?? ""
+            }
         }
         
         GMSGeocoder().reverseGeocodeCoordinate(destination) { response, error in
@@ -398,19 +466,14 @@ class NavigationManager {
                 return
             }
             
-            let realm = try! Realm()
-            realm.beginWrite()
-            
-            record.arrival = address.thoroughfare ?? ""
-            
-            try!realm.commitWrite()
+            try! Realm().write {
+                record.arrival = address.thoroughfare ?? ""
+            }
         }
     }
     
+    /// 경로 데이터에 위치 정보를 추가
     public func addTrace(location: CLLocation) throws {
-        
-        let realm = try! Realm()
-        realm.beginWrite()
         
         guard let record = record else {
             
@@ -422,42 +485,41 @@ class NavigationManager {
                 ]
             )
             
-            realm.cancelWrite()
             throw error
         }
         
-        if let last = traces.last {
+        try! Realm().write {
             
-            let lastLocation = CLLocation(latitude: last.latitude, longitude: last.longitude)
-            record.distance += location.distance(from: lastLocation)
-            
-            print("Speed: ", String(location.speed))
-            switch location.speed {
+            if let last = traces.last {
                 
-                case _ where location.speed < 0: fallthrough
-                case _ where location.speed > NavigationManager.RIDING_VELOCITY_THRESHOLD:
+                let lastLocation = CLLocation(latitude: last.latitude, longitude: last.longitude)
+                record.distance += location.distance(from: lastLocation)
+                
+                print("Speed: ", String(location.speed))
+                switch location.speed {
+                    
+                    case _ where location.speed < 0: fallthrough
+                    case _ where location.speed > NavigationManager.RIDING_VELOCITY_THRESHOLD:
 
-                    print("Speed ​​measurement error due to low GPS reception rate")     // FOR DEBUG
-                
-            case _ where location.speed < NavigationManager.MINIMUM_RIDING_VELOCITY :
-                
-                record.restTime += location.timestamp.timeIntervalSince(last.timestamp)
-                print("Rest Time... \(record.restTime),")     // FOR DEBUG
-                fallthrough
-            default:
-                record.maximumSpeed = max(record.maximumSpeed, location.speed)
+                        print("Speed ​​measurement error due to low GPS reception rate")     // FOR DEBUG
+                    
+                    case _ where location.speed < NavigationManager.MINIMUM_RIDING_VELOCITY :
+                        
+                        record.restTime += location.timestamp.timeIntervalSince(last.timestamp)
+                        print("Rest Time... \(record.restTime),")     // FOR DEBUG
+                        fallthrough
+                    default:
+                        record.maximumSpeed = max(record.maximumSpeed, location.speed)
+                }
             }
+            
+            let trace = Trace(recordID: record._id, location : location)
+            traces.append(trace)
         }
-        
-        let trace = Trace(recordID: record._id, location : location)
-        traces.append(trace)
-        try! realm.commitWrite()
     }
     
+    /// 경로 데이터를 저장
     public func saveData() throws {
-        
-        let realm = try! Realm()
-        realm.beginWrite()
         
         guard let record = record else {
             
@@ -469,7 +531,6 @@ class NavigationManager {
                 ]
             )
             
-            realm.cancelWrite()
             throw error
         }
         
@@ -483,24 +544,24 @@ class NavigationManager {
                 ]
             )
             
-            realm.cancelWrite()
             throw error
         }
         
-        if let firstTrace = traces.first, let lastTrace = traces.last {
+        try! Realm().write {
             
-            print("first: ", String(describing: firstTrace))
-            print("last: ", String(describing: lastTrace))
-            record.ridingTime = lastTrace.timestamp.timeIntervalSince(firstTrace.timestamp)
-            
-            let excerciseTime = record.ridingTime - record.restTime
-            record.calories = excerciseTime * 0.139
-            record.averageSpeed = excerciseTime > 0 ? record.distance / excerciseTime : 0
-            
-            record.distance /= 1000.0
+            if let firstTrace = traces.first, let lastTrace = traces.last {
+                
+                print("first: ", String(describing: firstTrace))
+                print("last: ", String(describing: lastTrace))
+                record.ridingTime = lastTrace.timestamp.timeIntervalSince(firstTrace.timestamp)
+                
+                let excerciseTime = record.ridingTime - record.restTime
+                record.calories = excerciseTime * 0.139
+                record.averageSpeed = excerciseTime > 0 ? record.distance / excerciseTime : 0
+                
+                record.distance /= 1000.0
+            }
         }
-        
-        try! realm.commitWrite()
 
         RealmHelper.add(data: record)
         RealmHelper.add(datas: traces)

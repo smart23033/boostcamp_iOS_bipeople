@@ -12,7 +12,21 @@ import Alamofire
 enum PlaceType: String {
     case toilet
 	case wifi
-    case store
+    case downtown_shelf
+    case downtown_store
+    case downtown_rental
+    case downtown_restroom
+    case downtown_bridge
+    case downtown_pump
+    case hanriver_shelf
+    case hanriver_store
+    case hanriver_rental
+    case hanriver_drink
+    case hanriver_floor
+    case hanriver_bridge
+    case hanriver_elevator
+    case hanriver_access    
+    
     case none
 }
 
@@ -25,10 +39,10 @@ enum ApiURL: String {
 class PublicPlace: Object {
     
     @objc dynamic var id : String = UUID().uuidString
-    @objc dynamic var location = ""
+    @objc dynamic var title = ""
+    @objc dynamic var address = ""
     @objc dynamic var lat : Double = 0.0
     @objc dynamic var lng : Double = 0.0
-    @objc dynamic var imageURL : String = ""
     
     @objc private dynamic var _placeType: String = ""
     public var placeType: PlaceType {

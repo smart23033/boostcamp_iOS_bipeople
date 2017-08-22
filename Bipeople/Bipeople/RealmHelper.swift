@@ -17,7 +17,7 @@ public class RealmHelper: NSObject {
     class func add<T: Object>(data: T) {
         
         try! realm.write {
-        realm.add(data)
+            realm.add(data)
         }
     }
     

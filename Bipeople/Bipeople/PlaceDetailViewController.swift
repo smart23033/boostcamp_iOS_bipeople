@@ -12,17 +12,17 @@ import GoogleMaps
 class PlaceDetailViewController: UIViewController {
     
     var place : PublicPlace?
-    var places = [PublicPlace]()
+    var places: [PublicPlace]?
     
-    @IBOutlet weak var placeTypeLabel: UILabel!
+    @IBOutlet weak var placeAddressLabel: UILabel!
     @IBOutlet weak var placeMapView: GMSMapView!
     @IBOutlet weak var placesTableView: UITableView!
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationItem.title = place?.location
-        self.placeTypeLabel.text = place?.placeType.rawValue
+        self.navigationItem.title = place?.title
+        self.placeAddressLabel.text = place?.address
         
         guard let place = place else {
             return
@@ -50,15 +50,18 @@ extension PlaceDetailViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return places.count
+        return places?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let place = places[indexPath.row]
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "PlacesTableCell")
         
-        cell.textLabel?.text = place.location
+        guard let place = places?[indexPath.row] else {
+            return cell
+        }
+        
+        cell.textLabel?.text = place.title
         cell.accessoryView = (place.placeType == .none)
             ? nil : UIImageView(image: UIImage(named: place.placeType.rawValue))
         
