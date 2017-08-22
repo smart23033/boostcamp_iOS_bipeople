@@ -54,7 +54,6 @@ class NavigationManager {
     
     private var placesResult:[PublicPlace] = []         /// 현재 위치의 주변 공공장소를 보관
     private var placesMarkers:[GMSMarker] = []          /// 현재 위치의 주변 공공장소를 지도에 표시해줄 마커
-    private var areaCircle: GMSCircle?                  /// 현재 위치의 주변 공공장소를 가져올 범위
     
     private let synthesizer: AVSpeechSynthesizer = .init()
     private var lastGuidedIndex: Int = -1
@@ -336,13 +335,6 @@ class NavigationManager {
     /// 맵에 공공장소를 표시하였던 것을 지움
     public func clearPlaces() {
         
-        if let circle = areaCircle {
-            
-            DispatchQueue.main.async {
-                circle.map = nil
-            }
-        }
-        
         for marker in placesMarkers {
             
             DispatchQueue.main.async {
@@ -353,88 +345,11 @@ class NavigationManager {
         }
     }
     
-    /// 맵에 공공장소를 표시
-    public func showPlaces2() throws {
+    public func showPlaces() {
         
-        guard let currentLocation = mapViewForNavigation.myLocation?.coordinate else {
-            
-            let error = NSError(
-                domain: Bundle.main.bundleIdentifier ?? "nil",
-                code: -1,
-                userInfo: [
-                    NSLocalizedDescriptionKey : "현재 위치를 찾을 수 없습니다"
-                ]
-            )
-            
-            throw error
-        }
-        
-        clearPlaces()
-        
-        areaCircle = GMSCircle(position: currentLocation, radius: NavigationManager.PUBLIC_PLACE_SEARCH_RADIUS)
-        areaCircle?.strokeColor = UIColor.clear
-        areaCircle?.fillColor = UIColor(red: 0, green: 0, blue: 0.35, alpha: 0.4)
-        
-        DispatchQueue.main.async {
-            self.areaCircle?.map = self.mapViewForNavigation
-        }
-        
-        placesResult.removeAll()
-        placesResult = try! Realm().findNearby(
-            type: PublicPlace.self,
-            origin: currentLocation,
-            radius: NavigationManager.PUBLIC_PLACE_SEARCH_RADIUS,
-            sortAscending: nil
-        )
-        
-        placesMarkers.removeAll()
-        for place in placesResult {
-            
-            if case .none = place.placeType {
-                continue
-            }
-            
-            let placeLocation = CLLocationCoordinate2D(latitude: place.lat, longitude: place.lng)
-            let marker = GMSMarker(position: placeLocation)
-            
-            marker.icon = UIImage(named: place.placeType.rawValue)
-            marker.title = place.placeType.rawValue
-            marker.userData = place
-            
-            DispatchQueue.main.async {
-                marker.map = self.mapViewForNavigation
-            }
-            
-            placesMarkers.append(marker)
-        }
-    }
-    
-    public func showPlaces() throws {
-        
-        guard let geoBox = mapViewForNavigation.geoBox else {
-            
-            let error = NSError(
-                domain: Bundle.main.bundleIdentifier ?? "nil",
-                code: -1,
-                userInfo: [
-                    NSLocalizedDescriptionKey : "검색 범위를 지정할 수 없습니다"
-                ]
-            )
-            
-            throw error
-        }
-        
-        clearPlaces()
-        
-//        areaCircle = GMSCircle(position: currentLocation, radius: NavigationManager.PUBLIC_PLACE_SEARCH_RADIUS)
-//        areaCircle?.strokeColor = UIColor.clear
-//        areaCircle?.fillColor = UIColor(red: 0, green: 0, blue: 0.35, alpha: 0.4)
-//
-//        DispatchQueue.main.async {
-//            self.areaCircle?.map = self.mapViewForNavigation
-//        }
-        
+        let geoBox = mapViewForNavigation.geoBox
         placesResult = Array(try! Realm().findInBox(type: PublicPlace.self, box: geoBox))
+        
         placesMarkers.removeAll()
         for place in placesResult {
             

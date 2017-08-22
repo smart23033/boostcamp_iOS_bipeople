@@ -6,13 +6,21 @@
 //  Copyright © 2017년 BluePotato. All rights reserved.
 //
 
-enum StoreType : String {
-    case downtown_shelf = "시내_보관대"
-    case downtown_store = "시내_매장"
-    case downtown_rental = "시내_대여소"
-    case downtown_restroom = "시내_화장실"
-    case hanriver_shelf = "한강_보관대"
-    case hanriver_store = "한강_매점"
+enum StoreType : String, Codable {
+    case downtown_shelf     = "시내_보관대"
+    case downtown_store     = "시내_매장"
+    case downtown_rental    = "시내_대여소"
+    case downtown_restroom  = "시내_화장실"
+    case downtown_bridge    = "시내_한강다리"
+    case downtown_pump      = "시내_펌프"
+    case hanriver_shelf     = "한강_보관대"
+    case hanriver_store     = "한강_매점"
+    case hanriver_rental    = "한강_대여소"
+    case hanriver_drink     = "한강_식수대"
+    case hanriver_floor     = "한강_진출입_계단"
+    case hanriver_bridge    = "한강_지천다리"
+    case hanriver_elevator  = "한강_엘리베이터"
+    case hanriver_access    = "한강_진출입로_경사"
 }
 
 struct PublicStore: Codable {
@@ -50,7 +58,7 @@ struct GeoInfoBikeConvenientFacilitiesWGS : Codable {
 struct Store : Codable {
     var OBJECTID : Int
     var FILENAME : String
-    var CLASS : String
+    var CLASS : StoreType
     var ADDRESS : String
     var LNG : String
     var LAT : String
@@ -67,7 +75,7 @@ struct Store : Codable {
     init(
         OBJECTID : Int,
         FILENAME : String,
-        CLASS : String,
+        CLASS : StoreType,
         ADDRESS : String,
         LNG : String,
         LAT : String

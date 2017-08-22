@@ -107,69 +107,71 @@ extension AppDelegate {
         
         PublicPlace.fetchList(apiURL: .toiletURL, PublicToilet.self, success: { response in
             
-            let toilet = response.searchPublicToiletPOIService.row.map { toilet -> PublicPlace in
+            let toilets = response.searchPublicToiletPOIService.row.map { toilet -> PublicPlace in
                 
                 let place = PublicPlace()
                 
                 place.lat = toilet.y_Wgs84
                 place.lng = toilet.x_Wgs84
                 place.placeType = .toilet
-                place.location = toilet.fName
+                place.title = "공중 화장실"
+                place.address = toilet.fName
                 
                 return place
             }
             
             let realm = try! Realm()
             try! realm.write {
-                realm.add(toilet)
+                realm.add(toilets)
             }
         }) { error in
-            print("Error in", #function)    // FOR DEBUG
+            print("Error in", error)    // FOR DEBUG
         }
         
         PublicPlace.fetchList(apiURL : .wifiURL, PublicWiFi.self, success: { response in
             
-            let wifi = response.publicWiFiPlaceInfo.row.map { wifi -> PublicPlace in
+            let wifis = response.publicWiFiPlaceInfo.row.map { wifi -> PublicPlace in
             
                 let place = PublicPlace()
                 
                 place.lat = wifi.INSTL_Y
                 place.lng = wifi.INSTL_X
                 place.placeType = .wifi
-                place.location = wifi.PLACE_NAME
+                place.title = "공공 Wifi"
+                place.address = wifi.PLACE_NAME
                 
                 return place
             }
 
             let realm = try! Realm()
             try! realm.write {
-                realm.add(wifi)
+                realm.add(wifis)
             }
         }) { error in
-            print("Error in", #function)    // FOR DEBUG
+            print("Error in", error)    // FOR DEBUG
         }
         
         PublicPlace.fetchList(apiURL : .storeURL, PublicStore.self, success: { response in
             
-            let store = response.geoInfoBikeConvenientFacilitiesWGS.row.map { store -> PublicPlace in
+            let stores = response.geoInfoBikeConvenientFacilitiesWGS.row.map { store -> PublicPlace in
                 
                 let place = PublicPlace()
                 
                 place.lat = Double(store.LAT) ?? 0.0
                 place.lng = Double(store.LNG) ?? 0.0
-                place.placeType = .store
-                place.location = store.ADDRESS
-                place.imageURL = store.FILENAME
+                place.placeType = PlaceType(rawValue: store.CLASS.rawValue) ?? .none
+                place.title = store.CLASS.rawValue
+                place.address = store.ADDRESS
                 
                 return place
             }
             
             let realm = try! Realm()
             try! realm.write {
-                realm.add(store)
+                realm.add(stores)
             }
         }) { error in
-            print("Error in", #function)    // FOR DEBUG
+            print("Error in", error)    // FOR DEBUG
         }
     }
 }

@@ -159,27 +159,21 @@ extension UIColor {
 
 extension GMSMapView {
     
-    var geoBox: GeoBox? {
+    var geoBox: GeoBox {
         
-        guard
-            let center = self.myLocation?.coordinate
-        else {
-            return nil
-        }
+        let center = self.camera.target
         
         let bound = GMSCoordinateBounds(region: self.projection.visibleRegion())
+
+        let dLat = abs(bound.northEast.latitude - bound.southWest.latitude)
+        let dLng = abs(bound.northEast.longitude - bound.southWest.longitude)
         
-        let lat1 = bound.northEast.latitude
-        let lat2 = bound.southWest.latitude
-        let lng1 = bound.northEast.longitude
-        let lng2 = bound.southWest.longitude
+        print("\(dLat), \(dLng)")
         
-        let maxLat = max(lat1, lat2)
-        let minLat = min(lat1, lat2)
-        let maxLng = max(lng1, lng2)
-        let minLng = min(lng1, lng2)
-        
-        let span = MKCoordinateSpan(latitudeDelta: (maxLat - minLat), longitudeDelta: (maxLng - minLng))
+        let span = MKCoordinateSpan(
+            latitudeDelta: min(dLat, 0.05),
+            longitudeDelta: min(dLng, 0.05)
+        )
         let region = MKCoordinateRegion(center: center, span: span)
         
         return region.geoBox

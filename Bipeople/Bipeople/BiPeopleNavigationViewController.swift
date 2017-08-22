@@ -23,14 +23,6 @@ enum LiteralString: String {
 
 class BiPeopleNavigationViewController: UIViewController {
     
-    private var selectedMarker: GMSMarker?
-    
-    /// navigationItem에서 보이지 않게 하기 위해 nil로 만들면
-    /// @IBOutlet weak ~Button들이 메모리 해제 되는 것을 막기 위해 저장
-    private var navigationButtons: [String:UIBarButtonItem] = [:]
-    
-    private var currentLocation: CLLocation?    /// 앱 첫 실행 시, 맵을 현재 위치로 이동시키기 위한 변수
-    
     /// 기록 취소 후 네비게이션 모드 종료 버튼
     @IBOutlet weak var cancelButton: UIBarButtonItem! {
         willSet(newVal) {
@@ -92,6 +84,18 @@ class BiPeopleNavigationViewController: UIViewController {
             navigationMapView.settings.zoomGestures = true
             navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             navigationMapView.isMyLocationEnabled = true
+
+            let seoul = CLLocationCoordinate2D(
+                latitude: 37.541,
+                longitude: 126.986
+            )
+            
+            let camera = GMSCameraPosition.camera(
+                withTarget: seoul,
+                zoom: 100
+            )
+
+            navigationMapView.camera = camera
         }
     }
     
@@ -134,6 +138,12 @@ class BiPeopleNavigationViewController: UIViewController {
         
         return label
     } ()
+    
+    /// navigationItem에서 보이지 않게 하기 위해 nil로 만들면
+    /// @IBOutlet weak ~Button들이 메모리 해제 되는 것을 막기 위해 저장
+    private var navigationButtons: [String:UIBarButtonItem] = [:]
+    
+    private var currentLocation: CLLocation?    /// 앱 첫 실행 시, 맵을 현재 위치로 이동시키기 위한 변수
     
     private var navigationManager: NavigationManager!   /// 네비게이션 모드 책임
     private var locationManager: CLLocationManager!     /// 위치정보 책임
@@ -178,6 +188,8 @@ class BiPeopleNavigationViewController: UIViewController {
             }
         }
     }
+    
+    private var selectedMarker: GMSMarker?  /// 마커가 선택 된 경우, 맵을 선택한 경우 마커 선택이 해제되도록
     
     override func viewDidLoad() {
         
@@ -275,6 +287,7 @@ class BiPeopleNavigationViewController: UIViewController {
     
     @IBAction func didTapPlacesButton(_ sender: Any) {
         
+        placesButton.isSelected = !placesButton.isSelected
         let placesCount = try! Realm().objects(PublicPlace.self).count
         guard placesCount > 0 else {
             let warningAlert = UIAlertController(
@@ -295,12 +308,16 @@ class BiPeopleNavigationViewController: UIViewController {
             return
         }
         
-        placesButton.isSelected = !placesButton.isSelected
+        navigationManager.clearPlaces()
         if placesButton.isSelected {
-            tryShowPlaces()
-        } else {
-            navigationManager.clearPlaces()
+            navigationManager.showPlaces()
         }
+    }
+    
+    
+    @IBAction func didTapView(_ sender: Any) {
+        
+        print("HI")
     }
     
     /// 현재위치에서 목적지까지의 경로를 갖고와 맵에 표시
@@ -342,33 +359,6 @@ class BiPeopleNavigationViewController: UIViewController {
             self.loadingIndicatorView.stopAnimating()
             self.navigationMapView.isHidden = false
             self.startButton.isHidden = self.isNavigationOn
-        }
-    }
-    
-    private func tryShowPlaces() {
-        
-        do {
-            try navigationManager.showPlaces()
-        } catch {
-            
-            placesButton.isSelected = false
-            navigationManager.clearPlaces()
-            
-            let warningAlert = UIAlertController(
-                title: error.localizedDescription,
-                message: "다시 시도하시겠습니까?(5초 후 자동으로 사라집니다)",
-                preferredStyle: .alert
-            )
-            warningAlert.addAction(UIAlertAction(title: "취소", style: .cancel))
-            warningAlert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
-                self.placesButton.isSelected = true
-                self.tryShowPlaces()
-            })
-            
-            self.present(warningAlert, animated: true)
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
-                warningAlert.dismiss(animated: true, completion: nil)
-            }
         }
     }
     
@@ -447,11 +437,6 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
         
             currentLocation = updatedLocation
             moveMap(coordinate: currentLocation?.coordinate)
-        }
-        
-        // 현재 위치 주변 공공장소 보여주기
-        if placesButton.isSelected {
-            tryShowPlaces()
         }
         
         // 네비게이션 모드가 켜져있는 경우
@@ -618,8 +603,8 @@ extension BiPeopleNavigationViewController: GMSMapViewDelegate {
             return nil
         }
         
-        infoWindow.nameLabel.text = place.location
-        infoWindow.addressLabel.text = place.location
+        infoWindow.nameLabel.text = place.title
+        infoWindow.addressLabel.text = place.address
         
         return infoWindow
     }
@@ -641,26 +626,43 @@ extension BiPeopleNavigationViewController: GMSMapViewDelegate {
         self.navigationController?.pushViewController(placeDetailVC, animated: true)
     }
     
-    func mapView(_ mapView: GMSMapView, didEndDragging marker: GMSMarker) {
-        print(#function)    // FOR DEBUG
-    }
-    
-    func mapView(_ mapView: GMSMapView, willMove gesture: Bool) {
-        print(#function)    // FOR DEBUG
-    }
-    
-    func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
-        print(#function)    // FOR DEBUG
-    }
+//    func mapView(_ mapView: GMSMapView, willMove gesture: Bool) {
+//
+//        print(#function)    // FOR DEBUG
+//
+//        // 현재 위치 주변 공공장소 보여주기
+//        navigationManager.clearPlaces()
+//        if placesButton.isSelected {
+//            navigationManager.showPlaces()
+//        }
+//    }
+//
+//    func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
+//
+//        print(#function)    // FOR DEBUG
+//
+//        // 현재 위치 주변 공공장소 보여주기
+//        navigationManager.clearPlaces()
+//        if placesButton.isSelected {
+//            navigationManager.showPlaces()
+//        }
+//    }
     
     func mapView(_ mapView: GMSMapView, idleAt position: GMSCameraPosition) {
+        
         print(#function)    // FOR DEBUG
+        
+        // 현재 위치 주변 공공장소 보여주기
+        navigationManager.clearPlaces()
+        if placesButton.isSelected {
+            navigationManager.showPlaces()
+        }
     }
     
     func didTapMyLocationButton(for mapView: GMSMapView) -> Bool {
         print(#function)    // FOR DEBUG
         
-        return true
+        return false
     }
     
     /// 맵에서 위치가 선택(터치)된 경우
