@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import MapKit
+import GoogleMaps
+import GeoQueries
 
 /// MARK: Date Extension
 
@@ -151,5 +154,34 @@ extension UIColor {
             blue: hex & 0xFF,
             a: a
         )
+    }
+}
+
+extension GMSMapView {
+    
+    var geoBox: GeoBox? {
+        
+        guard
+            let center = self.myLocation?.coordinate
+        else {
+            return nil
+        }
+        
+        let bound = GMSCoordinateBounds(region: self.projection.visibleRegion())
+        
+        let lat1 = bound.northEast.latitude
+        let lat2 = bound.southWest.latitude
+        let lng1 = bound.northEast.longitude
+        let lng2 = bound.southWest.longitude
+        
+        let maxLat = max(lat1, lat2)
+        let minLat = min(lat1, lat2)
+        let maxLng = max(lng1, lng2)
+        let minLng = min(lng1, lng2)
+        
+        let span = MKCoordinateSpan(latitudeDelta: (maxLat - minLat), longitudeDelta: (maxLng - minLng))
+        let region = MKCoordinateRegion(center: center, span: span)
+        
+        return region.geoBox
     }
 }

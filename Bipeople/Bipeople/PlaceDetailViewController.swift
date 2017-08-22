@@ -12,7 +12,7 @@ import GoogleMaps
 class PlaceDetailViewController: UIViewController {
     
     var place : PublicPlace?
-    var places = [PublicPlace]()
+    var places: [PublicPlace]?
     
     @IBOutlet weak var placeTypeLabel: UILabel!
     @IBOutlet weak var placeMapView: GMSMapView!
@@ -50,13 +50,16 @@ extension PlaceDetailViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return places.count
+        return places?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let place = places[indexPath.row]
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "PlacesTableCell")
+        
+        guard let place = places?[indexPath.row] else {
+            return cell
+        }
         
         cell.textLabel?.text = place.location
         cell.accessoryView = (place.placeType == .none)

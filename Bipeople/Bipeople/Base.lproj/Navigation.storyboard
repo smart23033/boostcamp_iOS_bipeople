@@ -43,10 +43,12 @@
                         <subviews>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="aC5-W2-0Gn">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <gestureRecognizers/>
                             </activityIndicatorView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pjH-rm-9aE" customClass="GMSMapView">
                                 <rect key="frame" x="0.0" y="64" width="375" height="602.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
                                 <connections>
                                     <outlet property="delegate" destination="MC0-9L-o62" id="cWq-3i-oxQ"/>
                                 </connections>
@@ -226,7 +228,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="navigation" width="50" height="50"/>
-        <image name="selectedNavigation" width="50" height="50"/>
+        <image name="navigation" width="25" height="25"/>
+        <image name="selectedNavigation" width="25" height="25"/>
     </resources>
 </document>
