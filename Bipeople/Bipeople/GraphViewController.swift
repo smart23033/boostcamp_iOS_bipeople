@@ -38,10 +38,14 @@ class GraphViewController: UIViewController {
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var prototypeGraphView: ScrollableGraphView!
     @IBOutlet weak var calendarView: FSCalendar!
-    @IBOutlet weak var filterLabel: UILabel!
+    @IBOutlet weak var filterLabel: UILabel! {
+        didSet {
+            filterLabel.text = selectedValue.rawValue
+        }
+    }
     @IBOutlet weak var startLabel: UILabel! {
         didSet {
-            startLabel.text = Date().toString()
+            startLabel.text = Date().addingTimeInterval(-24*60*60*7).toString()
         }
     }
     @IBOutlet weak var endLabel: UILabel! {
@@ -99,7 +103,7 @@ class GraphViewController: UIViewController {
     var dataWithDate: [String:Double] = [:]
     
     var pickerData: [GraphType] = [.distance,.ridingTime,.calories,.averageSpeed]
-    var selectedValue: String = ""
+    var selectedValue: GraphType = .distance
     
     var distance: Double?
     var ridingTime: TimeInterval?
@@ -111,11 +115,10 @@ class GraphViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        let realm = try! Realm()
-//        records = Array(realm.objects(Record.self))
-        
         self.calendarView.today = nil
         self.calendarView.isHidden = true
+        
+        reloadGraph()
     }
     
     //MARK: Functions
@@ -147,16 +150,14 @@ class GraphViewController: UIViewController {
         records.sort{ $0.createdAt < $1.createdAt }
         
         switch selectedValue {
-        case GraphType.distance.rawValue:
+        case .distance:
             dataWithDate = getDataWithDate(type: .distance, startDate: startDate, endDate: endDate)
-        case GraphType.ridingTime.rawValue:
+        case .ridingTime:
             dataWithDate = getDataWithDate(type: .ridingTime, startDate: startDate, endDate: endDate)
-        case GraphType.calories.rawValue:
+        case .calories:
             dataWithDate = getDataWithDate(type: .calories, startDate: startDate, endDate: endDate)
-        case GraphType.averageSpeed.rawValue:
+        case .averageSpeed:
             dataWithDate = getDataWithDate(type: .averageSpeed, startDate: startDate, endDate: endDate)
-        default:
-            break
         }
         
         guard let maxValue = dataWithDate.values.sorted(by: >).first else {
@@ -309,9 +310,10 @@ class GraphViewController: UIViewController {
     @IBAction func didChangeSegControl(_ sender: UISegmentedControl) {
         
         reloadGraph()
-        reloadDataSheet()
+//        reloadDataSheet()
         
     }
+    
     @IBAction func didTapFilterLabel(_ sender: UITapGestureRecognizer) {
         let alertView = UIAlertController(
             title: "Select item from list",
@@ -334,7 +336,7 @@ class GraphViewController: UIViewController {
         present(alertView, animated: true, completion: { () -> Void in
             pickerView.frame.size.width = alertView.view.frame.size.width
             
-            self.selectedValue = self.pickerData[0].rawValue
+            self.selectedValue = self.pickerData[0]
             self.filterLabel.text = GraphType.distance.rawValue
             self.reloadGraph()
             self.reloadDataSheet()
@@ -487,13 +489,13 @@ extension GraphViewController: ScrollableGraphViewDataSource {
         // Setup the first line plot.
         let linePlot = LinePlot(identifier: "plot")
         
-        linePlot.lineWidth = 5
+        linePlot.lineWidth = 2
         linePlot.lineColor = UIColor.primary
         linePlot.lineStyle = ScrollableGraphViewLineStyle.straight
         
-        linePlot.shouldFill = false
+        linePlot.shouldFill = true
         linePlot.fillType = ScrollableGraphViewFillType.solid
-        linePlot.fillColor = UIColor.blue.withAlphaComponent(0.5)
+        linePlot.fillColor = UIColor.primary.withAlphaComponent(0.2)
         
         linePlot.adaptAnimationType = ScrollableGraphViewAnimationType.elastic
         
@@ -532,8 +534,8 @@ extension GraphViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     {
-        selectedValue = pickerData[pickerView.selectedRow(inComponent: 0)].rawValue
-        filterLabel.text = selectedValue
+        selectedValue = pickerData[pickerView.selectedRow(inComponent: 0)]
+        filterLabel.text = selectedValue.rawValue
         
         reloadGraph()
         reloadDataSheet()

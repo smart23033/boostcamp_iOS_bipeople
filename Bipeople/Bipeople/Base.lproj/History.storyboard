@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--History-->
+        <!--기록-->
         <scene sceneID="fiQ-dr-vA0">
             <objects>
                 <viewController id="7CJ-Dn-Dtl" customClass="HistoryTableViewController" customModule="Bipeople" customModuleProvider="target" sceneMemberID="viewController">
@@ -70,7 +70,7 @@
                             <outlet property="delegate" destination="7CJ-Dn-Dtl" id="OQK-dq-xhq"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="History" id="Wf9-do-Ci9"/>
+                    <navigationItem key="navigationItem" title="기록" id="Wf9-do-Ci9"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="tableView" destination="8Gg-os-3y7" id="ivE-9g-0zx"/>
@@ -212,6 +212,16 @@
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Filter" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tgb-99-LAW">
+                                <rect key="frame" x="325" y="339.5" width="34.5" height="18"/>
+                                <gestureRecognizers/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="LnQ-oE-DPL" appends="YES" id="55b-71-wYh"/>
+                                </connections>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -219,11 +229,13 @@
                             <constraint firstItem="cAP-c5-XNN" firstAttribute="top" secondItem="XdY-j6-lNB" secondAttribute="bottom" constant="8" id="6Xc-B3-mDn"/>
                             <constraint firstItem="XdY-j6-lNB" firstAttribute="leading" secondItem="Wb9-sf-EFr" secondAttribute="leadingMargin" id="8Ew-Fp-0Wd"/>
                             <constraint firstItem="y3Z-50-kGl" firstAttribute="leading" secondItem="Wb9-sf-EFr" secondAttribute="leadingMargin" id="OPd-ih-4vu"/>
+                            <constraint firstItem="tgb-99-LAW" firstAttribute="centerY" secondItem="XdY-j6-lNB" secondAttribute="centerY" id="Sk5-u5-iR1"/>
                             <constraint firstItem="cAP-c5-XNN" firstAttribute="leading" secondItem="Wb9-sf-EFr" secondAttribute="leadingMargin" id="Zbp-im-Bpw"/>
                             <constraint firstItem="DSo-rY-X0v" firstAttribute="centerY" secondItem="A5r-ZJ-gYD" secondAttribute="centerY" id="aC4-BU-PF8"/>
                             <constraint firstItem="A5r-ZJ-gYD" firstAttribute="leading" secondItem="Wb9-sf-EFr" secondAttribute="leadingMargin" id="b4z-eu-ULK"/>
                             <constraint firstItem="y3Z-50-kGl" firstAttribute="height" secondItem="Wb9-sf-EFr" secondAttribute="height" multiplier="0.32" id="d0n-EW-C61"/>
                             <constraint firstItem="y3Z-50-kGl" firstAttribute="trailing" secondItem="Wb9-sf-EFr" secondAttribute="trailingMargin" id="ele-Q8-4XX"/>
+                            <constraint firstItem="tgb-99-LAW" firstAttribute="trailing" secondItem="Wb9-sf-EFr" secondAttribute="trailingMargin" id="h2o-0f-gC6"/>
                             <constraint firstItem="cAP-c5-XNN" firstAttribute="height" secondItem="Wb9-sf-EFr" secondAttribute="height" multiplier="0.4" id="jC5-Cv-Hf9"/>
                             <constraint firstItem="cAP-c5-XNN" firstAttribute="trailing" secondItem="Wb9-sf-EFr" secondAttribute="trailingMargin" id="kqo-jb-d0j"/>
                             <constraint firstAttribute="trailing" secondItem="DSo-rY-X0v" secondAttribute="trailing" constant="20" id="oPf-vb-tQJ"/>
@@ -237,6 +249,7 @@
                         <outlet property="caloriesLabel" destination="Nhq-mk-vXI" id="isx-CG-ISR"/>
                         <outlet property="createdAt" destination="DSo-rY-X0v" id="UkT-e1-7eZ"/>
                         <outlet property="distanceLabel" destination="OX8-c2-ulq" id="bQu-FH-gCT"/>
+                        <outlet property="filterLabel" destination="tgb-99-LAW" id="Zbn-g8-6xt"/>
                         <outlet property="mapView" destination="cAP-c5-XNN" id="kRw-6L-k7x"/>
                         <outlet property="maximumSpeedLabel" destination="I4a-QS-Vnk" id="Whl-Mc-ACw"/>
                         <outlet property="restTimeLabel" destination="A5l-aP-8ex" id="AQ8-bn-hmt"/>
@@ -245,6 +258,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kgo-6Q-bdo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="LnQ-oE-DPL">
+                    <connections>
+                        <action selector="didTapFilterLabel:" destination="0J0-6S-UEE" id="eMm-Uy-10R"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2735" y="1312"/>
         </scene>
