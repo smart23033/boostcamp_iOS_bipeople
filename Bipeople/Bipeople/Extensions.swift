@@ -157,6 +157,8 @@ extension UIColor {
     }
 }
 
+//MARK: GMSMapView Extension
+
 extension GMSMapView {
     
     var geoBox: GeoBox {

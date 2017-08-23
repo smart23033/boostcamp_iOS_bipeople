@@ -109,7 +109,7 @@
                             <outletCollection property="gestureRecognizers" destination="zBA-KE-G3F" appends="YES" id="aj1-Vq-3xM"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="TITLE" id="cHY-bb-SJt">
+                    <navigationItem key="navigationItem" title="네비게이션" id="cHY-bb-SJt">
                         <barButtonItem key="leftBarButtonItem" title="취소" id="PmP-QK-R8S">
                             <connections>
                                 <action selector="didTapCancelButton:" destination="MC0-9L-o62" id="TtD-ip-Sny"/>
@@ -270,7 +270,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="placeAddressLabel" destination="bbd-L7-YRs" id="nL2-tk-eCs"/>
+                        <outlet property="placeAddressLabel" destination="bbd-L7-YRs" id="gb0-1S-uNY"/>
                         <outlet property="placeMapView" destination="qsK-Ck-QQT" id="qmQ-77-UNi"/>
                         <outlet property="placesTableView" destination="hjw-xS-aky" id="8CW-GR-Ims"/>
                     </connections>
