@@ -119,6 +119,7 @@ class GraphViewController: UIViewController {
         self.calendarView.isHidden = true
         
         reloadGraph()
+        reloadDataSheet()
     }
     
     //MARK: Functions

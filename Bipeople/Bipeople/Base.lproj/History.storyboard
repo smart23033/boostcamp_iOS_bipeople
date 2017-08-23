@@ -4,6 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13156.2"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -254,7 +255,7 @@
                         <outlet property="maximumSpeedLabel" destination="I4a-QS-Vnk" id="Whl-Mc-ACw"/>
                         <outlet property="restTimeLabel" destination="A5l-aP-8ex" id="AQ8-bn-hmt"/>
                         <outlet property="ridingTimeLabel" destination="up2-Gw-5d6" id="evZ-fr-Udp"/>
-                        <outlet property="titleLabel" destination="psD-61-zu4" id="hSZ-7a-Ceb"/>
+                        <outlet property="titleLabel" destination="psD-61-zu4" id="rS3-Ti-E94"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kgo-6Q-bdo" userLabel="First Responder" sceneMemberID="firstResponder"/>
