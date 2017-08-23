@@ -445,6 +445,7 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
         // print("Updated Location: ", updatedLocation)    // FOR DEBUG
         
         if currentLocation == nil {
+            
             currentLocation = updatedLocation
             navigationMapView.isHidden = false
             
@@ -482,23 +483,18 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
         }
         
         // 네비게이션 모드가 켜져있는 경우
-        // 1. 위치 변화 정보 저장
-        // 2. 현재 위치를 NavigationBar Title로(Async)
-        // 3. 목적지 도착을 확인 후, 도착한 경우 기록 저장 및 안내 종료
-        // 4. 중간 경유지를 지나가는 경우 음성 안내
-        // 5. 현재 위치를 이용 해 경로에서 50m 밖을 벗어났는 지를 확인
-        //    벗어난 경우 현 위치에서 목적지 까지 새로운 경로를 구해 안내(Async)
         if isNavigationOn {
             
-            // 1. 위치 변화 정보 저장
+            // 위치 변화 정보 저장
             do {
                 try navigationManager.addTrace(location: updatedLocation)
             } catch {
                 print("Save trace data failed with error: ", error)
             }
             
-            // 2. 현재 위치를 NavigationBar Title로(Async)
-            GMSGeocoder().reverseGeocodeCoordinate(updatedLocation.coordinate) { response, error in
+            // 현재 위치를 NavigationBar Title로(Async)
+            
+            CLGeocoder().reverseGeocodeLocation(updatedLocation, preferredLocale: Locale(identifier: "ko")) { response, error in
                 
                 guard error == nil else {
                     print("Reverse Geocode from current coordinate failed with error: ", error!)    // FOR DEBUG
@@ -508,7 +504,8 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
                 }
                 
                 guard
-                    let address = response?.firstResult()
+                    let address1 = response?.first?.thoroughfare,
+                    let address2 = response?.first?.subThoroughfare
                 else {
                     print("Reverse Geocode result is empty")    // FOR DEBUG
                     self.marqueeTitle.text = LiteralString.unknown.rawValue
@@ -516,51 +513,50 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
                     return
                 }
                 
-                self.marqueeTitle.text = address.thoroughfare ?? LiteralString.unknown.rawValue
+                self.marqueeTitle.text = address1.appending(" ").appending(address2)
             }
             
-            // 3. 목적지 도착을 확인 후, 도착한 경우 기록 저장 및 안내 종료
-            if navigationManager.isArrived {
+            switch navigationManager.currentStatus {
+            
+            case .arrived:              // 목적지 도착을 확인 후, 도착한 경우 기록 저장 및 안내 종료
                 navigationManager.voiceGuidance(index: Int.max)
                 
                 isNavigationOn = false
                 trySaveData()
-            }
-            else {
                 
-                // 4. 중간 경유지를 지나가는 경우 음성 안내
-                let waypointIndex = navigationManager.isInWayPoint
-                if waypointIndex >= 0 {
-                    navigationManager.voiceGuidance(index: waypointIndex)
-                }
-                // 5. 현재 위치를 이용 해 경로에서 50m 밖을 벗어났는 지를 확인
-                //    벗어난 경우 현 위치에서 목적지 까지 새로운 경로를 구해 안내(Async)
-                else if navigationManager.isAwayFromRoute {
+            case let .waypoint(index):  // 중간 경유지를 지나가는 경우 음성 안내
+                navigationManager.voiceGuidance(index: index)
+                
+            case .offroad:              // 경로에서 벗어난 경우, 현 위치에서 목적지 까지 새로운 경로를 구해 안내(Async)
+                let warningAlert = UIAlertController(
+                    title: "경로 이탈",
+                    message: "경로를 재설정 합니다(3초 후 자동으로 사라집니다)",
+                    preferredStyle: .alert
+                )
+                warningAlert.addAction(UIAlertAction(title: "종료(저장)", style: .destructive){ _ in
+                    self.navigationManager.voiceGuidance(index: Int.max)
                     
-                    let warningAlert = UIAlertController(
-                        title: "경로 이탈",
-                        message: "경로를 재설정 합니다(3초 후 자동으로 사라집니다)",
-                        preferredStyle: .alert
-                    )
-                    warningAlert.addAction(UIAlertAction(title: "종료(저장)", style: .destructive){ _ in
-                        self.navigationManager.voiceGuidance(index: Int.max)
-                        
-                        self.isNavigationOn = false
-                        self.trySaveData()
-                    })
-                    warningAlert.addAction(UIAlertAction(title: "종료(취소)", style: .cancel){ _ in
-                        self.navigationManager.voiceGuidance(index: Int.max)
-                        
-                        self.isNavigationOn = false
-                    })
-                    self.present(warningAlert, animated: true)
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
-                        warningAlert.dismiss(animated: true, completion: nil)
-                    }
+                    self.isNavigationOn = false
+                    self.trySaveData()
+                })
+                warningAlert.addAction(UIAlertAction(title: "종료(취소)", style: .cancel){ _ in
+                    self.navigationManager.voiceGuidance(index: Int.max)
                     
-                    navigationManager.voiceGuidance(index: Int.min)
-                    getRouteAndDrawForDestination(recorded: true)
+                    self.isNavigationOn = false
+                })
+                self.present(warningAlert, animated: true)
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
+                    warningAlert.dismiss(animated: true, completion: nil)
                 }
+                
+                navigationManager.voiceGuidance(index: Int.min)
+                getRouteAndDrawForDestination(recorded: true)
+            
+            case .onroad:
+                break
+                
+            case .error:
+                break
             }
         }
     }

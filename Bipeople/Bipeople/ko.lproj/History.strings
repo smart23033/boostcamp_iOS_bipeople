@@ -1,0 +1,63 @@
+
+/* Class = "UILabel"; text = "주행 시간"; ObjectID = "2T3-TP-uLk"; */
+"2T3-TP-uLk.text" = "주행 시간";
+
+/* Class = "UILabel"; text = "createdAt"; ObjectID = "3hi-AV-MFl"; */
+"3hi-AV-MFl.text" = "createdAt";
+
+/* Class = "UILabel"; text = "15: 11"; ObjectID = "A5l-aP-8ex"; */
+"A5l-aP-8ex.text" = "15: 11";
+
+/* Class = "UILabel"; text = "주행 정보"; ObjectID = "A5r-ZJ-gYD"; */
+"A5r-ZJ-gYD.text" = "주행 정보";
+
+/* Class = "UILabel"; text = "휴식 시간"; ObjectID = "C4q-SA-DAB"; */
+"C4q-SA-DAB.text" = "휴식 시간";
+
+/* Class = "UILabel"; text = "2017-08-31"; ObjectID = "DSo-rY-X0v"; */
+"DSo-rY-X0v.text" = "2017-08-31";
+
+/* Class = "UILabel"; text = "20.1 km/h"; ObjectID = "I4a-QS-Vnk"; */
+"I4a-QS-Vnk.text" = "20.1 km/h";
+
+/* Class = "UILabel"; text = "312,312,321 kcal"; ObjectID = "Nhq-mk-vXI"; */
+"Nhq-mk-vXI.text" = "312,312,321 kcal";
+
+/* Class = "UILabel"; text = "42.195km"; ObjectID = "OX8-c2-ulq"; */
+"OX8-c2-ulq.text" = "42.195km";
+
+/* Class = "UILabel"; text = "Start - End"; ObjectID = "TfH-e1-Gyt"; */
+"TfH-e1-Gyt.text" = "Start - End";
+
+/* Class = "UILabel"; text = "주행 거리"; ObjectID = "Tuj-Qk-4lP"; */
+"Tuj-Qk-4lP.text" = "주행 거리";
+
+/* Class = "UINavigationItem"; title = "기록"; ObjectID = "Wf9-do-Ci9"; */
+"Wf9-do-Ci9.title" = "기록";
+
+/* Class = "UILabel"; text = "지도"; ObjectID = "XdY-j6-lNB"; */
+"XdY-j6-lNB.text" = "지도";
+
+/* Class = "UILabel"; text = "최고 속도"; ObjectID = "aEs-xo-h0e"; */
+"aEs-xo-h0e.text" = "최고 속도";
+
+/* Class = "UILabel"; text = "Distance"; ObjectID = "id1-eA-g2Y"; */
+"id1-eA-g2Y.text" = "Distance";
+
+/* Class = "UILabel"; text = "소모 칼로리"; ObjectID = "jLb-MH-ASu"; */
+"jLb-MH-ASu.text" = "소모 칼로리";
+
+/* Class = "UILabel"; text = "15.4 km/h"; ObjectID = "jLs-Q9-gVU"; */
+"jLs-Q9-gVU.text" = "15.4 km/h";
+
+/* Class = "UINavigationItem"; title = "Title"; ObjectID = "psD-61-zu4"; */
+"psD-61-zu4.title" = "Title";
+
+/* Class = "UILabel"; text = "Filter"; ObjectID = "tgb-99-LAW"; */
+"tgb-99-LAW.text" = "Filter";
+
+/* Class = "UILabel"; text = "평균 속도"; ObjectID = "u9v-uC-zao"; */
+"u9v-uC-zao.text" = "평균 속도";
+
+/* Class = "UILabel"; text = "2: 10: 55"; ObjectID = "up2-Gw-5d6"; */
+"up2-Gw-5d6.text" = "2: 10: 55";

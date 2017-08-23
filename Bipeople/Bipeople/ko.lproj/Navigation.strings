@@ -1,0 +1,30 @@
+
+/* Class = "UITabBarItem"; title = "네비게이션"; ObjectID = "2Bs-XG-aqc"; */
+"2Bs-XG-aqc.title" = "네비게이션";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "68s-vc-AQZ"; */
+"68s-vc-AQZ.normalTitle" = "Button";
+
+/* Class = "UIBarButtonItem"; title = "저장"; ObjectID = "B5E-8w-wya"; */
+"B5E-8w-wya.title" = "저장";
+
+/* Class = "UILabel"; text = "위치"; ObjectID = "FoE-yf-y9M"; */
+"FoE-yf-y9M.text" = "위치";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "Nhe-9Y-JBH"; */
+"Nhe-9Y-JBH.normalTitle" = "Button";
+
+/* Class = "UIBarButtonItem"; title = "취소"; ObjectID = "PmP-QK-R8S"; */
+"PmP-QK-R8S.title" = "취소";
+
+/* Class = "UILabel"; text = "Address"; ObjectID = "bbd-L7-YRs"; */
+"bbd-L7-YRs.text" = "Address";
+
+/* Class = "UINavigationItem"; title = "TITLE"; ObjectID = "cHY-bb-SJt"; */
+"cHY-bb-SJt.title" = "TITLE";
+
+/* Class = "UILabel"; text = "관련항목"; ObjectID = "pNF-oI-xMn"; */
+"pNF-oI-xMn.text" = "관련항목";
+
+/* Class = "UILabel"; text = "지도"; ObjectID = "vCl-pr-Xyr"; */
+"vCl-pr-Xyr.text" = "지도";

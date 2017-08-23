@@ -1,0 +1,75 @@
+
+/* Class = "UILabel"; text = "2017-09-21"; ObjectID = "6x5-Lp-7sU"; */
+"6x5-Lp-7sU.text" = "2017-09-21";
+
+/* Class = "UISegmentedControl"; 8cM-zC-Fsa.segmentTitles[0] = "일별"; ObjectID = "8cM-zC-Fsa"; */
+"8cM-zC-Fsa.segmentTitles[0]" = "일별";
+
+/* Class = "UISegmentedControl"; 8cM-zC-Fsa.segmentTitles[1] = "주별"; ObjectID = "8cM-zC-Fsa"; */
+"8cM-zC-Fsa.segmentTitles[1]" = "주별";
+
+/* Class = "UISegmentedControl"; 8cM-zC-Fsa.segmentTitles[2] = "월별"; ObjectID = "8cM-zC-Fsa"; */
+"8cM-zC-Fsa.segmentTitles[2]" = "월별";
+
+/* Class = "UILabel"; text = "kcal"; ObjectID = "HLQ-pK-327"; */
+"HLQ-pK-327.text" = "kcal";
+
+/* Class = "UILabel"; text = "평균 속도"; ObjectID = "JVP-NK-5vS"; */
+"JVP-NK-5vS.text" = "평균 속도";
+
+/* Class = "UILabel"; text = "0.0"; ObjectID = "LkZ-TV-FZh"; */
+"LkZ-TV-FZh.text" = "0.0";
+
+/* Class = "UILabel"; text = "s"; ObjectID = "OOX-2D-4Hm"; */
+"OOX-2D-4Hm.text" = "s";
+
+/* Class = "UILabel"; text = "m"; ObjectID = "SnD-bS-OnZ"; */
+"SnD-bS-OnZ.text" = "m";
+
+/* Class = "UILabel"; text = "0"; ObjectID = "T7T-xG-ICk"; */
+"T7T-xG-ICk.text" = "0";
+
+/* Class = "UILabel"; text = "0.0"; ObjectID = "XBm-Qs-26z"; */
+"XBm-Qs-26z.text" = "0.0";
+
+/* Class = "UILabel"; text = "0"; ObjectID = "YiW-jf-XBh"; */
+"YiW-jf-XBh.text" = "0";
+
+/* Class = "UILabel"; text = "~"; ObjectID = "bAw-TU-FYo"; */
+"bAw-TU-FYo.text" = "~";
+
+/* Class = "UILabel"; text = "Filter"; ObjectID = "baD-OY-PGM"; */
+"baD-OY-PGM.text" = "Filter";
+
+/* Class = "UITabBarItem"; title = "그래프"; ObjectID = "cCm-W8-NfS"; */
+"cCm-W8-NfS.title" = "그래프";
+
+/* Class = "UINavigationItem"; title = "그래프"; ObjectID = "fyE-fY-fVu"; */
+"fyE-fY-fVu.title" = "그래프";
+
+/* Class = "UILabel"; text = "m/s"; ObjectID = "ice-KQ-s8e"; */
+"ice-KQ-s8e.text" = "m/s";
+
+/* Class = "UILabel"; text = "누적 주행 시간"; ObjectID = "mKV-aR-fTQ"; */
+"mKV-aR-fTQ.text" = "누적 주행 시간";
+
+/* Class = "UILabel"; text = "2017-08-09"; ObjectID = "mdX-n4-4LX"; */
+"mdX-n4-4LX.text" = "2017-08-09";
+
+/* Class = "UILabel"; text = "0"; ObjectID = "ngb-rh-gwV"; */
+"ngb-rh-gwV.text" = "0";
+
+/* Class = "UILabel"; text = "누적 주행 거리"; ObjectID = "oB2-KC-RfT"; */
+"oB2-KC-RfT.text" = "누적 주행 거리";
+
+/* Class = "UILabel"; text = "km"; ObjectID = "oFf-tL-vZ1"; */
+"oFf-tL-vZ1.text" = "km";
+
+/* Class = "UILabel"; text = "h"; ObjectID = "okh-TK-mGP"; */
+"okh-TK-mGP.text" = "h";
+
+/* Class = "UILabel"; text = "누적 소모 칼로리"; ObjectID = "ra1-Kh-0i6"; */
+"ra1-Kh-0i6.text" = "누적 소모 칼로리";
+
+/* Class = "UILabel"; text = "0.0"; ObjectID = "xN6-6b-JjU"; */
+"xN6-6b-JjU.text" = "0.0";

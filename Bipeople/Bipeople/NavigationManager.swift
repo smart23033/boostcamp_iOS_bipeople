@@ -64,41 +64,26 @@ class NavigationManager {
         navigationMapView = mapView
     }
     
-    /// 현재 위치가 도착지인지를 반환
-    public var isArrived: Bool {
-
-        guard
-            let destination = destinationMarker?.position,
-            let currentLocation = navigationMapView.myLocation
-        else {
-            return false
-        }
-        
-        let arrivalLocation = CLLocation(latitude: destination.latitude, longitude: destination.longitude)
-        
-        return currentLocation.distance(from: arrivalLocation) < NavigationManager.PATH_RANGE_TOLERANCE
+    enum NavigationStatus {
+        case arrived
+        case waypoint(Int)
+        case offroad
+        case onroad
+        case error
     }
     
-    /// 현재 위치가 네비게이션 경로에서 벗어나 있는지를 반환
-    public var isAwayFromRoute: Bool {
-
+    public var currentStatus: NavigationStatus {
+        
         guard
-            let currentCoord = navigationMapView.myLocation?.coordinate,
+            routeWaypoints.count > 0,
+            let currentLocation = navigationMapView.myLocation,
             let navigationPath = navigationPath
         else {
-            return false
+            return .error
         }
         
-        return !GMSGeometryIsLocationOnPathTolerance(currentCoord, navigationPath, true, NavigationManager.PATH_RANGE_TOLERANCE)
-    }
-    
-    /// 중간 경유지를 통과중이라면 해당 경유지 인덱스를 반환, 통과 중이지 않은 경우 -1반환
-    public var isInWayPoint: Int {
-        
-        guard
-            let currentLocation = navigationMapView.myLocation
-        else {
-            return -1
+        guard GMSGeometryIsLocationOnPathTolerance(currentLocation.coordinate, navigationPath, true, NavigationManager.PATH_RANGE_TOLERANCE) else {
+            return .offroad
         }
         
         for (index, waypoint) in routeWaypoints.reversed().enumerated() {
@@ -109,11 +94,12 @@ class NavigationManager {
             )
             
             if currentLocation.distance(from: waypointLocation) < NavigationManager.PATH_RANGE_TOLERANCE {
-                return routeWaypoints.count - index - 1
+                
+                return index == 0 ? .arrived : .waypoint(routeWaypoints.count - index - 1)
             }
         }
         
-        return -1
+        return .onroad
     }
     
     /// 다른 뷰 컨트롤러와 공유할 공공장소 정보들
@@ -441,7 +427,7 @@ class NavigationManager {
     public func initDatas() throws {
         
         guard
-            let currentLocation = navigationMapView.myLocation?.coordinate
+            let currentLocation = navigationMapView.myLocation
         else {
             record = nil
             
@@ -457,12 +443,11 @@ class NavigationManager {
         }
         
         try! Realm().write {
-            
             record = Record(flag: true)
             traces.removeAll()
         }
         
-        GMSGeocoder().reverseGeocodeCoordinate(currentLocation) { response, error in
+        CLGeocoder().reverseGeocodeLocation(currentLocation, preferredLocale: Locale(identifier: "ko")) { response, error in
             
             guard error == nil else {
                 print("Reverse Geocode from current coordinate failed with error: ", error!)    // FOR DEBUG
@@ -474,13 +459,16 @@ class NavigationManager {
                 return
             }
             
-            guard let address = response?.firstResult() else {
-                print("Reverse Geocode result is empty")    // FOR DEBUG
-                return
+            guard
+                let address1 = response?.first?.thoroughfare,
+                let address2 = response?.first?.subThoroughfare
+                else {
+                    print("Reverse Geocode result is empty")    // FOR DEBUG
+                    return
             }
             
             try! Realm().write {
-                record.departure = address.thoroughfare ?? ""
+                record.departure = address1.appending(" ").appending(address2)
             }
         }
     }
@@ -535,7 +523,7 @@ class NavigationManager {
     public func saveData() throws {
         
         guard
-            let currentLocation = navigationMapView.myLocation?.coordinate
+            let currentLocation = navigationMapView.myLocation
         else {
             record = nil
                 
@@ -552,8 +540,6 @@ class NavigationManager {
         
         guard let record = record else {
             
-            
-            
             let error = NSError(
                 domain: Bundle.main.bundleIdentifier ?? "nil",
                 code: -1,
@@ -565,23 +551,11 @@ class NavigationManager {
             throw error
         }
         
-        guard traces.count > 0 else {
-            
-            let error = NSError(
-                domain: Bundle.main.bundleIdentifier ?? "nil",
-                code: -1,
-                userInfo: [
-                    NSLocalizedDescriptionKey : "Recording is possible only if at least one trace data exists"
-                ]
-            )
-            
-            throw error
-        }
-        
-        GMSGeocoder().reverseGeocodeCoordinate(currentLocation) { response, error in
+        CLGeocoder().reverseGeocodeLocation(currentLocation, preferredLocale: Locale(identifier: "ko")) { response, error in
             
             guard error == nil else {
                 print("Reverse Geocode from current coordinate failed with error: ", error!)    // FOR DEBUG
+                
                 return
             }
             
@@ -590,13 +564,16 @@ class NavigationManager {
                 return
             }
             
-            guard let address = response?.firstResult() else {
+            guard
+                let address1 = response?.first?.thoroughfare,
+                let address2 = response?.first?.subThoroughfare
+            else {
                 print("Reverse Geocode result is empty")    // FOR DEBUG
                 return
             }
             
             try! Realm().write {
-                record.arrival = address.thoroughfare ?? ""
+                record.arrival = address1.appending(" ").appending(address2)
             }
         }
         
