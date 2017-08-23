@@ -23,8 +23,8 @@ import RealmSwift
 class Record: Object {
     
     @objc dynamic var _id: Int = 0
-    @objc dynamic var departure: String = ""
-    @objc dynamic var arrival: String = ""
+    @objc dynamic var departure: String = LiteralString.unknown.rawValue
+    @objc dynamic var arrival: String = LiteralString.unknown.rawValue
     @objc dynamic var distance: Double = 0.0
     @objc dynamic var ridingTime: TimeInterval = 0.0
     @objc dynamic var restTime: TimeInterval = 0.0

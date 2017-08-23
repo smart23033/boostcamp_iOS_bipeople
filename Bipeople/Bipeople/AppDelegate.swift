@@ -38,20 +38,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         changeTheme(navigationControllers: navControllers)
         
         /* FOR DEBUG: 더미데이터 삽입 시작 */
-        // RealmHelper.deleteTable(of: Record.self)
-        for i in 0 ..< 15 {
-            let record = Record(departure: "departure \(i)",
-                arrival: "arrival \(i)",
-                distance: Double(arc4random_uniform(1000)) / Double(10),
-                ridingTime: Double(arc4random_uniform(1000)) / Double(10),
-                restTime: Double(arc4random_uniform(1000)) / Double(10),
-                averageSpeed: Double(arc4random_uniform(1000)) / Double(10),
-                maximumSpeed: Double(arc4random_uniform(1000)) / Double(10),
-                calories: Double(arc4random_uniform(1000)) / Double(10))
-
-            RealmHelper.add(data: record)
-        }
-        // RealmHelper.deleteTable(of: Trace.self)
+//        RealmHelper.deleteTable(of: Record.self)
+//        for i in 0 ..< 15 {
+//            let record = Record(departure: "departure \(i)",
+//                arrival: "arrival \(i)",
+//                distance: Double(arc4random_uniform(1000)) / Double(10),
+//                ridingTime: Double(arc4random_uniform(1000)) / Double(10),
+//                restTime: Double(arc4random_uniform(1000)) / Double(10),
+//                averageSpeed: Double(arc4random_uniform(1000)) / Double(10),
+//                maximumSpeed: Double(arc4random_uniform(1000)) / Double(10),
+//                calories: Double(arc4random_uniform(1000)) / Double(10))
+//
+//            RealmHelper.add(data: record)
+//        }
+//        RealmHelper.deleteTable(of: Trace.self)
         /* FOR DEBUG: 더미데이터 삽입 끝 */
         
         return true

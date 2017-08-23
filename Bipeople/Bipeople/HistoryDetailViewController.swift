@@ -59,13 +59,19 @@ class HistoryDetailViewController: UIViewController {
             return
         }
         
-        marqueeTitle = MarqueeLabel()
-        
         let predicate = NSPredicate(format: "recordID = %d", recordID)
         traces = Array(RealmHelper.fetch(from: Trace.self, with: predicate))
         
+        if let width = self.navigationController?.navigationBar.frame.width,
+            let height = self.navigationController?.navigationBar.frame.height {
+            
+            marqueeTitle = MarqueeLabel(frame: CGRect(
+                x: 0, y: 0, width: width * 0.7, height: height * 0.9))
+        }
+        
         marqueeTitle?.text = "\(record?.departure ?? "unknown") - \(record?.arrival ?? "unknown")"
         marqueeTitle?.textColor = UIColor.white
+        marqueeTitle?.textAlignment = .center
         titleLabel.titleView = marqueeTitle
         
         distanceLabel.text = "\(record?.distance.roundTo(places: 1) ?? 0) km"
@@ -77,7 +83,6 @@ class HistoryDetailViewController: UIViewController {
         createdAt.text = record?.createdAt.toString()
         
         drawRoute(type: PolyLineType.altitude)
-        
     }
     
     //MARK: Actions

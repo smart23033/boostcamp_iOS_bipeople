@@ -14,7 +14,7 @@ class HistoryTableViewController: UIViewController {
     //MARK: Properties
     
     @IBOutlet weak var tableView: UITableView!
-    var records: [Record]?
+    var records: [Record] = []
     
     //MARK: Life Cycle
     
@@ -34,13 +34,18 @@ class HistoryTableViewController: UIViewController {
     // MARK: Segues
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
         if segue.identifier == "HistoryDetail" {
-            guard let historyDetailViewController = segue.destination as? HistoryDetailViewController,
-                let indexPath = tableView.indexPathForSelectedRow else {
+            
+            guard
+                let historyDetailVC = segue.destination as? HistoryDetailViewController,
+                let indexPath = tableView.indexPathForSelectedRow,
+                indexPath.row < records.count
+            else {
                 return
             }
 
-            historyDetailViewController.record = records?[indexPath.row]
+            historyDetailVC.record = records[indexPath.row]
         }
     }
     
@@ -51,29 +56,41 @@ class HistoryTableViewController: UIViewController {
 extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let count = records?.count{
-            return count
-        } else{
-            return 0
-        }
+        
+        return records.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryCell", for: indexPath) as! HistoryCell
         
-        cell.titleLabel?.text = "\(records?[indexPath.row].departure ?? "unknown") - \(records?[indexPath.row].arrival ?? "unknown")"
-        cell.distanceLabel?.text = "\(records?[indexPath.row].distance.roundTo(places: 1) ?? 0) km"
-        cell.dateLabel?.text = records?[indexPath.row].createdAt.toString()
+        guard indexPath.row < records.count else {
+            return cell
+        }
+        
+        let record = records[indexPath.row]
+        
+        cell.titleLabel?.text = "\(record.departure) - \(record.arrival)"
+        cell.distanceLabel?.text = "\(record.distance.roundTo(places: 1)) km"
+        cell.dateLabel?.text = record.createdAt.toString()
         
         return cell
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        guard indexPath.row < records.count else {
+            return
+        }
+        
+        let record = records[indexPath.row]
+        
         if case .delete = editingStyle {
-            RealmHelper.delete(data: records![indexPath.row])
-            records?.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+            records.remove(at: indexPath.row)
+            RealmHelper.delete(data: record)
+//          tableView.deleteRows(at: [indexPath], with: .fade) // FIXME: 가끔 삭제시 Crash 발생
+            tableView.reloadData()
         }
     }
 }
