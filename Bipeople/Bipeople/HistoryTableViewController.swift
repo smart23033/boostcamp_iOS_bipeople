@@ -93,4 +93,5 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
             tableView.reloadData()
         }
     }
+    
 }

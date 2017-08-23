@@ -64,9 +64,7 @@ class HistoryDetailViewController: UIViewController {
         
         if let width = self.navigationController?.navigationBar.frame.width,
             let height = self.navigationController?.navigationBar.frame.height {
-            
-            marqueeTitle = MarqueeLabel(frame: CGRect(
-                x: 0, y: 0, width: width * 0.7, height: height * 0.9))
+            marqueeTitle = MarqueeLabel(frame: CGRect(x: 0, y: 0, width: width * 0.7, height: height * 0.9))
         }
         
         marqueeTitle?.text = "\(record?.departure ?? "unknown") - \(record?.arrival ?? "unknown")"
