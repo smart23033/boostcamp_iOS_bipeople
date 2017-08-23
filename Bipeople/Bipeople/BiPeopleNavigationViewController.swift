@@ -445,7 +445,6 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
         // print("Updated Location: ", updatedLocation)    // FOR DEBUG
         
         if currentLocation == nil {
-            print(" ???")
             currentLocation = updatedLocation
             navigationMapView.isHidden = false
             
