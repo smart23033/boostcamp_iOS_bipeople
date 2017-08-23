@@ -73,6 +73,7 @@ class HistoryDetailViewController: UIViewController {
         marqueeTitle?.textColor = UIColor.white
         marqueeTitle?.textAlignment = .center
         titleLabel.titleView = marqueeTitle
+        
         distanceLabel.text = "\(record?.distance.roundTo(places: 1) ?? 0) km"
         ridingTimeLabel.text = record?.ridingTime.stringTime
         restTimeLabel.text = record?.restTime.stringTime

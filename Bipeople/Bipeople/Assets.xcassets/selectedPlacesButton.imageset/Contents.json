@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "pressedInfoButton.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "pump.png",
       "scale" : "2x"
     },
     {

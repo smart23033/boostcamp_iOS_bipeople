@@ -11,7 +11,7 @@ import Alamofire
 
 enum PlaceType {
     case toilet
-	case wifi
+    case wifi
     case store(StoreType)
     case none
     
@@ -23,6 +23,19 @@ enum PlaceType {
             return "wifi"
         case let .store(type):
             return type.rawValue
+        default:
+            return ""
+        }
+    }
+    
+    var imageName: String {
+        switch self {
+        case .toilet:
+            return "toilet"
+        case .wifi:
+            return "wifi"
+        case let .store(type):
+            return stringByType(rawValue: type.rawValue)
         default:
             return ""
         }
@@ -41,6 +54,38 @@ enum PlaceType {
             default:
                 self = .none
             }
+        }
+    }
+    
+    func stringByType(rawValue: StoreType.RawValue) -> String {
+        switch rawValue {
+        case "시내_보관대": fallthrough
+        case "한강_보관대":
+            return "parking"
+        case "시내_매장":
+            return "shop"
+        case "시내_대여소": fallthrough
+        case "한강_대여소":
+            return "rental"
+        case "시내_화장실":
+            return "toilet"
+        case "시내_한강다리": fallthrough
+        case "한강_지천다리":
+            return "bridge"
+        case "시내_펌프":
+            return "pump"
+        case "한강_매점":
+            return "shop"
+        case "한강_식수대":
+            return "drinking"
+        case "한강_진출입_계단":
+            return "stairs"
+        case "한강_엘리베이터":
+            return "elevator"
+        case "한강_진출입로_경사":
+            return "entrance"
+        default:
+            return ""
         }
     }
 }

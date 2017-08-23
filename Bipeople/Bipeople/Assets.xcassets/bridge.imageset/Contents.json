@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "bridge.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "bridge.png",
       "scale" : "2x"
     },
     {

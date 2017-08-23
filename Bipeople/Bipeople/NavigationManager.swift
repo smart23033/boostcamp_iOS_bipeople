@@ -192,7 +192,7 @@ class NavigationManager {
         
         if destinationMarker == nil {
             let marker = GMSMarker()
-            marker.icon = GMSMarker.markerImage(with: UIColor.primary)
+            marker.icon = UIImage(named:"arrival")
             
             destinationMarker = marker
         }
@@ -390,7 +390,7 @@ class NavigationManager {
                 let placeLocation = CLLocationCoordinate2D(latitude: place.lat, longitude: place.lng)
                 let marker = GMSMarker(position: placeLocation)
                 
-                marker.icon = UIImage(named: place.placeType.description)
+                marker.icon = UIImage(named: place.placeType.imageName)
                 marker.userData = place
                 
                 DispatchQueue.main.async {
@@ -409,12 +409,18 @@ class NavigationManager {
         for marker in waypointsMarker {
             marker.map = nil
         }
+        var waypointCount = 0
         
         waypointsMarker.removeAll()
         for waypoint in routeWaypoints {
             let marker = GMSMarker()
+            let markerIconView = Bundle.main.loadNibNamed("WaypointMarker", owner: BiPeopleNavigationViewController.self, options: nil)?.first as? WaypointMarker
             
-            marker.icon = GMSMarker.markerImage(with: UIColor.primary)
+            waypointCount += 1
+            
+            markerIconView?.numberLabel.text = "\(waypointCount)"
+            marker.iconView = markerIconView
+            
             marker.position = waypoint.coord
             marker.title = waypoint.placeName
             marker.snippet = waypoint.description
