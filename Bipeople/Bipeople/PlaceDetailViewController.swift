@@ -46,7 +46,7 @@ class PlaceDetailViewController: UIViewController {
         )
         
         let marker = GMSMarker(position: position)
-        marker.icon = UIImage(named: place.placeType.description)
+        marker.icon = UIImage(named: place.placeType.imageName)
         marker.map = placeMapView
     }
     
@@ -68,7 +68,7 @@ extension PlaceDetailViewController: UITableViewDataSource {
         let place = nearPlaces[indexPath.row]
         
         cell.textLabel?.text = place.title
-        cell.accessoryView = UIImageView(image: UIImage(named: place.placeType.description))
+        cell.accessoryView = UIImageView(image: UIImage(named: place.placeType.imageName))
         
         return cell
     }

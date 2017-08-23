@@ -8,19 +8,20 @@
 
 enum StoreType : String, Codable {
     case downtown_parking   = "시내_보관대"
-    case downtown_store     = "시내_매장"
+    case downtown_shop      = "시내_매장"
     case downtown_rental    = "시내_대여소"
-    case downtown_restroom  = "시내_화장실"
+    case downtown_toliet    = "시내_화장실"
     case downtown_bridge    = "시내_한강다리"
     case downtown_pump      = "시내_펌프"
-    case hanriver_shelf     = "한강_보관대"
-    case hanriver_store     = "한강_매점"
+    case hanriver_parking   = "한강_보관대"
+    case hanriver_shop      = "한강_매점"
     case hanriver_rental    = "한강_대여소"
     case hanriver_drink     = "한강_식수대"
-    case hanriver_floor     = "한강_진출입_계단"
+    case hanriver_stairs    = "한강_진출입_계단"
     case hanriver_bridge    = "한강_지천다리"
     case hanriver_elevator  = "한강_엘리베이터"
     case hanriver_access    = "한강_진출입로_경사"
+    case none               = ""
 }
 
 struct PublicStore: Codable {

@@ -40,40 +40,10 @@ class BiPeopleNavigationViewController: UIViewController {
     }
     
     /// 네비게이션 시작 버튼
-    @IBOutlet weak var startButton: UIButton! {
-        didSet {
-            // 출발 버튼을 원형 플로팅 버튼으로 변경
-            startButton.clipsToBounds = true
-            startButton.layer.cornerRadius = startButton.frame.width * 0.5
-            startButton.layer.shadowColor = UIColor.black.cgColor
-            startButton.layer.shadowRadius = 2
-            startButton.layer.shadowOpacity = 0.8
-            startButton.layer.shadowOffset = CGSize.zero
-            startButton.setTitle("출발", for: .normal)
-            startButton.setTitleColor(UIColor.white, for: .normal)
-            startButton.backgroundColor = UIColor.primary
-            startButton.autoresizingMask = []
-        }
-    }
+    @IBOutlet weak var startButton: UIButton!
     
     /// 현재 위치 주변 공공장소를 보여줄지를 결정할 버튼
-    @IBOutlet weak var placesButton: UIButton! {
-        didSet {
-            // 출발 버튼을 원형 플로팅 버튼으로 변경
-            placesButton.clipsToBounds = true
-            placesButton.layer.cornerRadius = placesButton.frame.width * 0.5
-            placesButton.layer.shadowColor = UIColor.black.cgColor
-            placesButton.layer.shadowRadius = 2
-            placesButton.layer.shadowOpacity = 0.8
-            placesButton.layer.shadowOffset = CGSize.zero
-            placesButton.setTitle("off", for: .normal)
-            placesButton.setTitleColor(UIColor.white, for: .normal)
-            placesButton.setTitle("on", for: .selected)
-            placesButton.setTitleColor(UIColor.white, for: .selected)
-            placesButton.backgroundColor = UIColor.primary
-            placesButton.autoresizingMask = []
-        }
-    }
+    @IBOutlet weak var placesButton: UIButton! 
     
     /// 네비게이션에 사용 될 MapView
     @IBOutlet weak var navigationMapView: GMSMapView! {
@@ -190,7 +160,7 @@ class BiPeopleNavigationViewController: UIViewController {
     }
     
     /// 마커가 선택 된 경우, 맵을 선택한 경우 마커 선택이 해제되도록
-    private var selectedMarker: GMSMarker?
+    private var selectedMarker: GMSMarker? 
 
     /// 네비게이션 모드에서 터치 시, 5초 가량 현재위치 화면고정 해제
     private var timeUnlocked: TimeInterval = Date().timeIntervalSince1970
@@ -222,7 +192,6 @@ class BiPeopleNavigationViewController: UIViewController {
         // CLLocationManager 초기화
         locationManager = CLLocationManager()
         locationManager.allowsBackgroundLocationUpdates = true
-        locationManager.showsBackgroundLocationIndicator = true
         locationManager.requestAlwaysAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         locationManager.distanceFilter = 10     // 이전 위치에서 얼마나 거리차가 나면 위치변경 트리거를 실행할지 결정
@@ -394,6 +363,7 @@ class BiPeopleNavigationViewController: UIViewController {
             
             self.navigationManager.setRouteAndWaypoints(from: geoJSON)
             self.navigationManager.drawRoute()
+            
             self.navigationManager.showMarkers()
             
             self.loadingIndicatorView.stopAnimating()
