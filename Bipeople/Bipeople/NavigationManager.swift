@@ -53,12 +53,12 @@ class NavigationManager {
     private var traces: [Trace] = []                    /// 주행 기록의 위치 정보
     
     private var placesResult:[PublicPlace] = []         /// 현재 위치의 주변 공공장소를 보관
-    private var placesMarkers:[String:GMSMarker] = [:]          /// 현재 위치의 주변 공공장소를 지도에 표시해줄 마커
+    private var placesMarkers:[String:GMSMarker] = [:]  /// 현재 위치의 주변 공공장소를 지도에 표시해줄 마커
     
     private let synthesizer: AVSpeechSynthesizer = .init()
     private var lastGuidedIndex: Int = -1
     
-    private var navigationMapView: GMSMapView        /// 네비게이션에 사용될 MapView
+    private var navigationMapView: GMSMapView           /// 네비게이션에 사용될 MapView
     
     init(mapView: GMSMapView) {
         navigationMapView = mapView
@@ -116,9 +116,17 @@ class NavigationManager {
         return -1
     }
     
-    ///
+    /// 다른 뷰 컨트롤러와 공유할 공공장소 정보들
     public var publicPlaces: [PublicPlace] {
         return placesResult
+    }
+    
+    public var expectedDistance: Double {
+        return navigationPath?.length(of: .geodesic) ?? 0
+    }
+    
+    public var estimatedTime: TimeInterval {
+        return expectedDistance / 4
     }
     
     /// 음성 안내
@@ -306,6 +314,8 @@ class NavigationManager {
                 let coordinate = CLLocationCoordinate2D(latitude: coord[1], longitude: coord[0])
                 // print(coordinate)    // FOR DEBUG
                 path.add(coordinate)
+                
+                // print(description)
                 routeWaypoints.append(Waypoint(coord: coordinate, placeName: placeName, description: description))
             } else if case let .array(coords) = coordinates {
                 coords.forEach { coord in
@@ -425,8 +435,7 @@ class NavigationManager {
     public func initDatas() throws {
         
         guard
-            let currentLocation = navigationMapView.myLocation?.coordinate,
-            let destination = destinationMarker?.position
+            let currentLocation = navigationMapView.myLocation?.coordinate
         else {
             record = nil
             
@@ -434,7 +443,7 @@ class NavigationManager {
                 domain: Bundle.main.bundleIdentifier ?? "nil",
                 code: -1,
                 userInfo: [
-                    NSLocalizedDescriptionKey : "First, wait current location updated And set the destination"
+                    NSLocalizedDescriptionKey : "Cannot find current location"
                 ]
             )
             
@@ -466,28 +475,6 @@ class NavigationManager {
             
             try! Realm().write {
                 record.departure = address.thoroughfare ?? ""
-            }
-        }
-        
-        GMSGeocoder().reverseGeocodeCoordinate(destination) { response, error in
-            
-            guard error == nil else {
-                print("Reverse Geocode from current coordinate failed with error: ", error!)    // FOR DEBUG
-                return
-            }
-            
-            guard let record = self.record else {
-                print("Record is not ready")    // FOR DEBUG
-                return
-            }
-            
-            guard let address = response?.firstResult() else {
-                print("Reverse Geocode result is empty")    // FOR DEBUG
-                return
-            }
-            
-            try! Realm().write {
-                record.arrival = address.thoroughfare ?? ""
             }
         }
     }
@@ -541,7 +528,25 @@ class NavigationManager {
     /// 경로 데이터를 저장
     public func saveData() throws {
         
+        guard
+            let currentLocation = navigationMapView.myLocation?.coordinate
+        else {
+            record = nil
+                
+            let error = NSError(
+                domain: Bundle.main.bundleIdentifier ?? "nil",
+                code: -1,
+                userInfo: [
+                    NSLocalizedDescriptionKey : "Cannot find current location"
+                ]
+            )
+            
+            throw error
+        }
+        
         guard let record = record else {
+            
+            
             
             let error = NSError(
                 domain: Bundle.main.bundleIdentifier ?? "nil",
@@ -565,6 +570,28 @@ class NavigationManager {
             )
             
             throw error
+        }
+        
+        GMSGeocoder().reverseGeocodeCoordinate(currentLocation) { response, error in
+            
+            guard error == nil else {
+                print("Reverse Geocode from current coordinate failed with error: ", error!)    // FOR DEBUG
+                return
+            }
+            
+            guard let record = self.record else {
+                print("Record is not ready")    // FOR DEBUG
+                return
+            }
+            
+            guard let address = response?.firstResult() else {
+                print("Reverse Geocode result is empty")    // FOR DEBUG
+                return
+            }
+            
+            try! Realm().write {
+                record.arrival = address.thoroughfare ?? ""
+            }
         }
         
         try! Realm().write {
