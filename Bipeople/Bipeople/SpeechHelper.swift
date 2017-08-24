@@ -20,14 +20,14 @@ class SpeechHelper: NSObject {
         synth.delegate = self
     }
     
-    func say(_ utterance: AVSpeechUtterance) {
+    func say(_ utterance: AVSpeechUtterance, type: AVSpeechBoundary) {
         do {
             try audioSession.setCategory(AVAudioSessionCategoryPlayback, with: AVAudioSessionCategoryOptions.duckOthers)
             try audioSession.setActive(true)
             
             if synth.isSpeaking {
                 print("Speaking has been stopped");
-                synth.stopSpeaking(at: .immediate)
+                synth.stopSpeaking(at: type)
             }
             
             synth.speak(utterance)

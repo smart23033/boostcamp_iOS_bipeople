@@ -171,8 +171,8 @@
 			isa = PBXGroup;
 			children = (
 				F18C67251F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift */,
-				F11F51D71F45CD7800429741 /* PlaceDetailViewController.swift */,
 				A2A2993C1F3C6CF300E31ED9 /* NavigationManager.swift */,
+				F11F51D71F45CD7800429741 /* PlaceDetailViewController.swift */,
 				F19060AE1F3C94DD00DB67B8 /* MarkerInfoWindow.swift */,
 				A2384C4D1F4D65F100009131 /* WaypointMarker.swift */,
 			);

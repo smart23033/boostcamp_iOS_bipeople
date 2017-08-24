@@ -25,7 +25,7 @@ class Properties: Codable {
      */
     var pointIndex: Int?            /// 안내점 노드 순번, 필수 X, Ex) 1
     var direction: String?          /// 방면 명칭, 필수 X, Ex) 직진
-    var intersectionName: String?  /// 교차로 명칭, 필수 X, Ex) - 0: 왕십리역 오거리
+    var intersectionName: String?   /// 교차로 명칭, 필수 X, Ex) - 0: 왕십리역 오거리
     var nearPoiX: String?           /// 안내지점 근방 poi X좌표, 필수 X,
     var nearPoiY: String?           /// 안내지점 근방 poi Y좌표, 필수 X,
     var nearPoiName: String?        /// 안내지점 근방 poi, 필수 X,
