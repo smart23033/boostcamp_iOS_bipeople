@@ -15,13 +15,23 @@ import GooglePlacePicker
 import GeoQueries
 import MarqueeLabel
 
+
+
+// MARK: Enum
+
 enum LiteralString: String {
     case tracking = "Tracking..."
     case apptitle = "BiPeople"
     case unknown = "Unknown"
 }
 
+
+
+// MARK: Class
+
 class BiPeopleNavigationViewController: UIViewController {
+    
+    // MARK: IBOutlet
     
     /// 기록 취소 후 네비게이션 모드 종료 버튼
     @IBOutlet weak var cancelButton: UIBarButtonItem! {
@@ -63,6 +73,10 @@ class BiPeopleNavigationViewController: UIViewController {
     /// 맵을 Reloading 할 때 보여줄 Indicator
     @IBOutlet weak var loadingIndicatorView: UIActivityIndicatorView!
     
+
+    
+    // MARK: Lazy Variable
+    
     /// 구글 장소 자동완성 검색창
     lazy private var searchPlaceController: UISearchController = {
         
@@ -100,16 +114,17 @@ class BiPeopleNavigationViewController: UIViewController {
         return label
     } ()
     
-    /// navigationItem에서 보이지 않게 하기 위해 nil로 만들면
-    /// @IBOutlet weak ~Button들이 메모리 해제 되는 것을 막기 위해 저장
-    private var navigationButtons: [String:UIBarButtonItem] = [:]
     
-    private var currentLocation: CLLocation?    /// 첫 앱 실행 시 현재 위치로 이동시키기 위한 변수
+    
+    // MARK: Private Variable
+    
+    /// navigationItem에서 보이지 않게 하기 위해 버튼을 nil로 만들면 메모리 해제 되는 것을 막기 위해 저장
+    private var navigationButtons: [String:UIBarButtonItem] = [:]
     
     private var navigationManager: NavigationManager!   /// 네비게이션 모드 책임
     private var locationManager: CLLocationManager!     /// 위치정보 책임
     
-    private var zoomLevel: Float = 15.0                 /// 카메라 줌인 정도
+    private var currentLocation: CLLocation?            /// 첫 앱 실행 시 현재 위치로 이동시키기 위한 변수
     
     /// 네비게이션 모드가 실행되거나 종료될 때, UI의 변화를 책임
     private var isNavigationOn: Bool = false {
@@ -165,6 +180,10 @@ class BiPeopleNavigationViewController: UIViewController {
     /// 네비게이션 모드에서 터치 시, 5초 가량 현재위치 화면고정 해제
     private var timeUnlocked: TimeInterval = Date().timeIntervalSince1970
     
+    
+    
+    // MARK: Lifecycle Method
+    
     override func viewDidLoad() {
         
         /*******************************************************************************************/
@@ -204,6 +223,10 @@ class BiPeopleNavigationViewController: UIViewController {
         // NavigationManager 초기화
         navigationManager = NavigationManager(mapView: navigationMapView)
     }
+    
+    
+    
+    // MARK: IBAction
     
     /// 현재 까지의 주행기록을 취소하는 버튼
     @IBAction func didTapCancelButton(_ sender: Any) {
@@ -318,11 +341,6 @@ class BiPeopleNavigationViewController: UIViewController {
         }
     }
     
-    /// t초 가량 화면 고정을 해제
-    private func unpinScreen(for second: Double) {
-        timeUnlocked = Date().timeIntervalSince1970 + second
-    }
-    
     @IBAction func didTapView(_ sender: Any) {
         unpinScreen(for: 5)
     }
@@ -349,6 +367,15 @@ class BiPeopleNavigationViewController: UIViewController {
     
     @IBAction func didLongPressView(_ sender: Any) {
         unpinScreen(for: 5)
+    }
+    
+    
+    
+    // MARK: Private Method
+    
+    /// 인자로 받은 시간만큼 화면 고정을 해제
+    private func unpinScreen(for second: Double) {
+        timeUnlocked = Date().timeIntervalSince1970 + second
     }
     
     /// 현재위치에서 목적지까지의 경로를 갖고와 맵에 표시
@@ -429,7 +456,7 @@ class BiPeopleNavigationViewController: UIViewController {
     }
     
     /// 맵을 coordinate 위치로 이동시키고, bearing 방향으로 회전시킴
-    func moveMap(coordinate: CLLocationCoordinate2D?, bearing: CLLocationDirection = -1) {
+    private func moveMap(coordinate: CLLocationCoordinate2D?, bearing: CLLocationDirection = -1) {
         
         guard let coord = coordinate else {
             return
@@ -437,7 +464,7 @@ class BiPeopleNavigationViewController: UIViewController {
         
         let camera = GMSCameraPosition.camera(
             withTarget: coord,
-            zoom: zoomLevel,
+            zoom: 15.0,
             bearing: bearing,
             viewingAngle: -1
         )
@@ -504,6 +531,10 @@ class BiPeopleNavigationViewController: UIViewController {
         }
     }
 }
+
+
+
+// MARK: Exteinsion
 
 /// CoreLocation 네비게이션 작동 시에 사용
 extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
