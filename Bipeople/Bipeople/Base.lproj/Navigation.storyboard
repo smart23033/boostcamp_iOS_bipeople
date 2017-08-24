@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13156.2"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -77,6 +76,18 @@
                                     <action selector="didTapStartButton:" destination="MC0-9L-o62" eventType="touchUpInside" id="C5M-7g-gQi"/>
                                 </connections>
                             </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Enz-5l-hfU">
+                                <rect key="frame" x="309" y="477" width="58" height="58"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="58" id="c1b-lg-2A2"/>
+                                </constraints>
+                                <state key="normal" title="Button">
+                                    <color key="titleColor" red="0.41885125637054443" green="0.87518250942230225" blue="0.91042119264602661" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="didTapClearButton:" destination="MC0-9L-o62" eventType="touchUpInside" id="Gmp-9O-qPh"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
@@ -89,9 +100,12 @@
                             <constraint firstItem="aC5-W2-0Gn" firstAttribute="leading" secondItem="yJC-rw-kB1" secondAttribute="leading" id="Gnz-mG-G3d"/>
                             <constraint firstItem="pjH-rm-9aE" firstAttribute="bottom" secondItem="XbL-LW-ZKV" secondAttribute="top" id="LGT-E5-AHf"/>
                             <constraint firstItem="68s-vc-AQZ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="yJC-rw-kB1" secondAttribute="leading" constant="20" symbolic="YES" id="POb-16-BDM"/>
+                            <constraint firstItem="Enz-5l-hfU" firstAttribute="leading" secondItem="Nhe-9Y-JBH" secondAttribute="leading" id="YYP-lJ-jmv"/>
                             <constraint firstItem="Nhe-9Y-JBH" firstAttribute="trailing" secondItem="68s-vc-AQZ" secondAttribute="trailing" id="ZrR-mX-XSp"/>
                             <constraint firstItem="pjH-rm-9aE" firstAttribute="leading" secondItem="yJC-rw-kB1" secondAttribute="leading" id="c3n-yC-yPR"/>
+                            <constraint firstItem="Enz-5l-hfU" firstAttribute="trailing" secondItem="Nhe-9Y-JBH" secondAttribute="trailing" id="cTV-J9-eRB"/>
                             <constraint firstAttribute="trailing" secondItem="68s-vc-AQZ" secondAttribute="trailing" constant="8" id="fNg-fu-8TZ"/>
+                            <constraint firstItem="Nhe-9Y-JBH" firstAttribute="top" secondItem="Enz-5l-hfU" secondAttribute="bottom" constant="4" id="jaU-Sw-6UW"/>
                             <constraint firstItem="aC5-W2-0Gn" firstAttribute="trailing" secondItem="yJC-rw-kB1" secondAttribute="trailing" id="mR1-eI-SoQ"/>
                             <constraint firstItem="aC5-W2-0Gn" firstAttribute="bottom" secondItem="XbL-LW-ZKV" secondAttribute="top" id="oT8-n2-c9J"/>
                             <constraint firstItem="Nhe-9Y-JBH" firstAttribute="leading" secondItem="68s-vc-AQZ" secondAttribute="leading" id="rXQ-mu-Qc9"/>
@@ -123,6 +137,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="cancelButton" destination="PmP-QK-R8S" id="zWS-my-ZKW"/>
+                        <outlet property="clearButton" destination="Enz-5l-hfU" id="025-ST-yv4"/>
                         <outlet property="doneButton" destination="B5E-8w-wya" id="7i8-g3-5ug"/>
                         <outlet property="loadingIndicatorView" destination="aC5-W2-0Gn" id="SBU-V2-Msa"/>
                         <outlet property="navigationMapView" destination="pjH-rm-9aE" id="rhm-CF-b6J"/>

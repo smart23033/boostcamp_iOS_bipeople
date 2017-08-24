@@ -69,13 +69,17 @@ class NavigationManager {
         case waypoint(Int)
         case offroad
         case onroad
+        case freeride
         case error
     }
     
     public var currentStatus: NavigationStatus {
         
+        guard routeWaypoints.count > 0 else {
+            return .freeride
+        }
+        
         guard
-            routeWaypoints.count > 0,
             let currentLocation = navigationMapView.myLocation,
             let navigationPath = navigationPath
         else {
@@ -117,33 +121,39 @@ class NavigationManager {
     
     /// 음성 안내
     public func voiceGuidance(index: Int) {
-
-        guard
-            index == Int.max || index == Int.min ||
-            ((0 <= index && index < routeWaypoints.count) && index > lastGuidedIndex)
-        else {
-            print("index: \(index), lastGuidedIndex: \(lastGuidedIndex)")
-            return
-        }
     
         var speechString: String = ""
+        var speechType: AVSpeechBoundary = .word
         switch index {
-            case Int.max:
-                print("종료")
-                speechString = "안내를 종료합니다"
-            case Int.min:
-                print("안내시작/경로이탈")
-                speechString = "경로를 설정 합니다"
-            default:
-                print(routeWaypoints[index].description)
-                speechString = routeWaypoints[index].description
+            
+        case Int.max:
+            print("종료")
+            speechString = "기록을 종료합니다"
+            speechType = .immediate
+            
+        case Int.min:
+            print("경로이탈")
+            speechString = "경로를 재설정 합니다"
+            speechType = .immediate
+            
+        case _ where routeWaypoints.count == 0 && lastGuidedIndex < index:
+            print("자유주행")
+            speechString = "기록을 시작합니다"
+            speechType = .immediate
+            
+        case _ where (0 <= index && index < routeWaypoints.count) && lastGuidedIndex < index:
+            print(routeWaypoints[index].description)
+            speechString = routeWaypoints[index].description
+            
+        default:
+            return
         }
         
         let utterance = AVSpeechUtterance(string: speechString)
         utterance.voice = AVSpeechSynthesisVoice(language: "ko-KR")
         utterance.rate = 0.4
         
-        SpeechHelper.shared.say(utterance)
+        SpeechHelper.shared.say(utterance, type: speechType)
         
         lastGuidedIndex = index
     }
@@ -423,8 +433,18 @@ class NavigationManager {
         }
     }
     
+    public func clearRoute() {
+        
+        routeWaypoints = []
+        navigationPath = nil
+        
+        navigationMapView.clear()
+    }
+    
     /// 경로 데이터를 초기화
     public func initDatas() throws {
+        
+        lastGuidedIndex = -1
         
         guard
             let currentLocation = navigationMapView.myLocation
@@ -447,7 +467,7 @@ class NavigationManager {
             traces.removeAll()
         }
         
-        CLGeocoder().reverseGeocodeLocation(currentLocation, preferredLocale: Locale(identifier: "ko")) { response, error in
+        GMSGeocoder().reverseGeocodeCoordinate(currentLocation.coordinate) { response, error in
             
             guard error == nil else {
                 print("Reverse Geocode from current coordinate failed with error: ", error!)    // FOR DEBUG
@@ -460,15 +480,14 @@ class NavigationManager {
             }
             
             guard
-                let address1 = response?.first?.thoroughfare,
-                let address2 = response?.first?.subThoroughfare
+                let address = response?.firstResult()?.thoroughfare
                 else {
                     print("Reverse Geocode result is empty")    // FOR DEBUG
                     return
             }
             
             try! Realm().write {
-                record.departure = address1.appending(" ").appending(address2)
+                record.departure = address
             }
         }
     }
@@ -551,7 +570,7 @@ class NavigationManager {
             throw error
         }
         
-        CLGeocoder().reverseGeocodeLocation(currentLocation, preferredLocale: Locale(identifier: "ko")) { response, error in
+        GMSGeocoder().reverseGeocodeCoordinate(currentLocation.coordinate) { response, error in
             
             guard error == nil else {
                 print("Reverse Geocode from current coordinate failed with error: ", error!)    // FOR DEBUG
@@ -565,15 +584,14 @@ class NavigationManager {
             }
             
             guard
-                let address1 = response?.first?.thoroughfare,
-                let address2 = response?.first?.subThoroughfare
+                let address = response?.firstResult()?.thoroughfare
             else {
                 print("Reverse Geocode result is empty")    // FOR DEBUG
                 return
             }
             
             try! Realm().write {
-                record.arrival = address1.appending(" ").appending(address2)
+                record.arrival = address
             }
         }
         
