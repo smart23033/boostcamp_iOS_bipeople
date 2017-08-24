@@ -132,7 +132,6 @@ class BiPeopleNavigationViewController: UIViewController {
             if newVal {
                 do {
                     try navigationManager.initDatas()
-                    
                     marqueeTitle.text = LiteralString.tracking.rawValue
                     
                     self.navigationItem.titleView = marqueeTitle
@@ -260,6 +259,7 @@ class BiPeopleNavigationViewController: UIViewController {
             
             self.isNavigationOn = false
             self.trySaveData()
+            try? self.navigationManager.initDatas()
         })
         
         self.present(confirmAlert, animated: true)
@@ -583,6 +583,7 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
         
         // 사용자의 사용이 없는 경우 맵의 중심을 현재 위치로
         if timeUnlocked < Date().timeIntervalSince1970 {
+
             let bearing = navigationManager.calculateBearing(to: updatedLocation)
             moveMap(coordinate: updatedLocation.coordinate, bearing: bearing)
         }

@@ -47,6 +47,15 @@ public class RealmHelper: NSObject {
         }
     }
     
+    class func delete<T: Object>(data: T.Type, with predicate: NSPredicate) {
+        
+        let results = realm.objects(T.self).filter(predicate)
+        
+        try! realm.write {
+            realm.delete(results)
+        }
+    }
+    
     class func deleteAll() {
         
         try! realm.write {
