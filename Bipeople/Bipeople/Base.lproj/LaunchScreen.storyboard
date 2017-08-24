@@ -5,8 +5,15 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13156.2"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Savoye.ttc">
+            <string>SavoyeLetPlain</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="EHf-IW-A2E">
@@ -20,23 +27,44 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bipeople" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cVx-jZ-pvN">
-                                <rect key="frame" x="78" y="298.5" width="218.5" height="70.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="59"/>
-                                <nil key="textColor"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Background" translatesAutoresizingMaskIntoConstraints="NO" id="Wwl-0Q-xPe">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cyclist" translatesAutoresizingMaskIntoConstraints="NO" id="boL-Gb-YQK">
+                                <rect key="frame" x="94" y="200" width="187.5" height="167.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="boL-Gb-YQK" secondAttribute="height" multiplier="28:25" id="5fv-1y-6Ah"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bipeople" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gwI-AY-Ysb">
+                                <rect key="frame" x="94" y="387.5" width="187.5" height="84.5"/>
+                                <fontDescription key="fontDescription" name="SavoyeLetPlain" family="Savoye LET" pointSize="71"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="cVx-jZ-pvN" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Lkw-Fb-5a4"/>
-                            <constraint firstItem="cVx-jZ-pvN" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="cTz-vx-v4c"/>
+                            <constraint firstItem="Wwl-0Q-xPe" firstAttribute="bottom" secondItem="xb3-aO-Qok" secondAttribute="top" id="6fb-ZM-BOK"/>
+                            <constraint firstItem="boL-Gb-YQK" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="8qC-ki-UBI"/>
+                            <constraint firstItem="boL-Gb-YQK" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" multiplier="10" id="Iu2-WJ-FeQ"/>
+                            <constraint firstItem="gwI-AY-Ysb" firstAttribute="top" secondItem="boL-Gb-YQK" secondAttribute="bottom" constant="20" id="J9J-ZZ-lnf"/>
+                            <constraint firstItem="Wwl-0Q-xPe" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="LHg-4Q-z5N"/>
+                            <constraint firstItem="gwI-AY-Ysb" firstAttribute="trailing" secondItem="boL-Gb-YQK" secondAttribute="trailing" id="TtF-u2-lCi"/>
+                            <constraint firstItem="boL-Gb-YQK" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" multiplier="0.5" id="bC4-Xh-bmf"/>
+                            <constraint firstItem="gwI-AY-Ysb" firstAttribute="leading" secondItem="boL-Gb-YQK" secondAttribute="leading" id="hQp-Gm-37x"/>
+                            <constraint firstItem="Wwl-0Q-xPe" firstAttribute="trailing" secondItem="Ze5-6b-2t3" secondAttribute="trailing" id="rHa-ll-Hew"/>
+                            <constraint firstItem="Wwl-0Q-xPe" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="tZT-aa-ywp"/>
                         </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="375"/>
+            <point key="canvasLocation" x="52" y="374.66266866566718"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Background" width="512" height="512"/>
+        <image name="cyclist" width="549" height="491"/>
+    </resources>
 </document>

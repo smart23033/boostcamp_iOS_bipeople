@@ -91,6 +91,7 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
             RealmHelper.delete(data: record)
 //          tableView.deleteRows(at: [indexPath], with: .fade) // FIXME: 가끔 삭제시 Crash 발생
             tableView.reloadData()
+            
         }
     }
     

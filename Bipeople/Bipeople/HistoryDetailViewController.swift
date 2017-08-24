@@ -88,7 +88,7 @@ class HistoryDetailViewController: UIViewController {
     @IBAction func didTapFilterLabel(_ sender: UITapGestureRecognizer) {
         
         let alertView = UIAlertController(
-            title: "Select item from list",
+            title: "원하는 정렬을 선택하시오",
             message: "\n\n\n\n\n\n\n",
             preferredStyle: .actionSheet)
         

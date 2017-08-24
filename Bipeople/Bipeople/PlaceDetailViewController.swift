@@ -25,7 +25,7 @@ class PlaceDetailViewController: UIViewController {
     var isNavigationOn: Bool = false
     
     lazy var findRouteButton: UIBarButtonItem = .init(title: "이동", style: .done, target: self, action: nil)
-    lazy var backButton: UIBarButtonItem = .init(title: "뒤로가기", style: .done, target: self, action: #selector(popAllViewControllers))
+    lazy var backButton: UIBarButtonItem = .init(title: "뒤로", style: .done, target: self, action: #selector(popAllViewControllers))
     
     func findRouteAndDrawForPlace() {
         

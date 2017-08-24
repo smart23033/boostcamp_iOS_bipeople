@@ -96,7 +96,7 @@ class GraphViewController: UIViewController {
             }
         }
     }
-
+    
     var records: [Record] = []
     
     private var graphView: ScrollableGraphView?
@@ -198,11 +198,11 @@ class GraphViewController: UIViewController {
         
         self.averageSpeed = self.averageSpeed! / Double(records.count)
         
-//        let days = self.ridingTime?.days
+        //        let days = self.ridingTime?.days
         let hours = self.ridingTime?.hours
         let minutes = self.ridingTime?.minutes
         let seconds = self.ridingTime?.seconds
-            
+        
         self.distanceLabel.countFromZero(to: Float(self.distance ?? 0))
         self.averageSpeedLabel.countFromZero(to: Float(self.averageSpeed ?? 0))
         self.caloriesLabel.countFromZero(to: Float(self.calories ?? 0))
@@ -214,7 +214,7 @@ class GraphViewController: UIViewController {
     }
     
     //날짜별 데이터 획득
-    func getDataWithDate(type: GraphType ,startDate: Date, endDate: Date) -> [String:Double] {
+    func getDataWithDate(type: GraphType, startDate: Date, endDate: Date) -> [String:Double] {
         
         var datas: [String:Double] = [:]
         var data = Double()
@@ -246,7 +246,7 @@ class GraphViewController: UIViewController {
             let selectedSegment = Segments(rawValue: segmentedControl.selectedSegmentIndex)!
             
             var countForAverageSpeed = 1.0
-
+            
             switch selectedSegment {
             case .day:
                 if datas[record.createdAt.toString()] != nil {
@@ -261,45 +261,51 @@ class GraphViewController: UIViewController {
                 }
                 
             case .week:
+                print("count: ", records.count)
+                
                 guard var startDateOfWeek = Calendar.current.dateInterval(of: .weekOfYear, for: records[0].createdAt)?.start else {
                     return [:]
                 }
+                
+                //첫주 데이터 넣으려고 넣은 한줄
                 datas[startDateOfWeek.toString()] = data
                 
-                records.forEach { (record) in
-                    if startDateOfWeek == Calendar.current.dateInterval(of: .weekOfYear, for: record.createdAt)?.start {
-                        datas[startDateOfWeek.toString()]! += data
-                        countForAverageSpeed += 1
-                    }
-                    else {
-                        startDateOfWeek = (Calendar.current.dateInterval(of: .weekOfYear, for: record.createdAt)?.start)!
-                        datas[startDateOfWeek.toString()] = data
-                    }
-                    
-                    if type == .averageSpeed {
-                        datas[startDateOfWeek.toString()]! /= countForAverageSpeed
-                    }
+                
+                if startDateOfWeek == Calendar.current.dateInterval(of: .weekOfYear, for: record.createdAt)?.start {
+                    datas[startDateOfWeek.toString()]! += data
+                    countForAverageSpeed += 1
                 }
+                else {
+                    startDateOfWeek = (Calendar.current.dateInterval(of: .weekOfYear, for: record.createdAt)?.start)!
+                    datas[startDateOfWeek.toString()] = data
+                }
+                
+                if type == .averageSpeed {
+                    datas[startDateOfWeek.toString()]! /= countForAverageSpeed
+                }
+                
+                
             case .month:
                 guard var startDateOfMonth = Calendar.current.dateInterval(of: .month, for: records[0].createdAt)?.start else {
                     return [:]
                 }
+                
+                //첫달 데이터넣으려고
                 datas[startDateOfMonth.toString()] = data
                 
-                records.forEach { (record) in
-                    if startDateOfMonth == Calendar.current.dateInterval(of: .month, for: record.createdAt)?.start {
-                        datas[startDateOfMonth.toString()]! += data
-                        countForAverageSpeed += 1
-                    }
-                    else {
-                        startDateOfMonth = (Calendar.current.dateInterval(of: .month, for: record.createdAt)?.start)!
-                        datas[startDateOfMonth.toString()] = data
-                    }
-                    
-                    if type == .averageSpeed {
-                        datas[startDateOfMonth.toString()]! /= countForAverageSpeed
-                    }
+                if startDateOfMonth == Calendar.current.dateInterval(of: .month, for: record.createdAt)?.start {
+                    datas[startDateOfMonth.toString()]! += data
+                    countForAverageSpeed += 1
                 }
+                else {
+                    startDateOfMonth = (Calendar.current.dateInterval(of: .month, for: record.createdAt)?.start)!
+                    datas[startDateOfMonth.toString()] = data
+                }
+                
+                if type == .averageSpeed {
+                    datas[startDateOfMonth.toString()]! /= countForAverageSpeed
+                }
+                
             }
         }
         
@@ -309,10 +315,7 @@ class GraphViewController: UIViewController {
     //MARK: Actions
     
     @IBAction func didChangeSegControl(_ sender: UISegmentedControl) {
-        
         reloadGraph()
-//        reloadDataSheet()
-        
     }
     
     @IBAction func didTapFilterLabel(_ sender: UITapGestureRecognizer) {
@@ -330,18 +333,15 @@ class GraphViewController: UIViewController {
         
         alertView.view.addSubview(pickerView)
         
-        let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil)
+        let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { _ in
+            self.reloadGraph()
+            self.reloadDataSheet()
+        })
         
         alertView.addAction(action)
         
         present(alertView, animated: true, completion: { () -> Void in
             pickerView.frame.size.width = alertView.view.frame.size.width
-            
-            self.selectedValue = self.pickerData[0]
-            self.filterLabel.text = GraphType.distance.rawValue
-            self.reloadGraph()
-            self.reloadDataSheet()
-            
         })
     }
     
@@ -537,9 +537,6 @@ extension GraphViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     {
         selectedValue = pickerData[pickerView.selectedRow(inComponent: 0)]
         filterLabel.text = selectedValue.rawValue
-        
-        reloadGraph()
-        reloadDataSheet()
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
