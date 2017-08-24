@@ -13,6 +13,11 @@ import Alamofire
 import RealmSwift
 import AVFoundation
 
+
+
+// MARK: Enum
+
+/// T Map API 사용 중 발생 가능한 에러
 enum TmapAPIError: Error {
     case invalidCurrentLocation
     case invalidDestination
@@ -22,14 +27,35 @@ enum TmapAPIError: Error {
     case unknown
 }
 
-struct Waypoint {
-    
-    var coord: CLLocationCoordinate2D
-    var placeName: String
-    var description: String
+/// 네비게이션 작동 중 가능한 상태
+enum NavigationStatus {
+    case arrived        // 도착
+    case waypoint(Int)  // 중간경유
+    case offroad        // 경로이탈
+    case onroad         // 정상주행
+    case freeride       // 자유주행
+    case error          // 에러
 }
 
+
+
+// MARK: Struct
+
+/// 경유지 구조체
+struct Waypoint {
+    
+    var coord: CLLocationCoordinate2D   // 위치
+    var placeName: String               // 지명
+    var description: String             // 음성 안내 문구
+}
+
+
+
+// MARK: Class
+
 class NavigationManager {
+    
+    // MARK: Private Static Variable
     
     private static let TMAP_API_URL: String = "https://apis.skplanetx.com/tmap/routes/pedestrian"
     private static let VERSION: Int         = 1
@@ -40,6 +66,10 @@ class NavigationManager {
     private static let MINIMUM_RIDING_VELOCITY: Double      = 0.5   /// 단위 m/sec
     private static let RIDING_VELOCITY_THRESHOLD: Double    = 16    /// 단위 m/sec
     private static let PUBLIC_PLACE_SEARCH_RADIUS: Double   = 500.0 /// 단위는 미터(m)
+    
+    
+    
+    // MARK: Private Variable
     
     private var navigationRoute: GMSPolyline?           /// 맵에 표시될 경로
     private var navigationPath: GMSMutablePath?         /// 맵에 표시될 경로의 꼭지점들
@@ -55,27 +85,29 @@ class NavigationManager {
     private var placesResult:[PublicPlace] = []         /// 현재 위치의 주변 공공장소를 보관
     private var placesMarkers:[String:GMSMarker] = [:]  /// 현재 위치의 주변 공공장소를 지도에 표시해줄 마커
     
-    private let synthesizer: AVSpeechSynthesizer = .init()
-    private var lastGuidedIndex: Int = -1
+    private var lastGuidedIndex: Int = -1               /// 마지막으로 경유한 곳을 저장
     
     private var navigationMapView: GMSMapView           /// 네비게이션에 사용될 MapView
+    
+    
+    
+    // MARK: Initializer
     
     init(mapView: GMSMapView) {
         navigationMapView = mapView
     }
     
-    enum NavigationStatus {
-        case arrived
-        case waypoint(Int)
-        case offroad
-        case onroad
-        case error
-    }
+    
+    
+    // MARK: Public Variable
     
     public var currentStatus: NavigationStatus {
         
+        guard routeWaypoints.count > 0 else {
+            return .freeride
+        }
+        
         guard
-            routeWaypoints.count > 0,
             let currentLocation = navigationMapView.myLocation,
             let navigationPath = navigationPath
         else {
@@ -115,41 +147,23 @@ class NavigationManager {
         return expectedDistance / 4
     }
     
-    /// 음성 안내
-    public func voiceGuidance(index: Int) {
-
-        guard
-            index == Int.max || index == Int.min ||
-            ((0 <= index && index < routeWaypoints.count) && index > lastGuidedIndex)
-        else {
-            print("index: \(index), lastGuidedIndex: \(lastGuidedIndex)")
-            return
-        }
     
-        var speechString: String = ""
-        switch index {
-            case Int.max:
-                print("종료")
-                speechString = "안내를 종료합니다"
-            case Int.min:
-                print("안내시작/경로이탈")
-                speechString = "경로를 설정 합니다"
-            default:
-                print(routeWaypoints[index].description)
-                speechString = routeWaypoints[index].description
-        }
+    
+    // MARK: Private Method
+    
+    private func degreesToRadians(degrees: Double) -> Double {
         
-        let utterance = AVSpeechUtterance(string: speechString)
-        utterance.voice = AVSpeechSynthesisVoice(language: "ko-KR")
-        utterance.rate = 0.4
-        
-        SpeechHelper.shared.say(utterance)
-        
-        lastGuidedIndex = index
+        return degrees * .pi / 180.0
     }
     
-    private func degreesToRadians(degrees: Double) -> Double { return degrees * .pi / 180.0 }
-    private func radiansToDegrees(radians: Double) -> Double { return radians * 180.0 / .pi }
+    private func radiansToDegrees(radians: Double) -> Double {
+        
+        return radians * 180.0 / .pi
+    }
+    
+    
+    
+    // MARK: Public Method
     
     /// 마지막 위치와 비교하여 진행 방향을 계산해 반환
     public func calculateBearing(to : CLLocation) -> CLLocationDirection {
@@ -423,8 +437,59 @@ class NavigationManager {
         }
     }
     
+    /// 음성 안내
+    public func voiceGuidance(index: Int) {
+        
+        var speechString: String = ""
+        var speechType: AVSpeechBoundary = .word
+        switch index {
+            
+        case Int.max:
+            print("종료")
+            speechString = "기록을 종료합니다"
+            speechType = .immediate
+            
+        case Int.min:
+            print("경로이탈")
+            speechString = "경로를 재설정 합니다"
+            speechType = .immediate
+            
+        case _ where routeWaypoints.count == 0 && lastGuidedIndex < index:
+            print("자유주행")
+            speechString = "기록을 시작합니다"
+            speechType = .immediate
+            
+        case _ where (0 <= index && index < routeWaypoints.count) && lastGuidedIndex < index:
+            print(routeWaypoints[index].description)
+            speechString = routeWaypoints[index].description
+            
+        default:
+            return
+        }
+        
+        let utterance = AVSpeechUtterance(string: speechString)
+        utterance.voice = AVSpeechSynthesisVoice(language: "ko-KR")
+        utterance.rate = 0.4
+        
+        SpeechHelper.shared.say(utterance, type: speechType)
+        
+        lastGuidedIndex = index
+    }
+    
+    /// 경로 및 목적지 초기화
+    public func clearRoute() {
+        
+        routeWaypoints = []
+        navigationPath = nil
+        destinationMarker = nil
+        
+        navigationMapView.clear()
+    }
+    
     /// 경로 데이터를 초기화
     public func initDatas() throws {
+        
+        lastGuidedIndex = -1
         
         guard
             let currentLocation = navigationMapView.myLocation
@@ -447,7 +512,8 @@ class NavigationManager {
             traces.removeAll()
         }
         
-        CLGeocoder().reverseGeocodeLocation(currentLocation, preferredLocale: Locale(identifier: "ko")) { response, error in
+        // 위치를 통해 지명을 가져온다
+        GMSGeocoder().reverseGeocodeCoordinate(currentLocation.coordinate) { response, error in
             
             guard error == nil else {
                 print("Reverse Geocode from current coordinate failed with error: ", error!)    // FOR DEBUG
@@ -460,15 +526,14 @@ class NavigationManager {
             }
             
             guard
-                let address1 = response?.first?.thoroughfare,
-                let address2 = response?.first?.subThoroughfare
+                let address = response?.firstResult()?.thoroughfare
                 else {
                     print("Reverse Geocode result is empty")    // FOR DEBUG
                     return
             }
             
             try! Realm().write {
-                record.departure = address1.appending(" ").appending(address2)
+                record.departure = address
             }
         }
     }
@@ -551,7 +616,8 @@ class NavigationManager {
             throw error
         }
         
-        CLGeocoder().reverseGeocodeLocation(currentLocation, preferredLocale: Locale(identifier: "ko")) { response, error in
+        // 위치를 통해 지명을 가져온다
+        GMSGeocoder().reverseGeocodeCoordinate(currentLocation.coordinate) { response, error in
             
             guard error == nil else {
                 print("Reverse Geocode from current coordinate failed with error: ", error!)    // FOR DEBUG
@@ -565,15 +631,14 @@ class NavigationManager {
             }
             
             guard
-                let address1 = response?.first?.thoroughfare,
-                let address2 = response?.first?.subThoroughfare
+                let address = response?.firstResult()?.thoroughfare
             else {
                 print("Reverse Geocode result is empty")    // FOR DEBUG
                 return
             }
             
             try! Realm().write {
-                record.arrival = address1.appending(" ").appending(address2)
+                record.arrival = address
             }
         }
         
