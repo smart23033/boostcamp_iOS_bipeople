@@ -87,11 +87,14 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
         
         if case .delete = editingStyle {
             
+            let predicate = NSPredicate(format: "recordID = %d", record._id)
+            RealmHelper.delete(data: Trace.self, with: predicate)
+          
             records.remove(at: indexPath.row)
             RealmHelper.delete(data: record)
+            
 //          tableView.deleteRows(at: [indexPath], with: .fade) // FIXME: 가끔 삭제시 Crash 발생
             tableView.reloadData()
-            
         }
     }
     

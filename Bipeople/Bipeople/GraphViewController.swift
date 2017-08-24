@@ -261,7 +261,6 @@ class GraphViewController: UIViewController {
                 }
                 
             case .week:
-                print("count: ", records.count)
                 
                 guard var startDateOfWeek = Calendar.current.dateInterval(of: .weekOfYear, for: records[0].createdAt)?.start else {
                     return [:]
@@ -320,7 +319,7 @@ class GraphViewController: UIViewController {
     
     @IBAction func didTapFilterLabel(_ sender: UITapGestureRecognizer) {
         let alertView = UIAlertController(
-            title: "Select item from list",
+            title: "원하는 정렬을 선택하세요",
             message: "\n\n\n\n\n\n\n",
             preferredStyle: .actionSheet)
         
@@ -334,6 +333,9 @@ class GraphViewController: UIViewController {
         alertView.view.addSubview(pickerView)
         
         let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { _ in
+            
+            self.filterLabel.text = self.selectedValue.rawValue
+                
             self.reloadGraph()
             self.reloadDataSheet()
         })
@@ -342,6 +344,9 @@ class GraphViewController: UIViewController {
         
         present(alertView, animated: true, completion: { () -> Void in
             pickerView.frame.size.width = alertView.view.frame.size.width
+            
+            self.selectedValue = .distance
+            
         })
     }
     
@@ -536,7 +541,6 @@ extension GraphViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     {
         selectedValue = pickerData[pickerView.selectedRow(inComponent: 0)]
-        filterLabel.text = selectedValue.rawValue
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {

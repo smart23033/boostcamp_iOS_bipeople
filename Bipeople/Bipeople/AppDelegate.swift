@@ -22,6 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         print(Realm.Configuration.defaultConfiguration.fileURL ?? "No path for realm") // FOR DEBUG
         
+        UIApplication.shared.isStatusBarHidden = false
+        
         // RealmHelper.deleteAll() // FOR DEBUG
         updatePublicPlaceInfoFromNetwork()
         /**

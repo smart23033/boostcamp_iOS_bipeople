@@ -526,7 +526,7 @@ class NavigationManager {
         
         try! Realm().write {
             record = Record(flag: true)
-            traces.removeAll()
+            traces = []
         }
         
         // 위치를 통해 지명을 가져온다
