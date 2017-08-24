@@ -208,6 +208,13 @@ class NavigationManager {
         marker.snippet = place.formattedAddress ?? LiteralString.unknown.rawValue
     }
     
+    /// 도착지 마커를 삭제
+    public func removeDestination() {
+        
+        destinationMarker?.map = nil
+        destinationMarker = nil
+    }
+    
     /// T Map GeoJSON API로 현재 위치에서 목적지 까지의 경로를 가져온다
     public func getGeoJSONFromTMap(failure: @escaping (Error) -> Void, success: @escaping (Data) throws -> Void) {
         
@@ -402,16 +409,22 @@ class NavigationManager {
         }
     }
     
-    /// 경유지와 도착지에 마커를 맵에 뿌림
-    public func showMarkers() {
+    /// Clear previous marker from map
+    public func clearMarkers() {
         
-        // Clear previous marker from map
         for marker in waypointsMarker {
             marker.map = nil
         }
-        var waypointCount = 0
         
         waypointsMarker.removeAll()
+    }
+    
+    /// 경유지와 도착지에 마커를 맵에 뿌림
+    public func showMarkers() {
+        
+        clearMarkers()
+        
+        var waypointCount = 0
         for waypoint in routeWaypoints {
             let marker = GMSMarker()
             let markerIconView = Bundle.main.loadNibNamed("WaypointMarker", owner: BiPeopleNavigationViewController.self, options: nil)?.first as? WaypointMarker
@@ -479,11 +492,15 @@ class NavigationManager {
     /// 경로 및 목적지 초기화
     public func clearRoute() {
         
-        routeWaypoints = []
         navigationPath = nil
-        destinationMarker = nil
         
-        navigationMapView.clear()
+        navigationRoute?.map = nil
+        navigationRoute = nil
+        
+        routeWaypoints = []
+        clearMarkers()
+        
+        removeDestination()
     }
     
     /// 경로 데이터를 초기화

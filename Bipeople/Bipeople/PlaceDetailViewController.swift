@@ -17,27 +17,39 @@ class PlaceDetailViewController: UIViewController {
     @IBOutlet var placeMapView: GMSMapView!
     @IBOutlet var placesTableView: UITableView!
     
+    
     //MARK: Properties
     
-    var selectedPlace : PublicPlace?
-    var nearPlaces: [PublicPlace] = []
-    var sameTypePlaces: [PublicPlace] = []
-    var isNavigationOn: Bool = false
+    public var selectedPlace : PublicPlace?
+    public var nearPlaces: [PublicPlace] = []
+    public var sameTypePlaces: [PublicPlace] = []
+    public var isNavigationOn: Bool = false
+
     
-    lazy var findRouteButton: UIBarButtonItem = .init(title: "이동", style: .done, target: self, action: nil)
-    lazy var backButton: UIBarButtonItem = .init(title: "뒤로", style: .done, target: self, action: #selector(popAllViewControllers))
+    //MARK: IBOutlet
     
-    func findRouteAndDrawForPlace() {
+    @IBOutlet weak var backButton: UIBarButtonItem!
+    
+    @IBOutlet weak var moveButton: UIBarButtonItem!
+    
+    
+    //MARK: Functions
+    
+    @IBAction func didTapBackButton(_ sender: Any) {
         
+        self.navigationController?.popToRootViewController(animated: true)
     }
+    
+    @IBAction func didTapMoveButton(_ sender: Any) {
+        
+        self.performSegue(withIdentifier: "MoveToPlace", sender: self)
+    }
+    
     
     //MARK: Life Cycle
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        self.navigationItem.leftBarButtonItem = backButton
-        self.navigationItem.rightBarButtonItem = isNavigationOn ? nil : findRouteButton
         
         self.navigationItem.title = selectedPlace?.title
         self.placeAddressLabel.text = selectedPlace?.address
@@ -56,16 +68,7 @@ class PlaceDetailViewController: UIViewController {
         let marker = GMSMarker(position: position)
         marker.icon = UIImage(named: place.placeType.imageName)
         marker.map = placeMapView
-        
-        
     }
-    
-    //MARK: Functions
-    
-    @objc func popAllViewControllers() {
-        self.navigationController?.popToRootViewController(animated: true)
-    }
-    
 }
 
 //MARK: UITableViewDelegate
@@ -73,10 +76,14 @@ class PlaceDetailViewController: UIViewController {
 extension PlaceDetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var count = 0
         
+        guard let selectedPlace = selectedPlace else {
+            return 0
+        }
+        
+        var count = 0
         nearPlaces.forEach { (place) in
-            if place.placeType.description == selectedPlace?.placeType.description {
+            if place.placeType.description == selectedPlace.placeType.description {
                 count += 1
             }
         }
@@ -92,7 +99,7 @@ extension PlaceDetailViewController: UITableViewDataSource, UITableViewDelegate 
         
         let place = sameTypePlaces[indexPath.row]
         
-        cell.textLabel?.text = place.title
+        cell.textLabel?.text = place.address
         cell.accessoryView = UIImageView(image: UIImage(named: place.placeType.imageName))
         
         return cell
@@ -100,17 +107,18 @@ extension PlaceDetailViewController: UITableViewDataSource, UITableViewDelegate 
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        guard let placeVC = self.storyboard?.instantiateViewController(withIdentifier: "PlaceDetailViewController") as? PlaceDetailViewController else {
+        guard
+            let instanceVC = self.storyboard?.instantiateViewController(withIdentifier: "PlaceDetailViewController"),
+            let placeDetailVC = instanceVC as? PlaceDetailViewController
+        else {
             return
         }
         
         sameTypePlaces = nearPlaces.filter { $0.placeType.description == selectedPlace?.placeType.description }
         
-        placeVC.selectedPlace = sameTypePlaces[indexPath.row]
-        placeVC.nearPlaces = self.nearPlaces
+        placeDetailVC.selectedPlace = sameTypePlaces[indexPath.row]
+        placeDetailVC.nearPlaces = self.nearPlaces
       
-        self.navigationController?.pushViewController(placeVC, animated: true);
-        
+        self.navigationController?.pushViewController(placeDetailVC, animated: true);
     }
-    
 }

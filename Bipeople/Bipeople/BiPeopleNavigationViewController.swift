@@ -228,6 +228,26 @@ class BiPeopleNavigationViewController: UIViewController {
     
     // MARK: IBAction
     
+    /// 공공장소에서 이동 버튼을 눌렀을 경우 unwind
+    @IBAction func unwindFromPlaceDetailVC(_ segue: UIStoryboardSegue) {
+        
+        guard
+            let placeDetailVC = segue.source as? PlaceDetailViewController,
+            let selectedPlace = placeDetailVC.selectedPlace
+        else {
+            return
+        }
+        
+        unpinScreen(for: 5)
+        
+        let placeCoord = CLLocationCoordinate2D(
+            latitude: selectedPlace.lat,
+            longitude: selectedPlace.lng
+        )
+        
+        moveMap(coordinate: placeCoord)
+    }
+    
     /// 현재 까지의 주행기록을 취소하는 버튼
     @IBAction func didTapCancelButton(_ sender: Any) {
         
@@ -607,6 +627,8 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
                     
                     return
                 }
+                
+                print(response?.results())
                 
                 guard
                     let address = response?.firstResult()?.thoroughfare
