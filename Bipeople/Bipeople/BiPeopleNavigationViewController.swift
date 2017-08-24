@@ -239,14 +239,14 @@ class BiPeopleNavigationViewController: UIViewController {
         }
         
         unpinScreen(for: 5)
-        
+
         let placeCoord = CLLocationCoordinate2D(
             latitude: selectedPlace.lat,
             longitude: selectedPlace.lng
         )
         
         moveMap(coordinate: placeCoord)
-        
+
         if isNavigationOn == false {
             
             navigationManager.setDestination(

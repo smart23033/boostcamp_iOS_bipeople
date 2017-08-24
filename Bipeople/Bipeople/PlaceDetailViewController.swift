@@ -33,7 +33,7 @@ class PlaceDetailViewController: UIViewController {
     @IBOutlet weak var moveButton: UIBarButtonItem!
     
     
-    //MARK: Functions
+    //MARK: IBAction
     
     @IBAction func didTapBackButton(_ sender: Any) {
         
