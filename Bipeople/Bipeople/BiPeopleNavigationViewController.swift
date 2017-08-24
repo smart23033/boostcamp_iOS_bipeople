@@ -246,6 +246,16 @@ class BiPeopleNavigationViewController: UIViewController {
         )
         
         moveMap(coordinate: placeCoord)
+        
+        if isNavigationOn == false {
+            
+            navigationManager.setDestination(
+                coord: placeCoord,
+                name: selectedPlace.title,
+                address: selectedPlace.address
+            )
+            getRouteAndDrawForDestination()
+        }
     }
     
     /// 현재 까지의 주행기록을 취소하는 버튼
@@ -809,7 +819,11 @@ extension BiPeopleNavigationViewController: GMSPlacePickerViewControllerDelegate
         
         // Dismiss the place picker.
         viewController.dismiss(animated: true) {
-            self.navigationManager.setDestination(at: place)
+            self.navigationManager.setDestination(
+                coord: place.coordinate,
+                name: place.name,
+                address: place.formattedAddress
+            )
             self.getRouteAndDrawForDestination()
         }
     }
@@ -845,7 +859,11 @@ extension BiPeopleNavigationViewController: GMSAutocompleteResultsViewController
         // 선택된 장소로 화면을 전환하기 위한 카메라 정보
         moveMap(coordinate: place.coordinate)
         
-        navigationManager.setDestination(at: place)
+        navigationManager.setDestination(
+            coord: place.coordinate,
+            name: place.name,
+            address: place.formattedAddress
+        )
         getRouteAndDrawForDestination()
     }
     

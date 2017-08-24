@@ -188,7 +188,7 @@ class NavigationManager {
     }
     
     /// 싱글톤 패턴이 사용 된, 도착지 마커를 맵 위에 설정
-    public func setDestination(at place: GMSPlace) {
+    public func setDestination(coord: CLLocationCoordinate2D, name:String, address: String?) {
         
         if destinationMarker == nil {
             let marker = GMSMarker()
@@ -203,9 +203,9 @@ class NavigationManager {
         
         marker.map = nil     // Clear previous marker from map
         
-        marker.position = place.coordinate
-        marker.title = place.name
-        marker.snippet = place.formattedAddress ?? LiteralString.unknown.rawValue
+        marker.position = coord
+        marker.title = name
+        marker.snippet = address ?? LiteralString.unknown.rawValue
     }
     
     /// 도착지 마커를 삭제
