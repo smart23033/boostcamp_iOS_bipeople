@@ -88,7 +88,7 @@ class HistoryDetailViewController: UIViewController {
     @IBAction func didTapFilterLabel(_ sender: UITapGestureRecognizer) {
         
         let alertView = UIAlertController(
-            title: "원하는 정렬을 선택하시오",
+            title: "원하는 정렬을 선택하세요",
             message: "\n\n\n\n\n\n\n",
             preferredStyle: .actionSheet)
         
@@ -101,7 +101,11 @@ class HistoryDetailViewController: UIViewController {
         
         alertView.view.addSubview(pickerView)
         
-        let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil)
+        let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
+         _ in
+            self.filterLabel.text = self.selectedValue.rawValue
+            self.drawRoute(type: self.selectedValue)
+        })
         
         alertView.addAction(action)
         
@@ -109,7 +113,6 @@ class HistoryDetailViewController: UIViewController {
             pickerView.frame.size.width = alertView.view.frame.size.width
 
             self.selectedValue = self.pickerData[pickerView.selectedRow(inComponent: 0)]
-            self.filterLabel.text = self.selectedValue.rawValue
             
         })
         
@@ -252,10 +255,6 @@ extension HistoryDetailViewController: UIPickerViewDelegate, UIPickerViewDataSou
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     {
         selectedValue = pickerData[pickerView.selectedRow(inComponent: 0)]
-        filterLabel.text = selectedValue.rawValue
-        
-        self.drawRoute(type: selectedValue)
-        
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
