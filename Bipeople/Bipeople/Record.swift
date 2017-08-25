@@ -20,6 +20,18 @@
 
 import RealmSwift
 
+
+// MARK: Enum
+
+enum LiteralString: String {
+    case apptitle   = "Bipeople"
+    case tracking   = "위치 검색 중"
+    case unknown    = "미확인 장소"
+}
+
+
+// MARK: Class
+
 class Record: Object {
     
     @objc dynamic var _id: Int = 0
@@ -55,8 +67,12 @@ class Record: Object {
         self.createdAt = generateRandomDate(daysBack: 50)
     }
     
+    override class func primaryKey() -> String? {
+        return "_id"
+    }
+    
     /// Return Maximum(_id) + 1
-    static func autoIncrement() -> Int {
+    class func autoIncrement() -> Int {
         
         let realm = try! Realm()
         if let retNext = realm.objects(Record.self).sorted(byKeyPath: "_id").last?._id {

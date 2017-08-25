@@ -17,21 +17,11 @@ import MarqueeLabel
 
 
 
-// MARK: Enum
-
-enum LiteralString: String {
-    case tracking = "Tracking..."
-    case apptitle = "BiPeople"
-    case unknown = "Unknown"
-}
-
-
-
 // MARK: Class
 
 class BiPeopleNavigationViewController: UIViewController {
     
-    // MARK: IBOutlet
+    // MARK: Outlets
     
     /// 기록 취소 후 네비게이션 모드 종료 버튼
     @IBOutlet weak var cancelButton: UIBarButtonItem! {
@@ -49,6 +39,9 @@ class BiPeopleNavigationViewController: UIViewController {
         }
     }
     
+    /// 주행 정보 창
+    @IBOutlet weak var infoView: UIView! 
+    
     /// 네비게이션 시작 버튼
     @IBOutlet weak var startButton: UIButton!
     
@@ -57,6 +50,18 @@ class BiPeopleNavigationViewController: UIViewController {
     
     /// 현재 위치 주변 공공장소를 보여줄지를 결정할 버튼
     @IBOutlet weak var placesButton: UIButton!
+    
+    /// 주행시간 표시 라벨
+    @IBOutlet weak var timeLabel: UILabel!
+    
+    /// 주행거리 표시 라벨
+    @IBOutlet weak var distanceLabel: UILabel!
+    
+    /// 칼로리 표시 라벨
+    @IBOutlet weak var calorieLabel: UILabel!
+    
+    /// 속도계 표시 라벨
+    @IBOutlet weak var speedLabel: UILabel!
     
     /// 네비게이션에 사용 될 MapView
     @IBOutlet weak var navigationMapView: GMSMapView! {
@@ -73,9 +78,10 @@ class BiPeopleNavigationViewController: UIViewController {
     /// 맵을 Reloading 할 때 보여줄 Indicator
     @IBOutlet weak var loadingIndicatorView: UIActivityIndicatorView!
     
-
+    /// 네비게이션 모드 중 주행 정보를 보여줄 화면
+    @IBOutlet weak var infoViewHeightConstraint: NSLayoutConstraint!
     
-    // MARK: Lazy Variable
+    // MARK: Lazy Variables
     
     /// 구글 장소 자동완성 검색창
     lazy private var searchPlaceController: UISearchController = {
@@ -114,32 +120,43 @@ class BiPeopleNavigationViewController: UIViewController {
         return label
     } ()
     
+//    private var infoViewFrame: CGRect!
+//    private var mapViewFrame: CGRect!
     
-    
-    // MARK: Private Variable
+    // MARK: Private Variables
     
     /// navigationItem에서 보이지 않게 하기 위해 버튼을 nil로 만들면 메모리 해제 되는 것을 막기 위해 저장
     private var navigationButtons: [String:UIBarButtonItem] = [:]
     
-    private var navigationManager: NavigationManager!   /// 네비게이션 모드 책임
-    private var locationManager: CLLocationManager!     /// 위치정보 책임
+    /// 네비게이션 모드 책임
+    private var navigationManager: NavigationManager!
     
-    private var currentLocation: CLLocation?            /// 첫 앱 실행 시 현재 위치로 이동시키기 위한 변수
+    /// GPS 정보(위치, 방향, 속도, 고도) 관리자
+    private var locationManager: CLLocationManager!
+    
+    /// 정보 창 라벨 갱신 타이머
+    private var recordTimer: Timer?
     
     /// 네비게이션 모드가 실행되거나 종료될 때, UI의 변화를 책임
     private var isNavigationOn: Bool = false {
         willSet(newVal) {
+            
             if newVal {
                 do {
+                    initInfoView()
+                    startTimer(selector: #selector(updateInfoView))
+                    
                     try navigationManager.initDatas()
-                    marqueeTitle.text = LiteralString.tracking.rawValue
                     
                     self.navigationItem.titleView = marqueeTitle
+                    
                     self.navigationItem.leftBarButtonItem = navigationButtons["cancel"]
                     self.navigationItem.rightBarButtonItem = navigationButtons["done"]
                     
                     startButton.isHidden = true
                     clearButton.isHidden = true
+                    
+                    toggleInfoView()
                 }
                 catch {
                     self.isNavigationOn = false
@@ -153,6 +170,9 @@ class BiPeopleNavigationViewController: UIViewController {
                     warningAlert.addAction(UIAlertAction(title: "확인", style: .default))
                     
                     self.present(warningAlert, animated: true)
+                    
+                    stopTimer()
+                    initInfoView()
                 }
                 
             } else {
@@ -169,6 +189,9 @@ class BiPeopleNavigationViewController: UIViewController {
                 
                 startButton.isHidden = false
                 clearButton.isHidden = true
+                
+                stopTimer()
+                initInfoView()
             }
         }
     }
@@ -181,9 +204,17 @@ class BiPeopleNavigationViewController: UIViewController {
     
     
     
-    // MARK: Lifecycle Method
+    // MARK: Life Cycle
     
     override func viewDidLoad() {
+        
+//        infoViewFrame = infoView.frame
+//        mapViewFrame = CGRect(
+//            x: infoViewFrame.origin.x,
+//            y: infoViewFrame.origin.y,
+//            width : infoViewFrame.width,
+//            height : infoViewFrame.height + navigationMapView.frame.height
+//        )
         
         /*******************************************************************************************/
         // 공공장소 세부사항 View에서 검색창이 사라지면서 네비게이션 바 아래에 검정줄이 생기는 것을 해결
@@ -225,7 +256,37 @@ class BiPeopleNavigationViewController: UIViewController {
     
     
     
-    // MARK: IBAction
+    // MARK: Actions
+    
+    /// 공공장소에서 이동 버튼을 눌렀을 경우 unwind
+    @IBAction func unwindFromPlaceDetailVC(_ segue: UIStoryboardSegue) {
+        
+        guard
+            let placeDetailVC = segue.source as? PlaceDetailViewController,
+            let selectedPlace = placeDetailVC.selectedPlace
+        else {
+            return
+        }
+        
+        unpinScreen(for: 5)
+
+        let placeCoord = CLLocationCoordinate2D(
+            latitude: selectedPlace.lat,
+            longitude: selectedPlace.lng
+        )
+        
+        moveMap(coordinate: placeCoord)
+
+        if isNavigationOn == false {
+            
+            navigationManager.setDestination(
+                coord: placeCoord,
+                name: selectedPlace.title,
+                address: selectedPlace.address
+            )
+            getRouteAndDrawForDestination()
+        }
+    }
     
     /// 현재 까지의 주행기록을 취소하는 버튼
     @IBAction func didTapCancelButton(_ sender: Any) {
@@ -237,7 +298,7 @@ class BiPeopleNavigationViewController: UIViewController {
         )
         confirmAlert.addAction(UIAlertAction(title: "취소", style: .cancel))
         confirmAlert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
-            self.navigationManager.voiceGuidance(index: Int.max)
+            self.navigationManager.guideWithVoice(at: Int.max)
             
             self.isNavigationOn = false
         })
@@ -255,7 +316,7 @@ class BiPeopleNavigationViewController: UIViewController {
         )
         confirmAlert.addAction(UIAlertAction(title: "취소", style: .cancel))
         confirmAlert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
-            self.navigationManager.voiceGuidance(index: Int.max)
+            self.navigationManager.guideWithVoice(at: Int.max)
             
             self.isNavigationOn = false
             self.trySaveData()
@@ -275,7 +336,7 @@ class BiPeopleNavigationViewController: UIViewController {
         if distance > 0 {
             title = """
                     주행 기록을 시작하시겠습니까?
-                    예상주행시간: \(time.stringTime)
+                    예상주행시간: \(time.digitalFormat)
                     예상주행거리: \(distance.roundTo(places: 1)) m
                     """
         } 
@@ -292,7 +353,7 @@ class BiPeopleNavigationViewController: UIViewController {
         confirmAlert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
             
             self.isNavigationOn = true
-            self.voiceGuideBasedOnCurrentStatus()
+            self.processBasedOnCurrentStatus()
         })
         
         self.present(confirmAlert, animated: true)
@@ -307,6 +368,8 @@ class BiPeopleNavigationViewController: UIViewController {
     
     /// 보이는 화면에 공공장소를 토글하는 버튼
     @IBAction func didTapPlacesButton(_ sender: Any) {
+        
+        unpinScreen(for: 5)
         
         placesButton.isSelected = !placesButton.isSelected
         
@@ -341,41 +404,62 @@ class BiPeopleNavigationViewController: UIViewController {
         }
     }
     
+    /// 사용자가 앱을 사용할 경우, 화면 고정을 5초간 해제
     @IBAction func didTapView(_ sender: Any) {
         unpinScreen(for: 5)
     }
     
+    /// 사용자가 앱을 사용할 경우, 화면 고정을 5초간 해제
     @IBAction func didPinchView(_ sender: Any) {
         unpinScreen(for: 5)
     }
     
+    /// 사용자가 앱을 사용할 경우, 화면 고정을 5초간 해제
     @IBAction func didRotateView(_ sender: Any) {
         unpinScreen(for: 5)
     }
     
+    /// 사용자가 앱을 사용할 경우, 화면 고정을 5초간 해제
     @IBAction func didSwipeView(_ sender: Any) {
         unpinScreen(for: 5)
     }
     
-    @IBAction func didPanView(_ sender: Any) {
+    /// 사용자가 앱을 사용할 경우, 화면 고정을 5초간 해제
+    @IBAction func didPanView(_ sender: Any) 
+    {
         unpinScreen(for: 5)
     }
     
+    /// 사용자가 앱을 사용할 경우, 화면 고정을 5초간 해제
     @IBAction func didEdgePanView(_ sender: Any) {
         unpinScreen(for: 5)
     }
     
+    /// 사용자가 앱을 사용할 경우, 화면 고정을 5초간 해제
     @IBAction func didLongPressView(_ sender: Any) {
         unpinScreen(for: 5)
     }
     
     
     
-    // MARK: Private Method
+    // MARK: Private Methods
     
     /// 인자로 받은 시간만큼 화면 고정을 해제
     private func unpinScreen(for second: Double) {
         timeUnlocked = Date().timeIntervalSince1970 + second
+        
+        if isNavigationOn {
+            toggleInfoView()
+        }
+    }
+    
+    /// 화면을 현재 위치로 고정
+    private func pinScreen() {
+        timeUnlocked = Date().timeIntervalSince1970
+        
+        if isNavigationOn {
+            toggleInfoView()
+        }
     }
     
     /// 현재위치에서 목적지까지의 경로를 갖고와 맵에 표시
@@ -456,18 +540,26 @@ class BiPeopleNavigationViewController: UIViewController {
     }
     
     /// 맵을 coordinate 위치로 이동시키고, bearing 방향으로 회전시킴
-    private func moveMap(coordinate: CLLocationCoordinate2D?, bearing: CLLocationDirection = -1) {
+    private func moveMap(coordinate: CLLocationCoordinate2D?) {
         
         guard let coord = coordinate else {
             return
         }
         
-        let camera = GMSCameraPosition.camera(
-            withTarget: coord,
-            zoom: 15.0,
-            bearing: bearing,
-            viewingAngle: -1
-        )
+        #if TARGET_IPHONE_SIMULATOR
+            let bearing = navigationManager.calculateBearing(to: updatedLocation)
+            let camera = GMSCameraPosition.camera(
+                withTarget: coord,
+                zoom: 15.0,
+                bearing: bearing,
+                viewingAngle: -1
+            )
+        #else
+            let camera = GMSCameraPosition.camera(
+                withTarget: coord,
+                zoom: 15.0
+            )
+        #endif
         
         if navigationMapView.isHidden {
             
@@ -482,19 +574,58 @@ class BiPeopleNavigationViewController: UIViewController {
         }
     }
     
+    /// 주행 정보창을 띄우거나 숨김
+    private func toggleInfoView() {
+        
+        if timeUnlocked < Date().timeIntervalSince1970 {    // 화면 고정이 된 상태에서
+            if infoView.isHidden == true {                  // 정보 창이 보이지 않는 상태라면
+                
+                infoView.isHidden = false                   // 정보 창을 보여준다(애니메이션 효과)
+                UIView.animate(
+                    withDuration: 1.0,
+                    delay: 0.0,
+                    options: .curveEaseInOut,
+                    animations: {
+                        
+                        let height = self.view.frame.height * 0.3
+                        self.infoViewHeightConstraint.constant = height
+                        self.view.layoutIfNeeded()
+                    },
+                    completion: nil
+                )
+            }
+        } else {                                            // 화면 고정되지 않은 상태에서
+            if infoView.isHidden == false {                 // 정보 창이 보이는 상태라면
+                
+                UIView.animate(                             // 정보 창을 감춘다(애니메이션 효과)
+                    withDuration: 1.0,
+                    delay: 0.0,
+                    options: .curveEaseInOut,
+                    animations: {
+                        
+                        self.infoViewHeightConstraint.constant = 0
+                        self.view.layoutIfNeeded()
+                    }
+                ) { _ in
+                    self.infoView.isHidden = true
+                }
+            }
+        }
+    }
+    
     /// 네비게이션에서 현재 위치를 바탕으로 안내를 해줌
-    private func voiceGuideBasedOnCurrentStatus() {
+    private func processBasedOnCurrentStatus() {
         
         switch navigationManager.currentStatus {
             
         case .arrived:              // 목적지 도착을 확인 후, 도착한 경우 기록 저장 및 안내 종료
-            navigationManager.voiceGuidance(index: Int.max)
+            navigationManager.guideWithVoice(at: Int.max)
             
             isNavigationOn = false
             trySaveData()
             
         case let .waypoint(index):  // 중간 경유지를 지나가는 경우 음성 안내
-            navigationManager.voiceGuidance(index: index)
+            navigationManager.guideWithVoice(at: index)
             
         case .offroad:              // 경로에서 벗어난 경우, 현 위치에서 목적지 까지 새로운 경로를 구해 안내(Async)
             let warningAlert = UIAlertController(
@@ -503,13 +634,13 @@ class BiPeopleNavigationViewController: UIViewController {
                 preferredStyle: .alert
             )
             warningAlert.addAction(UIAlertAction(title: "종료(저장)", style: .destructive){ _ in
-                self.navigationManager.voiceGuidance(index: Int.max)
+                self.navigationManager.guideWithVoice(at: Int.max)
                 
                 self.isNavigationOn = false
                 self.trySaveData()
             })
             warningAlert.addAction(UIAlertAction(title: "종료(취소)", style: .cancel){ _ in
-                self.navigationManager.voiceGuidance(index: Int.max)
+                self.navigationManager.guideWithVoice(at: Int.max)
                 
                 self.isNavigationOn = false
             })
@@ -518,11 +649,11 @@ class BiPeopleNavigationViewController: UIViewController {
                 warningAlert.dismiss(animated: true, completion: nil)
             }
             
-            navigationManager.voiceGuidance(index: Int.min)
+            navigationManager.guideWithVoice(at: Int.min)
             getRouteAndDrawForDestination(recorded: true)
             
         case .freeride:
-            navigationManager.voiceGuidance(index: 0)
+            navigationManager.guideWithVoice(at: 0)
             break
         case .onroad:
             break
@@ -530,14 +661,70 @@ class BiPeopleNavigationViewController: UIViewController {
             break
         }
     }
+    
+    /// 주행기록 타이머 시작
+    private func startTimer(selector: Selector) {
+        recordTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: selector, userInfo: nil, repeats: true)
+    }
+    
+    /// 주행기록 타이머 종료
+    private func stopTimer() {
+        
+        recordTimer?.invalidate()
+        recordTimer = nil
+    }
+    
+    /// 주행 정보창 초기화
+    private func initInfoView() {
+        
+        infoViewHeightConstraint.constant = 0
+        infoView.isHidden = true
+        
+        timeLabel.text = "00:00:00"
+        distanceLabel.text = nil
+        calorieLabel.text = nil
+        speedLabel.text = nil
+        
+        marqueeTitle.text = LiteralString.tracking.rawValue
+    }
+    
+    /// 타이머를 통해 주행 정보 창 갱신
+    @objc private func updateInfoView() {
+        
+        timeLabel.text      = navigationManager.recordTime.digitalFormat
+        distanceLabel.text  = "\((navigationManager.recordDistance / 1000.0).roundTo(places: 2))"
+        calorieLabel.text   = "\(navigationManager.recordCalorie.roundTo(places: 1))"
+        speedLabel.text     = "\(navigationManager.currentLocation?.speed.roundTo(places: 1) ?? 0.0)"
+    }
 }
 
 
-
-// MARK: Exteinsion
+// MARK: Exteinsions
 
 /// CoreLocation 네비게이션 작동 시에 사용
 extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
+    
+    func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool {
+        
+        return false
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        
+        #if TARGET_IPHONE_SIMULATOR
+            return
+        #else
+            guard
+                timeUnlocked < Date().timeIntervalSince1970,
+                newHeading.timestamp.timeIntervalSinceNow > -30,
+                newHeading.headingAccuracy >= 0
+            else {
+                return
+            }
+            
+            navigationMapView.animate(toBearing: newHeading.trueHeading)
+        #endif
+    }
     
     /// 위치 변화 이벤트 핸들러
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -549,9 +736,8 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
         
         // print("Updated Location: ", updatedLocation)    // FOR DEBUG
         
-        if currentLocation == nil {
+        if navigationManager.currentLocation == nil {
             
-            currentLocation = updatedLocation
             navigationMapView.isHidden = false
             
             let seoul = CLLocationCoordinate2D(
@@ -581,15 +767,18 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
             navigationMapView.setMinZoom(14, maxZoom: 100)
         }
         
+        navigationManager.currentLocation = updatedLocation
+        
         // 사용자의 사용이 없는 경우 맵의 중심을 현재 위치로
         if timeUnlocked < Date().timeIntervalSince1970 {
-
-            let bearing = navigationManager.calculateBearing(to: updatedLocation)
-            moveMap(coordinate: updatedLocation.coordinate, bearing: bearing)
+            moveMap(coordinate: updatedLocation.coordinate)
         }
         
         // 네비게이션 모드가 켜져있는 경우
         if isNavigationOn {
+            
+            // 상태 정보 창 토글
+            toggleInfoView()
             
             // 위치 변화 정보 저장
             do {
@@ -600,28 +789,14 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
             
             // 현재 위치를 NavigationBar Title로(Async)
             
-            GMSGeocoder().reverseGeocodeCoordinate(updatedLocation.coordinate) { response, error in
-                
-                guard error == nil else {
-                    print("Reverse Geocode from current coordinate failed with error: ", error!)    // FOR DEBUG
-                    self.marqueeTitle.text = LiteralString.tracking.rawValue
-                    
-                    return
-                }
-                
-                guard
-                    let address = response?.firstResult()?.thoroughfare
-                else {
-                    print("Reverse Geocode result is empty")    // FOR DEBUG
-                    self.marqueeTitle.text = LiteralString.unknown.rawValue
-                    
-                    return
-                }
-                
+            navigationManager.geoCoder(failure: { (error) in
+                print("GeoCoder failed with error: ", error)
+                self.marqueeTitle.text = LiteralString.tracking.rawValue
+            }) { (address) in
                 self.marqueeTitle.text = address
             }
             
-            voiceGuideBasedOnCurrentStatus()
+            processBasedOnCurrentStatus()
         }
     }
     
@@ -677,6 +852,7 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
     /// 위치 정보 에러 처리 핸들러
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         
+        // FOR DEBUG
         print("Location update fail with: ", error)
     }
 }
@@ -718,8 +894,6 @@ extension BiPeopleNavigationViewController: GMSMapViewDelegate {
         
         placeDetailVC.isNavigationOn = isNavigationOn
         placeDetailVC.selectedPlace = place
-        
-        // TODO: 필터링
         placeDetailVC.nearPlaces = navigationManager.publicPlaces
         
         self.navigationController?.pushViewController(placeDetailVC, animated: true)
@@ -770,7 +944,7 @@ extension BiPeopleNavigationViewController: GMSMapViewDelegate {
     
     func didTapMyLocationButton(for mapView: GMSMapView) -> Bool {
         
-        timeUnlocked = Date().timeIntervalSinceNow
+        pinScreen()
         
         return false
     }
@@ -783,19 +957,23 @@ extension BiPeopleNavigationViewController: GMSPlacePickerViewControllerDelegate
         
         // FOR DEBUG
         print("Selected Place name: ", place.name)
-        print("Selected Place address: ", place.formattedAddress ?? LiteralString.unknown)
+        print("Selected Place address: ", place.formattedAddress ?? LiteralString.unknown.rawValue)
         print("Selected Place attributions: ", place.attributions ?? NSAttributedString())
         
         // Dismiss the place picker.
         viewController.dismiss(animated: true) {
-            self.navigationManager.setDestination(at: place)
+            self.navigationManager.setDestination(
+                coord: place.coordinate,
+                name: place.name,
+                address: place.formattedAddress
+            )
             self.getRouteAndDrawForDestination()
         }
     }
     
     func placePicker(_ viewController: GMSPlacePickerViewController, didFailWithError error: Error) {
-        
-        // TODO: handle the error...
+
+        // FOR DEBUG
         print("place picker fail with : ", error.localizedDescription)
         
         viewController.dismiss(animated: true)
@@ -818,19 +996,23 @@ extension BiPeopleNavigationViewController: GMSAutocompleteResultsViewController
         
         // FOR DEBUG
         print("Searched Place name: ", place.name)
-        print("Searched Place address: ", place.formattedAddress ?? LiteralString.unknown)
+        print("Searched Place address: ", place.formattedAddress ?? LiteralString.unknown.rawValue)
         print("Searched Place attributions: ", place.attributions ?? NSAttributedString())
         
         // 선택된 장소로 화면을 전환하기 위한 카메라 정보
         moveMap(coordinate: place.coordinate)
         
-        navigationManager.setDestination(at: place)
+        navigationManager.setDestination(
+            coord: place.coordinate,
+            name: place.name,
+            address: place.formattedAddress
+        )
         getRouteAndDrawForDestination()
     }
     
     /// FOR DEBUG: 장소검색 자동완성에서 에러 발생 시
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController, didFailAutocompleteWithError error: Error) {
-        // TODO: handle the error...
+        
         print("result update fail with : ", error.localizedDescription)
     }
     

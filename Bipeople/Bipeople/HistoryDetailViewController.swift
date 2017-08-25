@@ -73,8 +73,8 @@ class HistoryDetailViewController: UIViewController {
         titleLabel.titleView = marqueeTitle
         
         distanceLabel.text = "\(record?.distance.roundTo(places: 1) ?? 0) km"
-        ridingTimeLabel.text = record?.ridingTime.stringTime
-        restTimeLabel.text = record?.restTime.stringTime
+        ridingTimeLabel.text = record?.ridingTime.hmsFormat
+        restTimeLabel.text = record?.restTime.hmsFormat
         averageSpeedLabel.text = "\(record?.averageSpeed.roundTo(places: 1) ?? 0) m/s"
         maximumSpeedLabel.text = "\(record?.maximumSpeed.roundTo(places: 1) ?? 0) m/s"
         caloriesLabel.text = "\(record?.calories.roundTo(places: 1) ?? 0) kcal"
