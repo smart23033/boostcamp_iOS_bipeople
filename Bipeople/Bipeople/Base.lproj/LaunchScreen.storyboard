@@ -31,13 +31,13 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cyclist" translatesAutoresizingMaskIntoConstraints="NO" id="boL-Gb-YQK">
-                                <rect key="frame" x="94" y="200" width="187.5" height="167.5"/>
+                                <rect key="frame" x="94" y="199.5" width="187.5" height="167.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="boL-Gb-YQK" secondAttribute="height" multiplier="28:25" id="5fv-1y-6Ah"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bipeople" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gwI-AY-Ysb">
-                                <rect key="frame" x="94" y="387.5" width="187.5" height="84.5"/>
+                                <rect key="frame" x="94" y="387" width="187.5" height="84.5"/>
                                 <fontDescription key="fontDescription" name="SavoyeLetPlain" family="Savoye LET" pointSize="71"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -47,10 +47,10 @@
                         <constraints>
                             <constraint firstItem="Wwl-0Q-xPe" firstAttribute="bottom" secondItem="xb3-aO-Qok" secondAttribute="top" id="6fb-ZM-BOK"/>
                             <constraint firstItem="boL-Gb-YQK" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="8qC-ki-UBI"/>
-                            <constraint firstItem="boL-Gb-YQK" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" multiplier="10" id="Iu2-WJ-FeQ"/>
                             <constraint firstItem="gwI-AY-Ysb" firstAttribute="top" secondItem="boL-Gb-YQK" secondAttribute="bottom" constant="20" id="J9J-ZZ-lnf"/>
                             <constraint firstItem="Wwl-0Q-xPe" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="LHg-4Q-z5N"/>
                             <constraint firstItem="gwI-AY-Ysb" firstAttribute="trailing" secondItem="boL-Gb-YQK" secondAttribute="trailing" id="TtF-u2-lCi"/>
+                            <constraint firstItem="boL-Gb-YQK" firstAttribute="bottom" secondItem="xb3-aO-Qok" secondAttribute="top" multiplier="0.55" id="acS-ea-tU4"/>
                             <constraint firstItem="boL-Gb-YQK" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" multiplier="0.5" id="bC4-Xh-bmf"/>
                             <constraint firstItem="gwI-AY-Ysb" firstAttribute="leading" secondItem="boL-Gb-YQK" secondAttribute="leading" id="hQp-Gm-37x"/>
                             <constraint firstItem="Wwl-0Q-xPe" firstAttribute="trailing" secondItem="Ze5-6b-2t3" secondAttribute="trailing" id="rHa-ll-Hew"/>

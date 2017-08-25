@@ -55,41 +55,62 @@ struct Waypoint {
 
 class NavigationManager {
     
-    // MARK: Private Static Variable
+    // MARK: Static Private Variables
     
-    private static let TMAP_API_URL: String = "https://apis.skplanetx.com/tmap/routes/pedestrian"
-    private static let VERSION: Int         = 1
-    private static let FORMAT: String       = "json"
-    private static let APP_KEY: String       = "5112af59-674c-38fd-89b0-ab54f1297284"
-    
-    private static let PATH_RANGE_TOLERANCE: Double         = 50    /// 단위 미터(m)
-    private static let MINIMUM_RIDING_VELOCITY: Double      = 0.5   /// 단위 m/sec
-    private static let RIDING_VELOCITY_THRESHOLD: Double    = 16    /// 단위 m/sec
-    private static let PUBLIC_PLACE_SEARCH_RADIUS: Double   = 500.0 /// 단위는 미터(m)
-    
+    static private let TMAP_API_URL: String = "https://apis.skplanetx.com/tmap/routes/pedestrian"
+    static private let VERSION: Int         = 1
+    static private let FORMAT: String       = "json"
+    static private let APP_KEY: String       = "5112af59-674c-38fd-89b0-ab54f1297284"
+    static private let PATH_RANGE_TOLERANCE: Double         = 50    /// 단위 미터(m)
+    static private let MINIMUM_RIDING_VELOCITY: Double      = 0.5   /// 단위 m/sec
+    static private let RIDING_VELOCITY_THRESHOLD: Double    = 16    /// 단위 m/sec
+    static private let PUBLIC_PLACE_SEARCH_RADIUS: Double   = 500.0 /// 단위는 미터(m)
     
     
-    // MARK: Private Variable
     
-    private var navigationRoute: GMSPolyline?           /// 맵에 표시될 경로
-    private var navigationPath: GMSMutablePath?         /// 맵에 표시될 경로의 꼭지점들
+    // MARK: Member Variables
     
-    private var routeWaypoints: [Waypoint] = []         /// 경유지들의 정보
-    private var waypointsMarker: [GMSMarker] = []       /// 경유지에 표시될 마커
+    /// 첫 앱 실행 시 현재 위치로 이동시키기 위한 변수
+    public var currentLocation: CLLocation?
     
-    private var destinationMarker: GMSMarker?           /// 목적지에 표시될 마커
+    /// 첫 앱 실행 시 현재 위치로 이동시키기 위한 변수
+    public var currentAddress: String?
+    
+    /// 맵에 표시될 경로
+    private var navigationRoute: GMSPolyline?
+    
+    /// 맵에 표시될 경로의 꼭지점들
+    private var navigationPath: GMSMutablePath?
+    
+    /// 경유지들의 정보
+    private var routeWaypoints: [Waypoint] = []
+    
+    /// 경유지에 표시될 마커
+    private var waypointsMarker: [GMSMarker] = []
+    
+    /// 목적지에 표시될 마커
+    private var destinationMarker: GMSMarker?
 
-    private var record: Record?                         /// 주행 기록
-    private var traces: [Trace] = []                    /// 주행 기록의 위치 정보
+    /// 주행 기록
+    private var record: Record?
     
-    private var placesResult:[PublicPlace] = []         /// 현재 위치의 주변 공공장소를 보관
-    private var placesMarkers:[String:GMSMarker] = [:]  /// 현재 위치의 주변 공공장소를 지도에 표시해줄 마커
+    /// 주행 기록의 위치 정보
+    private var traces: [Trace] = []
     
-    private var lastGuidedIndex: Int = -1               /// 마지막으로 경유한 곳을 저장
+    /// 현재 위치의 주변 공공장소를 보관
+    private var placesResult:[PublicPlace] = []
     
-    private var navigationMapView: GMSMapView           /// 네비게이션에 사용될 MapView
+    /// 현재 위치의 주변 공공장소를 지도에 표시해줄 마커
+    private var placesMarkers:[String:GMSMarker] = [:]
     
+    /// 마지막으로 경유한 곳을 저장
+    private var lastGuidedIndex: Int = -1
     
+    /// 네비게이션에 사용될 MapView
+    private var navigationMapView: GMSMapView
+    
+    /// 주행 시작 시간
+    private var startDateTime: Date?
     
     // MARK: Initializer
     
@@ -99,7 +120,7 @@ class NavigationManager {
     
     
     
-    // MARK: Public Variable
+    // MARK: Public Variables
     
     public var currentStatus: NavigationStatus {
         
@@ -147,9 +168,23 @@ class NavigationManager {
         return expectedDistance / 4
     }
     
+    public var recordTime: TimeInterval {
+        
+        guard let startDateTime = startDateTime else {
+            return 0
+        }
+        
+        return Date().timeIntervalSince(startDateTime)
+    }
     
+    public var recordDistance: Double = 0.0
     
-    // MARK: Private Method
+    public var recordCalorie: Double {
+        
+        return recordDistance * 0.03336
+    }
+    
+    // MARK: Private Methods
     
     private func degreesToRadians(degrees: Double) -> Double {
         
@@ -163,7 +198,7 @@ class NavigationManager {
     
     
     
-    // MARK: Public Method
+    // MARK: Public Methods
     
     /// 마지막 위치와 비교하여 진행 방향을 계산해 반환
     public func calculateBearing(to : CLLocation) -> CLLocationDirection {
@@ -349,6 +384,37 @@ class NavigationManager {
         }
     }
     
+    public func geoCoder(failure: @escaping (Error) -> Void, success: @escaping (String?) -> Void) {
+        
+        guard let coordinate = currentLocation?.coordinate else {
+            
+            let error = NSError(
+                domain: Bundle.main.bundleIdentifier ?? "nil",
+                code: -1,
+                userInfo: [
+                    NSLocalizedDescriptionKey : "Cannot find current location"
+                ]
+            )
+            
+            failure(error)
+            return
+        }
+        
+        GMSGeocoder().reverseGeocodeCoordinate(coordinate) { response, error in
+            
+            guard error == nil else {
+                
+                failure(error!)
+                return
+            }
+            
+            let address = response?.firstResult()?.thoroughfare
+            
+            self.currentAddress = address
+            success(address)
+        }
+    }
+    
     /// 맵에 공공장소를 표시하였던 것을 지움
     public func clearAllPlaces() {
         
@@ -451,7 +517,7 @@ class NavigationManager {
     }
     
     /// 음성 안내
-    public func voiceGuidance(index: Int) {
+    public func guideWithVoice(at index: Int) {
         
         var speechString: String = ""
         var speechType: AVSpeechBoundary = .word
@@ -506,6 +572,10 @@ class NavigationManager {
     /// 경로 데이터를 초기화
     public func initDatas() throws {
         
+        // 멤버변수 초기화
+        startDateTime   = Date()
+        recordDistance  = 0.0
+        currentAddress  = LiteralString.unknown.rawValue
         lastGuidedIndex = -1
         
         guard
@@ -544,11 +614,12 @@ class NavigationManager {
             
             guard
                 let address = response?.firstResult()?.thoroughfare
-                else {
-                    print("Reverse Geocode result is empty")    // FOR DEBUG
-                    return
+            else {
+                print("Reverse Geocode result is empty")    // FOR DEBUG
+                return
             }
             
+            self.currentAddress = address
             try! Realm().write {
                 record.departure = address
             }
@@ -569,6 +640,10 @@ class NavigationManager {
             )
             
             throw error
+        }
+        
+        guard location.horizontalAccuracy < NavigationManager.PATH_RANGE_TOLERANCE else {
+            return
         }
         
         try! Realm().write {
@@ -596,6 +671,12 @@ class NavigationManager {
                 }
             }
             
+            if let last = traces.last {
+                
+                let lastLocation = CLLocation(latitude: last.latitude, longitude: last.longitude)
+                recordDistance += location.distance(from: lastLocation)
+            }
+            
             let trace = Trace(recordID: record._id, location : location)
             traces.append(trace)
         }
@@ -603,22 +684,6 @@ class NavigationManager {
     
     /// 경로 데이터를 저장
     public func saveData() throws {
-        
-        guard
-            let currentLocation = navigationMapView.myLocation
-        else {
-            record = nil
-                
-            let error = NSError(
-                domain: Bundle.main.bundleIdentifier ?? "nil",
-                code: -1,
-                userInfo: [
-                    NSLocalizedDescriptionKey : "Cannot find current location"
-                ]
-            )
-            
-            throw error
-        }
         
         guard let record = record else {
             
@@ -633,42 +698,15 @@ class NavigationManager {
             throw error
         }
         
-        // 위치를 통해 지명을 가져온다
-        GMSGeocoder().reverseGeocodeCoordinate(currentLocation.coordinate) { response, error in
-            
-            guard error == nil else {
-                print("Reverse Geocode from current coordinate failed with error: ", error!)    // FOR DEBUG
-                
-                return
-            }
-            
-            guard let record = self.record else {
-                print("Record is not ready")    // FOR DEBUG
-                return
-            }
-            
-            guard
-                let address = response?.firstResult()?.thoroughfare
-            else {
-                print("Reverse Geocode result is empty")    // FOR DEBUG
-                return
-            }
-            
-            try! Realm().write {
-                record.arrival = address
-            }
-        }
-        
         try! Realm().write {
             
             if let firstTrace = traces.first, let lastTrace = traces.last {
                 
-                print("first: ", String(describing: firstTrace))
-                print("last: ", String(describing: lastTrace))
+                record.arrival = currentAddress ?? LiteralString.unknown.rawValue
                 record.ridingTime = lastTrace.timestamp.timeIntervalSince(firstTrace.timestamp)
                 
                 let excerciseTime = record.ridingTime - record.restTime
-                record.calories = excerciseTime * 0.139
+                record.calories = record.distance * 0.03336
                 record.averageSpeed = excerciseTime > 0 ? record.distance / excerciseTime : 0
                 
                 record.distance /= 1000.0
@@ -679,4 +717,3 @@ class NavigationManager {
         RealmHelper.add(datas: traces)
     }
 }
-

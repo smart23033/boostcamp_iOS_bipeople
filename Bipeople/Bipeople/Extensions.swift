@@ -87,7 +87,8 @@ extension TimeInterval {
         return self / 60
     }
     
-    var stringTime: String {
+    var hmsFormat: String {
+
 //        guard self.days == 0 else {
 //            return "\(self.days)d \(self.hours)h \(self.minutes)m \(self.seconds)s"
 //        }
@@ -97,7 +98,13 @@ extension TimeInterval {
         guard self.minutes == 0 else {
             return "\(self.minutes)m \(self.seconds)s"
         }
+
         return "\(self.seconds)s"
+    }
+    
+    var digitalFormat: String {
+        
+        return String(format: "%02d:%02d:%02d", self.hours, self.minutes, self.seconds)
     }
 }
 
@@ -133,7 +140,7 @@ extension Double {
 /// MARK: UIColor Extension
 
 extension UIColor {
-    static let primary = UIColor(hex: 0x1cb0b8)
+    static let primary = UIColor(hex: 0x1CB0B8)
     static let contrast = UIColor(hex: 0xB8241C)
     
     /// Create a UIColor from RGB
