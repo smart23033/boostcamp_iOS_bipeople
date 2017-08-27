@@ -683,10 +683,14 @@ class BiPeopleNavigationViewController: UIViewController {
     /// 타이머를 통해 주행 정보 창 갱신
     @objc private func updateInfoView() {
         
+        guard let speed = navigationManager.currentLocation?.speed else {
+            return
+        }
+        
         timeLabel.text      = navigationManager.recordTime.digitalFormat
         distanceLabel.text  = "\((navigationManager.recordDistance / 1000.0).roundTo(places: 2))"
         calorieLabel.text   = "\(navigationManager.recordCalorie.roundTo(places: 1))"
-        speedLabel.text     = "\(navigationManager.currentLocation?.speed.roundTo(places: 1) ?? 0.0)"
+        speedLabel.text     = speed < 0 ? "계산중" : "\(speed.roundTo(places: 1))"
     }
 }
 
