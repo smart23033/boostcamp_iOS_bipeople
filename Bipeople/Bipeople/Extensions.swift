@@ -64,7 +64,7 @@ extension Date {
     
 }
 
-//MARK: TimeInterval Extension
+/// MARK: TimeInterval Extension
 
 extension TimeInterval {
     var seconds: Int {
@@ -164,7 +164,7 @@ extension UIColor {
     }
 }
 
-//MARK: GMSMapView Extension
+/// MARK: GMSMapView Extension
 
 extension GMSMapView {
     
