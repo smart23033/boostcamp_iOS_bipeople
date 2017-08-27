@@ -2,7 +2,7 @@
 //  PlaceDetailViewController.swift
 //  Bipeople
 //
-//  Created by YeongSik Lee on 2017. 8. 15..
+//  Created by 조준영 on 2017. 8. 15..
 //  Copyright © 2017년 BluePotato. All rights reserved.
 //
 
