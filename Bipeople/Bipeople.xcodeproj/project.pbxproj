@@ -13,9 +13,7 @@
 		A219812B1F39730C00D0F5F7 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219812A1F39730C00D0F5F7 /* CardView.swift */; };
 		A219812D1F39771E00D0F5F7 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219812C1F39771E00D0F5F7 /* HistoryTableViewController.swift */; };
 		A219812F1F39772700D0F5F7 /* HistoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219812E1F39772700D0F5F7 /* HistoryDetailViewController.swift */; };
-		A2384C4C1F4D64C600009131 /* WaypointMarker.xib in Resources */ = {isa = PBXBuildFile; fileRef = A2384C4B1F4D64C600009131 /* WaypointMarker.xib */; };
 		A2384C4E1F4D65F100009131 /* WaypointMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2384C4D1F4D65F100009131 /* WaypointMarker.swift */; };
-		A2384C4F1F4D67C700009131 /* WaypointMarker.xib in Sources */ = {isa = PBXBuildFile; fileRef = A2384C4B1F4D64C600009131 /* WaypointMarker.xib */; };
 		A2560E931F4975F4003C17C5 /* GraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2560E921F4975F4003C17C5 /* GraphViewController.swift */; };
 		A258388C1F39A11A00BECEA3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A258388B1F39A11A00BECEA3 /* Extensions.swift */; };
 		A260BF381F49758D0041F77A /* Graph.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A260BF361F49758D0041F77A /* Graph.storyboard */; };
@@ -25,6 +23,7 @@
 		A2F35C111F447CF00016F1AF /* AnimatedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F35C101F447CF00016F1AF /* AnimatedLabel.swift */; };
 		CA581E36F745E69C960E75F5 /* Pods_Bipeople.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA1522085776953070CF67BC /* Pods_Bipeople.framework */; };
 		F11F51D81F45CD7800429741 /* PlaceDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11F51D71F45CD7800429741 /* PlaceDetailViewController.swift */; };
+		F12151F91F5047A6004BE7F9 /* WaypointMarker.xib in Resources */ = {isa = PBXBuildFile; fileRef = F12151F71F504789004BE7F9 /* WaypointMarker.xib */; };
 		F135BE8D1F45B4B100F89A53 /* PublicPlace.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135BE8A1F45B34F00F89A53 /* PublicPlace.swift */; };
 		F135BE8E1F45B4B100F89A53 /* PublicStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135BE891F45B34E00F89A53 /* PublicStore.swift */; };
 		F135BE8F1F45B4B100F89A53 /* PublicToilet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135BE8B1F45B34F00F89A53 /* PublicToilet.swift */; };
@@ -57,7 +56,6 @@
 		A219812A1F39730C00D0F5F7 /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		A219812C1F39771E00D0F5F7 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
 		A219812E1F39772700D0F5F7 /* HistoryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailViewController.swift; sourceTree = "<group>"; };
-		A2384C4B1F4D64C600009131 /* WaypointMarker.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WaypointMarker.xib; sourceTree = "<group>"; };
 		A2384C4D1F4D65F100009131 /* WaypointMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointMarker.swift; sourceTree = "<group>"; };
 		A2560E921F4975F4003C17C5 /* GraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphViewController.swift; sourceTree = "<group>"; };
 		A258388B1F39A11A00BECEA3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -75,6 +73,7 @@
 		F11635CC1F4D855400B53263 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/MarkerInfoWindow.strings; sourceTree = "<group>"; };
 		F11F51D71F45CD7800429741 /* PlaceDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDetailViewController.swift; sourceTree = "<group>"; };
 		F120FAC81F45DB7100AF4AB1 /* seoul.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = seoul.gpx; sourceTree = "<group>"; };
+		F12151F81F504789004BE7F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/WaypointMarker.xib; sourceTree = "<group>"; };
 		F135BE891F45B34E00F89A53 /* PublicStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicStore.swift; sourceTree = "<group>"; };
 		F135BE8A1F45B34F00F89A53 /* PublicPlace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicPlace.swift; sourceTree = "<group>"; };
 		F135BE8B1F45B34F00F89A53 /* PublicToilet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicToilet.swift; sourceTree = "<group>"; };
@@ -149,6 +148,7 @@
 				30E82D971F38227500536AFB /* Navigation */,
 				30E82D961F38226D00536AFB /* History */,
 				A2560E911F4975E0003C17C5 /* Graph */,
+				30E82DA61F38230C00536AFB /* Settings */,
 			);
 			path = Bipeople;
 			sourceTree = "<group>";
@@ -175,6 +175,13 @@
 			name = Navigation;
 			sourceTree = "<group>";
 		};
+		30E82DA61F38230C00536AFB /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
 		30E82DAB1F38235E00536AFB /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -184,7 +191,7 @@
 				F176C8461F3D9DD9008F39FD /* History.storyboard */,
 				A260BF361F49758D0041F77A /* Graph.storyboard */,
 				F176C8441F3D9DD9008F39FD /* MarkerInfoWindow.xib */,
-				A2384C4B1F4D64C600009131 /* WaypointMarker.xib */,
+				F12151F71F504789004BE7F9 /* WaypointMarker.xib */,
 				30E82D8A1F38224B00536AFB /* Assets.xcassets */,
 				30E82D8F1F38224B00536AFB /* Info.plist */,
 			);
@@ -295,6 +302,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F12151F91F5047A6004BE7F9 /* WaypointMarker.xib in Resources */,
 				F176C8381F3D9D70008F39FD /* Assets.xcassets in Resources */,
 				A260BF381F49758D0041F77A /* Graph.storyboard in Resources */,
 				F176C84C1F3D9DDC008F39FD /* Main.storyboard in Resources */,
@@ -302,7 +310,6 @@
 				F176C84D1F3D9DDC008F39FD /* MarkerInfoWindow.xib in Resources */,
 				F176C84A1F3D9DDC008F39FD /* History.storyboard in Resources */,
 				F176C84E1F3D9DDC008F39FD /* Navigation.storyboard in Resources */,
-				A2384C4C1F4D64C600009131 /* WaypointMarker.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -384,7 +391,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A2384C4F1F4D67C700009131 /* WaypointMarker.xib in Sources */,
 				F135BE8D1F45B4B100F89A53 /* PublicPlace.swift in Sources */,
 				F135BE8E1F45B4B100F89A53 /* PublicStore.swift in Sources */,
 				F135BE8F1F45B4B100F89A53 /* PublicToilet.swift in Sources */,
@@ -423,6 +429,14 @@
 				F11635CA1F4D855300B53263 /* ko */,
 			);
 			name = Graph.storyboard;
+			sourceTree = "<group>";
+		};
+		F12151F71F504789004BE7F9 /* WaypointMarker.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F12151F81F504789004BE7F9 /* Base */,
+			);
+			name = WaypointMarker.xib;
 			sourceTree = "<group>";
 		};
 		F176C83E1F3D9DD8008F39FD /* Navigation.storyboard */ = {
