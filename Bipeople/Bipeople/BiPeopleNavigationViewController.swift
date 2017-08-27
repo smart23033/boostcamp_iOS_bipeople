@@ -208,14 +208,6 @@ class BiPeopleNavigationViewController: UIViewController {
     
     override func viewDidLoad() {
         
-//        infoViewFrame = infoView.frame
-//        mapViewFrame = CGRect(
-//            x: infoViewFrame.origin.x,
-//            y: infoViewFrame.origin.y,
-//            width : infoViewFrame.width,
-//            height : infoViewFrame.height + navigationMapView.frame.height
-//        )
-        
         /*******************************************************************************************/
         // 공공장소 세부사항 View에서 검색창이 사라지면서 네비게이션 바 아래에 검정줄이 생기는 것을 해결
         self.navigationController?.navigationBar.isTranslucent = true;
@@ -546,8 +538,8 @@ class BiPeopleNavigationViewController: UIViewController {
             return
         }
         
-        #if TARGET_IPHONE_SIMULATOR
-            let bearing = navigationManager.calculateBearing(to: updatedLocation)
+        #if arch(i386) || arch(x86_64)
+            let bearing = navigationManager.calculateBearing(to: coord)
             let camera = GMSCameraPosition.camera(
                 withTarget: coord,
                 zoom: 15.0,
@@ -711,7 +703,7 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         
-        #if TARGET_IPHONE_SIMULATOR
+        #if arch(i386) || arch(x86_64)
             return
         #else
             guard

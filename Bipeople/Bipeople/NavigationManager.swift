@@ -201,7 +201,7 @@ class NavigationManager {
     // MARK: Public Methods
     
     /// 마지막 위치와 비교하여 진행 방향을 계산해 반환
-    public func calculateBearing(to : CLLocation) -> CLLocationDirection {
+    public func calculateBearing(to : CLLocationCoordinate2D) -> CLLocationDirection {
         
         guard let from = traces.last else {
             return -1
@@ -210,8 +210,8 @@ class NavigationManager {
         let lat1 = degreesToRadians(degrees: from.latitude)
         let lon1 = degreesToRadians(degrees: from.longitude)
         
-        let lat2 = degreesToRadians(degrees: to.coordinate.latitude)
-        let lon2 = degreesToRadians(degrees: to.coordinate.longitude)
+        let lat2 = degreesToRadians(degrees: to.latitude)
+        let lon2 = degreesToRadians(degrees: to.longitude)
         
         let dLon = lon2 - lon1
         
