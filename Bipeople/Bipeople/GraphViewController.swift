@@ -203,13 +203,13 @@ class GraphViewController: UIViewController {
         let minutes = self.ridingTime?.minutes
         let seconds = self.ridingTime?.seconds
         
-        self.distanceLabel.countFromZero(to: Float(self.distance ?? 0))
-        self.averageSpeedLabel.countFromZero(to: Float(self.averageSpeed ?? 0))
-        self.caloriesLabel.countFromZero(to: Float(self.calories ?? 0))
+        self.distanceLabel.count(to: Float(self.distance ?? 0))
+        self.averageSpeedLabel.count(to: Float(self.averageSpeed ?? 0))
+        self.caloriesLabel.count(to: Float(self.calories ?? 0))
         
-        self.hourLabel.countFromZero(to: Float(hours ?? 0))
-        self.minuteLabel.countFromZero(to: Float(minutes ?? 0))
-        self.secondLabel.countFromZero(to: Float(seconds ?? 0))
+        self.hourLabel.count(to: Float(hours ?? 0))
+        self.minuteLabel.count(to: Float(minutes ?? 0))
+        self.secondLabel.count(to: Float(seconds ?? 0))
         
     }
     
