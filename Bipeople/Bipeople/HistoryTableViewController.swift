@@ -26,7 +26,7 @@ class HistoryTableViewController: UIViewController {
         super.viewWillAppear(animated)
         
         let realm = try! Realm()
-        records = realm.objects(Record.self).sorted{ $0.createdAt < $1.createdAt }
+        records = realm.objects(Record.self).sorted{ $0.createdAt > $1.createdAt }
         
         tableView.reloadData()
     }
