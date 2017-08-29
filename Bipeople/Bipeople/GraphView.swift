@@ -104,6 +104,8 @@ class GraphView: UIScrollView {
         updateYLabels()
         
         self.setNeedsDisplay()
+        
+        self.setContentOffset(CGPoint.zero, animated: true)
     }
     
     private func initialize() {
