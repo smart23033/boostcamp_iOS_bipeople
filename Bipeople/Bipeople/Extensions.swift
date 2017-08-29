@@ -121,7 +121,14 @@ extension String {
             return nil
         }
         
-        return date
+        let gregorian = Calendar(identifier:.gregorian)
+        var components = gregorian.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+        
+        components.hour = 0
+        components.minute = 0
+        components.second = 0
+        
+        return gregorian.date(from: components) ?? date
     }
     
 }

@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8cM-zC-Fsa">
-                                <rect key="frame" x="100" y="124" width="175" height="29"/>
+                                <rect key="frame" x="100" y="84" width="175" height="29"/>
                                 <segments>
                                     <segment title="일별"/>
                                     <segment title="주별"/>
@@ -34,7 +34,7 @@
                                 </connections>
                             </segmentedControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mjy-SM-4kU" userLabel="Container">
-                                <rect key="frame" x="16" y="186" width="343" height="333.5"/>
+                                <rect key="frame" x="16" y="146" width="343" height="334"/>
                                 <subviews>
                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Filter" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="baD-OY-PGM" userLabel="Filter">
                                         <rect key="frame" x="298.5" y="0.0" width="34.5" height="18"/>
@@ -45,12 +45,12 @@
                                             <outletCollection property="gestureRecognizers" destination="cJs-1k-7cL" appends="YES" id="dcA-jy-Zb0"/>
                                         </connections>
                                     </label>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wcW-aI-mFE" userLabel="Graph" customClass="ScrollableGraphView" customModule="ScrollableGraphView">
-                                        <rect key="frame" x="0.0" y="20" width="343" height="313.5"/>
-                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wcW-aI-mFE" userLabel="Graph" customClass="GraphView" customModule="Bipeople" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="20" width="343" height="314"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NNG-aQ-p1g" userLabel="Calendar" customClass="FSCalendar">
-                                        <rect key="frame" x="0.0" y="20" width="343" height="313.5"/>
+                                        <rect key="frame" x="0.0" y="20" width="343" height="314"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="color" keyPath="headerTitleColor">
@@ -71,19 +71,20 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="NNG-aQ-p1g" firstAttribute="leading" secondItem="mjy-SM-4kU" secondAttribute="leading" id="0V4-3d-QIZ"/>
-                                    <constraint firstAttribute="trailing" secondItem="baD-OY-PGM" secondAttribute="trailing" constant="10" id="9Ag-nM-rJg"/>
-                                    <constraint firstAttribute="bottom" secondItem="wcW-aI-mFE" secondAttribute="bottom" id="Da2-xs-Kqk"/>
+                                    <constraint firstItem="baD-OY-PGM" firstAttribute="trailing" secondItem="mjy-SM-4kU" secondAttribute="trailing" constant="-10" id="9Ag-nM-rJg"/>
+                                    <constraint firstItem="wcW-aI-mFE" firstAttribute="bottom" secondItem="mjy-SM-4kU" secondAttribute="bottom" id="Da2-xs-Kqk"/>
+                                    <constraint firstItem="baD-OY-PGM" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="mjy-SM-4kU" secondAttribute="leading" constant="20" symbolic="YES" id="JwJ-dp-dKH"/>
                                     <constraint firstItem="wcW-aI-mFE" firstAttribute="leading" secondItem="mjy-SM-4kU" secondAttribute="leading" id="LLg-V0-rDn"/>
                                     <constraint firstItem="wcW-aI-mFE" firstAttribute="top" secondItem="mjy-SM-4kU" secondAttribute="top" constant="20" id="NPE-hn-v3i"/>
-                                    <constraint firstAttribute="trailing" secondItem="NNG-aQ-p1g" secondAttribute="trailing" id="Ohc-bn-N2M"/>
+                                    <constraint firstItem="NNG-aQ-p1g" firstAttribute="trailing" secondItem="mjy-SM-4kU" secondAttribute="trailing" id="Ohc-bn-N2M"/>
                                     <constraint firstItem="NNG-aQ-p1g" firstAttribute="top" secondItem="mjy-SM-4kU" secondAttribute="top" constant="20" id="dFz-CZ-Cav"/>
-                                    <constraint firstAttribute="trailing" secondItem="wcW-aI-mFE" secondAttribute="trailing" id="hVn-dx-fVE"/>
-                                    <constraint firstAttribute="bottom" secondItem="NNG-aQ-p1g" secondAttribute="bottom" id="u1z-HG-qMC"/>
+                                    <constraint firstItem="wcW-aI-mFE" firstAttribute="trailing" secondItem="mjy-SM-4kU" secondAttribute="trailing" id="hVn-dx-fVE"/>
+                                    <constraint firstItem="NNG-aQ-p1g" firstAttribute="bottom" secondItem="mjy-SM-4kU" secondAttribute="bottom" id="u1z-HG-qMC"/>
                                     <constraint firstItem="baD-OY-PGM" firstAttribute="top" secondItem="mjy-SM-4kU" secondAttribute="top" id="zlU-Y5-Qra"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h7T-SQ-fSD" customClass="CardView" customModule="Bipeople" customModuleProvider="target">
-                                <rect key="frame" x="16" y="535.5" width="343" height="133.5"/>
+                                <rect key="frame" x="16" y="496" width="343" height="133.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="X4R-i8-r9O">
                                         <rect key="frame" x="8" y="14" width="103" height="106.5"/>
@@ -225,7 +226,7 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="FsU-sR-QDa">
-                                <rect key="frame" x="41.5" y="160" width="292" height="18"/>
+                                <rect key="frame" x="41.5" y="120" width="292" height="18"/>
                                 <subviews>
                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2017-08-09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mdX-n4-4LX" userLabel="Start Label">
                                         <rect key="frame" x="0.0" y="0.0" width="84" height="18"/>
@@ -257,16 +258,15 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="8cM-zC-Fsa" secondAttribute="trailing" constant="100" id="4GY-C4-fSC"/>
-                            <constraint firstItem="8cM-zC-Fsa" firstAttribute="leading" secondItem="KMo-Zf-rbb" secondAttribute="leading" constant="100" id="4f7-20-cgI"/>
                             <constraint firstItem="h7T-SQ-fSD" firstAttribute="trailing" secondItem="KMo-Zf-rbb" secondAttribute="trailingMargin" id="Cy3-zW-5XG"/>
                             <constraint firstItem="mjy-SM-4kU" firstAttribute="leading" secondItem="KMo-Zf-rbb" secondAttribute="leadingMargin" id="F7A-1F-ckK"/>
                             <constraint firstItem="h7T-SQ-fSD" firstAttribute="top" secondItem="mjy-SM-4kU" secondAttribute="bottom" constant="16" id="Gfr-a7-Hhk"/>
                             <constraint firstItem="8cM-zC-Fsa" firstAttribute="top" secondItem="I5j-mX-oeS" secondAttribute="bottom" constant="20" id="Kn4-Fe-dgV"/>
                             <constraint firstItem="8cM-zC-Fsa" firstAttribute="centerX" secondItem="KMo-Zf-rbb" secondAttribute="centerX" id="Nei-rv-cKV"/>
-                            <constraint firstItem="mjy-SM-4kU" firstAttribute="height" secondItem="KMo-Zf-rbb" secondAttribute="height" multiplier="0.5" id="QNp-62-pCU"/>
                             <constraint firstItem="FsU-sR-QDa" firstAttribute="centerX" secondItem="KMo-Zf-rbb" secondAttribute="centerX" id="SAC-LO-Vho"/>
                             <constraint firstItem="mjy-SM-4kU" firstAttribute="trailing" secondItem="KMo-Zf-rbb" secondAttribute="trailingMargin" id="Tka-Q4-RX0"/>
                             <constraint firstItem="FsU-sR-QDa" firstAttribute="top" secondItem="8cM-zC-Fsa" secondAttribute="bottom" constant="8" id="bpR-Ie-nvU"/>
+                            <constraint firstItem="mjy-SM-4kU" firstAttribute="height" secondItem="h7T-SQ-fSD" secondAttribute="height" multiplier="5:2" id="jbH-bd-xsq"/>
                             <constraint firstItem="h7T-SQ-fSD" firstAttribute="leading" secondItem="KMo-Zf-rbb" secondAttribute="leadingMargin" id="m4M-wS-fFr"/>
                             <constraint firstItem="h7T-SQ-fSD" firstAttribute="height" secondItem="KMo-Zf-rbb" secondAttribute="height" multiplier="0.2" id="pRc-vp-BoW"/>
                             <constraint firstItem="mjy-SM-4kU" firstAttribute="top" secondItem="FsU-sR-QDa" secondAttribute="bottom" constant="8" id="xIo-bx-9Ob"/>
@@ -281,9 +281,9 @@
                         <outlet property="distanceLabel" destination="XBm-Qs-26z" id="hJ0-IQ-8vY"/>
                         <outlet property="endLabel" destination="6x5-Lp-7sU" id="tWp-qC-5Jl"/>
                         <outlet property="filterLabel" destination="baD-OY-PGM" id="suM-h0-zdX"/>
+                        <outlet property="graphView" destination="wcW-aI-mFE" id="ivX-Il-h3B"/>
                         <outlet property="hourLabel" destination="T7T-xG-ICk" id="TJe-4F-wZA"/>
                         <outlet property="minuteLabel" destination="ngb-rh-gwV" id="Mbv-VX-kUu"/>
-                        <outlet property="prototypeGraphView" destination="wcW-aI-mFE" id="aF5-bZ-FFj"/>
                         <outlet property="secondLabel" destination="YiW-jf-XBh" id="1DW-NU-wTk"/>
                         <outlet property="segmentedControl" destination="8cM-zC-Fsa" id="7gc-TR-W0V"/>
                         <outlet property="startLabel" destination="mdX-n4-4LX" id="RNH-P7-zsH"/>
@@ -331,6 +331,6 @@
     </scenes>
     <resources>
         <image name="graph" width="25" height="25"/>
-        <image name="selectedGraph" width="25" height="26"/>
+        <image name="selectedGraph" width="25" height="25"/>
     </resources>
 </document>

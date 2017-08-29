@@ -42,6 +42,7 @@
 		F176C84E1F3D9DDC008F39FD /* Navigation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F176C83E1F3D9DD8008F39FD /* Navigation.storyboard */; };
 		F18C67261F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18C67251F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift */; };
 		F19060AF1F3C94DE00DB67B8 /* MarkerInfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19060AE1F3C94DD00DB67B8 /* MarkerInfoWindow.swift */; };
+		F1E1FD4A1F55CD0000B98604 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E1FD491F55CD0000B98604 /* GraphView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -91,6 +92,7 @@
 		F176C8491F3D9DD9008F39FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F18C67251F3A6C3D00F18762 /* BiPeopleNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiPeopleNavigationViewController.swift; sourceTree = "<group>"; };
 		F19060AE1F3C94DD00DB67B8 /* MarkerInfoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerInfoWindow.swift; sourceTree = "<group>"; };
+		F1E1FD491F55CD0000B98604 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,6 +213,7 @@
 			isa = PBXGroup;
 			children = (
 				A2560E921F4975F4003C17C5 /* GraphViewController.swift */,
+				F1E1FD491F55CD0000B98604 /* GraphView.swift */,
 			);
 			name = Graph;
 			sourceTree = "<group>";
@@ -410,6 +413,7 @@
 				A2A2993D1F3C6CF300E31ED9 /* NavigationManager.swift in Sources */,
 				A2560E931F4975F4003C17C5 /* GraphViewController.swift in Sources */,
 				A219812B1F39730C00D0F5F7 /* CardView.swift in Sources */,
+				F1E1FD4A1F55CD0000B98604 /* GraphView.swift in Sources */,
 				F14C71B51F3ED200005015B1 /* Feature.swift in Sources */,
 				A2A2993A1F3C45D700E31ED9 /* Trace.swift in Sources */,
 				F11F51D81F45CD7800429741 /* PlaceDetailViewController.swift in Sources */,

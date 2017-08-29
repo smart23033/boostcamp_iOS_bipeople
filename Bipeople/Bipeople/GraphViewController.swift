@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 import FSCalendar
-import ScrollableGraphView
+//import ScrollableGraphView
 
 //MARK: enum
 
@@ -36,7 +36,7 @@ class GraphViewController: UIViewController {
     
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
-    @IBOutlet weak var prototypeGraphView: ScrollableGraphView!
+    @IBOutlet weak var graphView: GraphView!
     @IBOutlet weak var calendarView: FSCalendar!
     @IBOutlet weak var filterLabel: UILabel! {
         didSet {
@@ -97,18 +97,18 @@ class GraphViewController: UIViewController {
         }
     }
     
-    var records: [Record] = []
+    // private var graphView: ScrollableGraphView?
     
-    private var graphView: ScrollableGraphView?
-    var dataWithDate: [String:Double] = [:]
+    private var records: [Record] = []
+    private var dataWithDate: [String:Double] = [:]
     
-    var pickerData: [GraphType] = [.distance,.ridingTime,.calories,.averageSpeed]
-    var selectedValue: GraphType = .distance
+    private var pickerData: [GraphType] = [.distance,.ridingTime,.calories,.averageSpeed]
+    private var selectedValue: GraphType = .distance
     
-    var distance: Double?
-    var ridingTime: TimeInterval?
-    var calories: Double?
-    var averageSpeed: Double?
+    private var distance: Double?
+    private var ridingTime: TimeInterval?
+    private var calories: Double?
+    private var averageSpeed: Double?
     
     //MARK: Life Cycle
     
@@ -119,37 +119,26 @@ class GraphViewController: UIViewController {
         self.calendarView.isHidden = true
         
         reloadGraph()
-        reloadDataSheet()
+        reloadDataSheet()        
     }
     
     //MARK: Functions
     
     func reloadGraph() {
-        guard let frame = prototypeGraphView?.frame else {
+        
+        guard
+            let startDate = self.startLabel.text?.toDate(),
+            let endDate = self.endLabel.text?.toDate()?.addingTimeInterval(24 * 60 * 60 - 1)
+        else {
             return
         }
-        
-        graphView?.removeFromSuperview()
-        graphView = ScrollableGraphView(frame: frame, dataSource: self)
-        
-        guard let innerGraphView = graphView else {
-            return
-        }
-        
-        containerView.addSubview(innerGraphView)
-        
-        guard let startDate = self.startLabel.text?.toDate(),
-            let endDate = self.endLabel.text?.toDate()?.addingTimeInterval(24*60*60)
-            else {
-                return
-        }
-        
+
         //값을 가져오는 부분
         let predicate = NSPredicate(format: "createdAt >= %@ AND createdAt <= %@", startDate as NSDate, endDate as NSDate)
         records = Array(RealmHelper.fetch(from: Record.self, with: predicate))
-        
+
         records.sort{ $0.createdAt < $1.createdAt }
-        
+
         switch selectedValue {
         case .distance:
             dataWithDate = getDataWithDate(type: .distance, startDate: startDate, endDate: endDate)
@@ -160,14 +149,53 @@ class GraphViewController: UIViewController {
         case .averageSpeed:
             dataWithDate = getDataWithDate(type: .averageSpeed, startDate: startDate, endDate: endDate)
         }
-        
-        guard let maxValue = dataWithDate.values.sorted(by: >).first else {
-            return
-        }
-        
-        setupGraph(graphView: innerGraphView, max: maxValue)
-        
+
+        graphView.graphPoints = dataWithDate
     }
+    
+//    func reloadGraph2() {
+//        guard let frame = graphView?.frame else {
+//            return
+//        }
+//
+//        graphView?.removeFromSuperview()
+//        graphView = ScrollableGraphView(frame: frame, dataSource: self)
+//
+//        guard let innerGraphView = graphView else {
+//            return
+//        }
+//
+//        containerView.addSubview(innerGraphView)
+//
+//        guard let startDate = self.startLabel.text?.toDate(),
+//            let endDate = self.endLabel.text?.toDate()?.addingTimeInterval(24*60*60)
+//            else {
+//                return
+//        }
+//
+//        //값을 가져오는 부분
+//        let predicate = NSPredicate(format: "createdAt >= %@ AND createdAt <= %@", startDate as NSDate, endDate as NSDate)
+//        records = Array(RealmHelper.fetch(from: Record.self, with: predicate))
+//
+//        records.sort{ $0.createdAt < $1.createdAt }
+//
+//        switch selectedValue {
+//        case .distance:
+//            dataWithDate = getDataWithDate(type: .distance, startDate: startDate, endDate: endDate)
+//        case .ridingTime:
+//            dataWithDate = getDataWithDate(type: .ridingTime, startDate: startDate, endDate: endDate)
+//        case .calories:
+//            dataWithDate = getDataWithDate(type: .calories, startDate: startDate, endDate: endDate)
+//        case .averageSpeed:
+//            dataWithDate = getDataWithDate(type: .averageSpeed, startDate: startDate, endDate: endDate)
+//        }
+//
+//        guard let maxValue = dataWithDate.values.sorted(by: >).first else {
+//            return
+//        }
+//
+//        setupGraph(graphView: innerGraphView, max: maxValue)
+//    }
     
     func reloadDataSheet() {
         
@@ -335,7 +363,7 @@ class GraphViewController: UIViewController {
         let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { _ in
             
             self.filterLabel.text = self.selectedValue.rawValue
-                
+            
             self.reloadGraph()
             self.reloadDataSheet()
         })
@@ -441,87 +469,86 @@ extension GraphViewController: FSCalendarDelegate {
         
         reloadGraph()
         reloadDataSheet()
-        
     }
     
 }
 
 //MARK: ScrollableGraphViewDataSource
 
-extension GraphViewController: ScrollableGraphViewDataSource {
-    
-    
-    func value(forPlot plot: Plot, atIndex pointIndex: Int) -> Double {
-        
-        let sortedDates = dataWithDate.keys.sorted(by: <)
-        
-        switch(plot.identifier) {
-        case "plot":
-            
-            guard pointIndex < sortedDates.count else {
-                return 0
-            }
-            
-            var distances = [Double]()
-            
-            for date in sortedDates {
-                dataWithDate.forEach({ (key,value) in
-                    if key == date {
-                        distances.append(value)
-                    }
-                })
-            }
-            
-            return distances[pointIndex]
-            
-        default:
-            return 0
-        }
-    }
-    
-    func label(atIndex pointIndex: Int) -> String {
-        let sortedDates = dataWithDate.keys.sorted(by: <)
-        
-        return "\(sortedDates[pointIndex])"
-    }
-    
-    func numberOfPoints() -> Int {
-        //        print("numberOfPoints: ", dataWithDate.count)
-        return dataWithDate.count
-    }
-    
-    func setupGraph(graphView: ScrollableGraphView, max: Double) {
-        
-        // Setup the first line plot.
-        let linePlot = LinePlot(identifier: "plot")
-        
-        linePlot.lineWidth = 2
-        linePlot.lineColor = UIColor.primary
-        linePlot.lineStyle = ScrollableGraphViewLineStyle.straight
-        
-        linePlot.shouldFill = true
-        linePlot.fillType = ScrollableGraphViewFillType.solid
-        linePlot.fillColor = UIColor.primary.withAlphaComponent(0.2)
-        
-        linePlot.adaptAnimationType = ScrollableGraphViewAnimationType.elastic
-        
-        // Customise the reference lines.
-        let referenceLines = ReferenceLines()
-        
-        referenceLines.referenceLineLabelFont = UIFont.boldSystemFont(ofSize: 8)
-        referenceLines.referenceLineColor = UIColor.black.withAlphaComponent(0.2)
-        referenceLines.referenceLineLabelColor = UIColor.black
-        referenceLines.dataPointLabelColor = UIColor.black.withAlphaComponent(1)
-        
-        
-        graphView.addReferenceLines(referenceLines: referenceLines)
-        graphView.addPlot(plot: linePlot)
-        
-        graphView.rangeMax = max
-        graphView.dataPointSpacing = 70
-        
-    }
-}
+//extension GraphViewController: ScrollableGraphViewDataSource {
+//
+//
+//    func value(forPlot plot: Plot, atIndex pointIndex: Int) -> Double {
+//
+//        let sortedDates = dataWithDate.keys.sorted(by: <)
+//
+//        switch(plot.identifier) {
+//        case "plot":
+//
+//            guard pointIndex < sortedDates.count else {
+//                return 0
+//            }
+//
+//            var distances = [Double]()
+//
+//            for date in sortedDates {
+//                dataWithDate.forEach({ (key,value) in
+//                    if key == date {
+//                        distances.append(value)
+//                    }
+//                })
+//            }
+//
+//            return distances[pointIndex]
+//
+//        default:
+//            return 0
+//        }
+//    }
+//
+//    func label(atIndex pointIndex: Int) -> String {
+//        let sortedDates = dataWithDate.keys.sorted(by: <)
+//
+//        return "\(sortedDates[pointIndex])"
+//    }
+//
+//    func numberOfPoints() -> Int {
+//        //        print("numberOfPoints: ", dataWithDate.count)
+//        return dataWithDate.count
+//    }
+//
+//    func setupGraph(graphView: ScrollableGraphView, max: Double) {
+//
+//        // Setup the first line plot.
+//        let linePlot = LinePlot(identifier: "plot")
+//
+//        linePlot.lineWidth = 2
+//        linePlot.lineColor = UIColor.primary
+//        linePlot.lineStyle = ScrollableGraphViewLineStyle.straight
+//
+//        linePlot.shouldFill = true
+//        linePlot.fillType = ScrollableGraphViewFillType.solid
+//        linePlot.fillColor = UIColor.primary.withAlphaComponent(0.2)
+//
+//        linePlot.adaptAnimationType = ScrollableGraphViewAnimationType.elastic
+//
+//        // Customise the reference lines.
+//        let referenceLines = ReferenceLines()
+//
+//        referenceLines.referenceLineLabelFont = UIFont.boldSystemFont(ofSize: 8)
+//        referenceLines.referenceLineColor = UIColor.black.withAlphaComponent(0.2)
+//        referenceLines.referenceLineLabelColor = UIColor.black
+//        referenceLines.dataPointLabelColor = UIColor.black.withAlphaComponent(1)
+//
+//
+//        graphView.addReferenceLines(referenceLines: referenceLines)
+//        graphView.addPlot(plot: linePlot)
+//
+//        graphView.rangeMax = max
+//        graphView.dataPointSpacing = 70
+//
+//    }
+//}
 
 //MARK: UIPickerViewDelegate
 
