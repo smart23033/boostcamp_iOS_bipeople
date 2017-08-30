@@ -150,7 +150,6 @@
 				30E82D971F38227500536AFB /* Navigation */,
 				30E82D961F38226D00536AFB /* History */,
 				A2560E911F4975E0003C17C5 /* Graph */,
-				30E82DA61F38230C00536AFB /* Settings */,
 			);
 			path = Bipeople;
 			sourceTree = "<group>";
@@ -175,13 +174,6 @@
 				A2384C4D1F4D65F100009131 /* WaypointMarker.swift */,
 			);
 			name = Navigation;
-			sourceTree = "<group>";
-		};
-		30E82DA61F38230C00536AFB /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Settings;
 			sourceTree = "<group>";
 		};
 		30E82DAB1F38235E00536AFB /* Resources */ = {

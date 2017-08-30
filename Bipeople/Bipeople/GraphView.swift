@@ -2,8 +2,8 @@
 //  GraphView.swift
 //  GraphView
 //
-//  Created by CONNECT on 2017. 8. 29..
-//  Copyright © 2017년 CONNECT. All rights reserved.
+//  Created by 김성준, YeongSik Lee on 2017. 8. 29..
+//  Copyright © 2017년 BluePotato. All rights reserved.
 //
 
 import UIKit
