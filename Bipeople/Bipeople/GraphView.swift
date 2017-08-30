@@ -103,7 +103,8 @@ class GraphView: UIScrollView {
         updateXLabels()
         updateYLabels()
         
-        self.setNeedsDisplay()
+        let frame = CGRect(x: self.contentOffset.x, y: 0, width: self.bounds.width, height: self.bounds.height)
+        self.setNeedsDisplay(frame)
         
         self.setContentOffset(CGPoint.zero, animated: true)
     }
@@ -358,7 +359,8 @@ extension GraphView : UIScrollViewDelegate {
             needXLabelUpdated = true
         }
         
-        self.setNeedsDisplay()
+        let frame = CGRect(x: self.contentOffset.x, y: 0, width: self.bounds.width, height: self.bounds.height)
+        self.setNeedsDisplay(frame)
     }
 }
 

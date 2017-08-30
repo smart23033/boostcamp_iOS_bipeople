@@ -41,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         /* FOR DEBUG: 더미데이터 삽입 시작 */
 //        RealmHelper.deleteTable(of: Record.self)
-//        for i in 0 ..< 15 {
+//        for i in 0 ..< 30 {
 //            let record = Record(departure: "departure \(i)",
 //                arrival: "arrival \(i)",
 //                distance: Double(arc4random_uniform(1000)) / Double(10),
