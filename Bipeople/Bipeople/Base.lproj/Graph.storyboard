@@ -4,6 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13156.2"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -87,7 +88,7 @@
                                 <rect key="frame" x="16" y="496" width="343" height="133.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="X4R-i8-r9O">
-                                        <rect key="frame" x="8" y="14" width="103" height="106.5"/>
+                                        <rect key="frame" x="8" y="14" width="137" height="106.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="누적 주행 거리" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oB2-KC-RfT">
                                                 <rect key="frame" x="0.0" y="0.0" width="86" height="19"/>
@@ -116,10 +117,10 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="bottom" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="0FA-wd-pOZ">
-                                        <rect key="frame" x="112" y="14" width="223" height="106.5"/>
+                                        <rect key="frame" x="129" y="14" width="206" height="106.5"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="bottom" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="BaF-eB-wzC" userLabel="Distance">
-                                                <rect key="frame" x="175.5" y="0.0" width="47.5" height="19"/>
+                                                <rect key="frame" x="158.5" y="0.0" width="47.5" height="19"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XBm-Qs-26z" customClass="AnimatedLabel" customModule="Bipeople" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="1" width="21.5" height="18"/>
@@ -136,7 +137,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="bottom" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="0gx-MS-0gV" userLabel="RidingTime">
-                                                <rect key="frame" x="159.5" y="29" width="63.5" height="19.5"/>
+                                                <rect key="frame" x="142.5" y="29" width="63.5" height="19.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T7T-xG-ICk" userLabel="Hour Label" customClass="AnimatedLabel" customModule="Bipeople" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="1.5" width="9.5" height="18"/>
@@ -177,7 +178,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="6mU-AC-P1z" userLabel="AverageSpeed">
-                                                <rect key="frame" x="171" y="58.5" width="52" height="19"/>
+                                                <rect key="frame" x="154" y="58.5" width="52" height="19"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LkZ-TV-FZh" customClass="AnimatedLabel" customModule="Bipeople" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="21.5" height="19"/>
@@ -194,7 +195,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="bottom" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="trx-mm-Uqm" userLabel="Calories">
-                                                <rect key="frame" x="169" y="87.5" width="54" height="19"/>
+                                                <rect key="frame" x="152" y="87.5" width="54" height="19"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xN6-6b-JjU" customClass="AnimatedLabel" customModule="Bipeople" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="1" width="21.5" height="18"/>
@@ -220,9 +221,9 @@
                                     <constraint firstAttribute="trailing" secondItem="0FA-wd-pOZ" secondAttribute="trailing" constant="8" id="Aez-jg-KbI"/>
                                     <constraint firstItem="X4R-i8-r9O" firstAttribute="centerY" secondItem="h7T-SQ-fSD" secondAttribute="centerY" id="b3v-LF-r5t"/>
                                     <constraint firstItem="X4R-i8-r9O" firstAttribute="leading" secondItem="h7T-SQ-fSD" secondAttribute="leading" constant="8" id="c9q-b0-jrH"/>
-                                    <constraint firstItem="0FA-wd-pOZ" firstAttribute="width" secondItem="h7T-SQ-fSD" secondAttribute="width" multiplier="0.65" id="dYr-gI-yao"/>
+                                    <constraint firstItem="0FA-wd-pOZ" firstAttribute="width" secondItem="h7T-SQ-fSD" secondAttribute="width" multiplier="0.6" id="dYr-gI-yao"/>
                                     <constraint firstItem="0FA-wd-pOZ" firstAttribute="centerY" secondItem="h7T-SQ-fSD" secondAttribute="centerY" id="gX8-Vu-UFh"/>
-                                    <constraint firstItem="X4R-i8-r9O" firstAttribute="width" secondItem="h7T-SQ-fSD" secondAttribute="width" multiplier="0.3" id="ghc-iv-JSg"/>
+                                    <constraint firstItem="X4R-i8-r9O" firstAttribute="width" secondItem="h7T-SQ-fSD" secondAttribute="width" multiplier="0.4" id="ghc-iv-JSg"/>
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="FsU-sR-QDa">
