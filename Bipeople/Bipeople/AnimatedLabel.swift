@@ -38,7 +38,7 @@ class AnimatedLabel: UILabel {
         destinationValue = to
         lastUpdate = Date.timeIntervalSinceReferenceDate
         totalTime = duration
-        
+        progress = 0
         timer?.invalidate()
         timer = nil
         

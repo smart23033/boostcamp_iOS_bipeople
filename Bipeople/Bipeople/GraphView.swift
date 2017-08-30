@@ -114,7 +114,7 @@ class GraphView: UIScrollView {
         self.delegate = self
         
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.insetsLayoutMarginsFromSafeArea = false
+//        self.insetsLayoutMarginsFromSafeArea = false
     }
     
     override init(frame: CGRect) {
