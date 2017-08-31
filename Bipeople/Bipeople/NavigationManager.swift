@@ -243,6 +243,11 @@ class NavigationManager {
         marker.snippet = address ?? LiteralString.unknown.rawValue
     }
     
+    public func getDestinationCoord() -> CLLocationCoordinate2D? {
+        
+        return destinationMarker?.position
+    }
+    
     /// 도착지 마커를 삭제
     public func removeDestination() {
         

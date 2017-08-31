@@ -496,8 +496,15 @@ class BiPeopleNavigationViewController: UIViewController {
             
             self.loadingIndicatorView.stopAnimating()
             self.navigationMapView.isHidden = false
+            
             self.startButton.isHidden = self.isNavigationOn
             self.clearButton.isHidden = self.isNavigationOn
+            
+            
+            if recorded == false, let destination = self.navigationManager.getDestinationCoord() {
+                self.moveMap(coordinate: destination)
+                self.unpinScreen(for: 5)
+            }
         }
     }
     
@@ -538,7 +545,7 @@ class BiPeopleNavigationViewController: UIViewController {
             return
         }
         
-        #if arch(i386) || arch(x86_64)
+//        #if arch(i386) || arch(x86_64)
             let bearing = navigationManager.calculateBearing(to: coord)
             let camera = GMSCameraPosition.camera(
                 withTarget: coord,
@@ -546,12 +553,12 @@ class BiPeopleNavigationViewController: UIViewController {
                 bearing: bearing,
                 viewingAngle: -1
             )
-        #else
-            let camera = GMSCameraPosition.camera(
-                withTarget: coord,
-                zoom: 15.0
-            )
-        #endif
+//        #else
+//            let camera = GMSCameraPosition.camera(
+//                withTarget: coord,
+//                zoom: 15.0
+//            )
+//        #endif
         
         if navigationMapView.isHidden {
             
@@ -707,19 +714,19 @@ extension BiPeopleNavigationViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         
-        #if arch(i386) || arch(x86_64)
+//        #if arch(i386) || arch(x86_64)
             return
-        #else
-            guard
-                timeUnlocked < Date().timeIntervalSince1970,
-                newHeading.timestamp.timeIntervalSinceNow > -30,
-                newHeading.headingAccuracy >= 0
-            else {
-                return
-            }
-            
-            navigationMapView.animate(toBearing: newHeading.trueHeading)
-        #endif
+//        #else
+//            guard
+//                timeUnlocked < Date().timeIntervalSince1970,
+//                newHeading.timestamp.timeIntervalSinceNow > -30,
+//                newHeading.headingAccuracy >= 0
+//            else {
+//                return
+//            }
+//
+//            navigationMapView.animate(toBearing: newHeading.trueHeading)
+//        #endif
     }
     
     /// 위치 변화 이벤트 핸들러
