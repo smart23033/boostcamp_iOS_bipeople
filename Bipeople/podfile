@@ -9,7 +9,7 @@ target 'Bipeople' do
   pod 'GoogleMaps'
 
   # BLU
-  pod 'Alamofire', git: 'https://github.com/Alamofire/Alamofire.git', branch: 'swift4'
+  pod 'Alamofire'
   pod 'RealmSwift'
   pod 'RealmGeoQueries'
 
